@@ -1,3 +1,4 @@
+
 import React, { useEffect, useRef, useState } from 'react';
 import { Target, Users, Brain, Eraser, LineChart, MessageSquare, ArrowRight, HelpCircle, ChevronDown, Trophy, Activity, Check } from 'lucide-react';
 import { Footer } from './Footer.tsx';
@@ -102,6 +103,22 @@ const CountUpStat = ({ end, suffix = "", duration = 2 }: { end: number, suffix?:
 
 // --- SECTION COMPONENTS ---
 
+const WhatWeDoSection = () => (
+  <section className="max-w-4xl mx-auto px-6 md:px-8 py-24 text-center bg-white">
+     <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.8 }}
+     >
+       <span className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 mb-6 block">What We Do</span>
+       <h2 className="text-2xl md:text-4xl font-medium text-slate-900 leading-relaxed font-serif">
+          Mehri Fitness helps people track workouts, recovery, and health trends across devices. Users can train using just their phone or pair the GTL-1 smartwatch for deeper biometric insights, all supported by Alma AI guidance.
+       </h2>
+     </motion.div>
+  </section>
+);
+
 const KeyFeaturesSection = () => (
   <section className="max-w-7xl mx-auto px-6 md:px-8 py-12 md:py-20 bg-slate-50 rounded-[40px] md:rounded-[60px] my-12 md:my-20 border border-slate-100 shadow-sm">
      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 text-center">
@@ -132,6 +149,11 @@ const KeyFeaturesSection = () => (
               Seamlessly sync with our flagship hardware. The GTL-1 Smartwatch provides the high-fidelity sensor data that powers the entire MEHRI ecosystem.
            </p>
         </div>
+     </div>
+     <div className="mt-12 text-center border-t border-slate-200 pt-8 max-w-2xl mx-auto px-4">
+        <p className="text-xs text-slate-400 font-medium leading-relaxed">
+           Mehri Fitness analyzes heart rate, HRV, sleep, SpO₂, and activity data. Data availability depends on connected devices and usage patterns.
+        </p>
      </div>
   </section>
 );
@@ -171,24 +193,24 @@ const FAQSection = () => (
      </div>
      <div className="bg-white rounded-[30px] md:rounded-[40px] shadow-xl border border-slate-100 p-6 md:p-12">
         <FAQItem 
-           question="Is the GTL-1 Smartwatch compatible with both iOS and Android?" 
-           answer="Yes, the GTL-1 Smartwatch features universal compatibility. It syncs seamlessly via Bluetooth 5.3 to the Mehri Group app on both iOS and Android platforms." 
+           question="Does Mehri Fitness work without the GTL-1?" 
+           answer="Yes. You can use Mehri Fitness with just your smartphone to track workouts, log meals, and access Alma coaching. The GTL-1 is optional hardware for automated biometric data like continuous heart rate and sleep tracking." 
         />
         <FAQItem 
-           question="How does Alma AI provide health insights?" 
-           answer="Alma processes your historical workout data and real-time biometrics from the GTL-1 to identify patterns. It then generates specific, text-based coaching advice tailored to your recovery needs." 
+           question="Is the GTL-1 compatible with iOS and Android?" 
+           answer="Yes, the GTL-1 Smartwatch features universal compatibility. It syncs seamlessly via Bluetooth 5.3 to the Mehri app on both iOS and Android platforms." 
+        />
+        <FAQItem 
+           question="Is this a medical device?" 
+           answer="No. Mehri Fitness and the GTL-1 are wellness tools designed for recreational use, training, and performance tracking. They are not medical devices and should not be used to diagnose or treat medical conditions." 
         />
         <FAQItem 
            question="Is my biometric data secure?" 
-           answer="Security is paramount. We use localized AES-256 encryption on the GTL-1 device itself. Your physiological data is encrypted before it ever leaves your wrist." 
+           answer="Yes. We prioritize your privacy. Biometric data is encrypted locally on the device and during transmission to ensure your personal health information remains secure." 
         />
         <FAQItem 
            question="What is the battery life of the GTL-1?" 
-           answer="The GTL-1 is engineered for endurance, boasting an intelligent 14-day battery life on a single charge under typical usage conditions, including daily workout tracking." 
-        />
-        <FAQItem 
-           question="Is the GTL-1 water resistant?" 
-           answer="Yes, the GTL-1 carries an IP68 rating, making it fully resistant to dust and capable of withstanding submersion in water, perfect for swimming and intense training." 
+           answer="The GTL-1 is engineered for endurance, boasting an intelligent 14-day battery life on a single charge under typical usage conditions." 
         />
      </div>
   </section>
@@ -219,11 +241,11 @@ const StrongCommunitySection = () => (
         <div className="flex flex-col md:flex-row justify-center gap-12 md:gap-20 pt-8 border-t border-white/10">
            <div className="space-y-2">
               <p className="text-4xl md:text-6xl font-black text-white"><CountUpStat end={50000} suffix="+" /></p>
-              <p className="text-xs font-black uppercase tracking-[0.3em] text-[#A7F3D0]">Active Members</p>
+              <p className="text-xs font-black uppercase tracking-[0.3em] text-[#A7F3D0]">Registered Users</p>
            </div>
            <div className="space-y-2">
               <p className="text-4xl md:text-6xl font-black text-white"><CountUpStat end={1000000} suffix="+" /></p>
-              <p className="text-xs font-black uppercase tracking-[0.3em] text-[#A7F3D0]">Miles Recorded</p>
+              <p className="text-xs font-black uppercase tracking-[0.3em] text-[#A7F3D0]">Miles Since Launch</p>
            </div>
         </div>
      </div>
@@ -247,7 +269,7 @@ const ChallengesSection = () => (
            { id: 4, title: 'SPEED DEMON', img: 'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?q=80&w=800', label: 'JOIN NOW' }
         ].map((card) => (
            <div key={card.id} className="group relative h-[300px] md:h-[400px] rounded-[40px] overflow-hidden cursor-pointer shadow-xl">
-              <img src={card.img} className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+              <img src={card.img} alt={card.title} className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
               <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-transparent to-transparent" />
               <div className="absolute bottom-0 left-0 p-8 md:p-10 space-y-2">
                  <span className="bg-[#A7F3D0] text-slate-900 px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest mb-2 inline-block">
@@ -293,7 +315,7 @@ const GoalsCTASection = ({ onAction }: { onAction: () => void }) => (
 
 // --- MAIN LANDING COMPONENT ---
 
-export const LandingSection = ({ onStart }: any) => {
+export const LandingSection = ({ onStart, onNavigate }: any) => {
   // Removed explicit type annotation from unused parameter to satisfy GoalsCTASection prop type
   const createRipple = () => {
     onStart(); 
@@ -314,10 +336,10 @@ export const LandingSection = ({ onStart }: any) => {
         <div className="absolute inset-0 z-0 bg-black/50 backdrop-blur-[2px]" />
         
         <div className="relative z-10 text-center px-6 md:px-8 text-white flex flex-col items-center">
-          <div className="font-black tracking-tighter uppercase mb-6 md:mb-10 leading-none text-5xl md:text-9xl drop-shadow-2xl flex flex-col items-center gap-y-2">
+          <h1 className="font-black tracking-tighter uppercase mb-6 md:mb-10 leading-none text-5xl md:text-9xl drop-shadow-2xl flex flex-col items-center gap-y-2">
             <StaggeredText text="REACH YOUR" delayStart={0} />
             <StaggeredText text="BEST." delayStart={0.8} className="text-emerald-400" withUnderline={true} />
-          </div>
+          </h1>
           
           <motion.div 
             initial={{ opacity: 0, y: 30 }}
@@ -325,7 +347,7 @@ export const LandingSection = ({ onStart }: any) => {
             transition={{ delay: 1.5, duration: 0.8 }}
           >
             <p className="text-lg md:text-3xl font-medium max-w-3xl mx-auto mb-12 md:mb-20 leading-relaxed tracking-tight drop-shadow-md text-white/90 px-4">
-              The ultimate integrated app for your fitness performance.
+              An integrated fitness platform for training, recovery, and performance.
             </p>
             <motion.button 
               onClick={createRipple} 
@@ -339,7 +361,10 @@ export const LandingSection = ({ onStart }: any) => {
         </div>
       </section>
 
-      {/* 2. WATCH FEATURE (Reordered) */}
+      {/* 2. WHAT WE DO (NEW) */}
+      <WhatWeDoSection />
+
+      {/* 3. WATCH FEATURE (Reordered) */}
       <ScrollReveal className="max-w-7xl mx-auto px-6 md:px-8 py-20">
         <div className="bg-slate-900 rounded-[40px] md:rounded-[80px] p-8 md:p-24 flex flex-col lg:flex-row items-center gap-12 md:gap-20 relative overflow-hidden shadow-2xl group">
             <div className="absolute top-0 right-0 w-full h-full bg-gradient-to-br from-emerald-500/5 to-transparent pointer-events-none" />
@@ -358,14 +383,16 @@ export const LandingSection = ({ onStart }: any) => {
               
               <div className="space-y-8">
                 <p className="text-slate-400 text-base md:text-xl font-medium leading-relaxed max-w-xl mx-auto lg:mx-0">
-                  The GTL1 isn't just a tracker; it's an extension of your physiology. Milled from aerospace-grade titanium and powered by the Mehri Group kernel, it provides real-time, latency-free synchronization with your neural output.
+                  The GTL-1 is a precision instrument for your wrist. Milled from aerospace-grade titanium, it provides continuous physiological tracking to inform your training decisions. While optional, it unlocks the full depth of Mehri's biometric analysis.
                 </p>
                 
                 <ul className="space-y-3 inline-block text-left">
                    {[
-                     "Sapphire Crystal Retina Display",
-                     "14-Day Intelligent Battery Life",
-                     "Haptic Metronome & Pace Guidance"
+                     "Continuous heart-rate tracking",
+                     "HRV analysis during rest and sleep",
+                     "Night-time SpO₂ estimation",
+                     "Activity and workout detection",
+                     "Up to 14-day intelligent battery life"
                    ].map(item => (
                      <li key={item} className="flex items-center gap-3 text-slate-300 font-bold text-sm tracking-wide">
                         <div className="w-1.5 h-1.5 bg-emerald-400 rounded-full" /> {item}
@@ -414,7 +441,7 @@ export const LandingSection = ({ onStart }: any) => {
         </div>
       </ScrollReveal>
 
-      {/* 3. ALMA AI SECTION (Reordered) */}
+      {/* 4. ALMA AI SECTION (Reordered) */}
       <ScrollReveal className="max-w-7xl mx-auto px-6 md:px-8 py-20">
         <div className="bg-slate-900 rounded-[40px] md:rounded-[80px] p-8 md:p-24 flex flex-col-reverse lg:flex-row items-center gap-12 md:gap-20 relative overflow-hidden shadow-2xl">
            <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-slate-800 via-slate-900 to-slate-900 pointer-events-none" />
@@ -433,9 +460,14 @@ export const LandingSection = ({ onStart }: any) => {
                  <span className="text-emerald-400">WITH ALMA</span>
               </h2>
               
-              <p className="text-slate-400 text-base md:text-xl font-medium leading-relaxed max-w-xl mx-auto lg:mx-0">
-                 Your personal AI coach that does the work for you. Command Alma to log new sessions, remove accidental entries, or analyze your 200+ historical workouts through a simple, ChatGPT-inspired interface.
-              </p>
+              <div className="space-y-4">
+                <p className="text-slate-400 text-base md:text-xl font-medium leading-relaxed max-w-xl mx-auto lg:mx-0">
+                   Your personal AI coach that does the work for you. Command Alma to log new sessions, remove accidental entries, or analyze your historical workouts through a simple interface.
+                </p>
+                <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wide">
+                   * Alma provides non-medical fitness insights based on historical data trends.
+                </p>
+              </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 md:gap-8 pt-4">
                  {[
@@ -494,23 +526,23 @@ export const LandingSection = ({ onStart }: any) => {
         </div>
       </ScrollReveal>
 
-      {/* 4. STRONG COMMUNITY (Styling Updated) */}
+      {/* 5. STRONG COMMUNITY (Styling Updated) */}
       <StrongCommunitySection />
 
-      {/* 5. ONGOING CHALLENGES */}
+      {/* 6. ONGOING CHALLENGES */}
       <ChallengesSection />
 
-      {/* 6. REACH GOALS CTA (Styling Updated) */}
+      {/* 7. REACH GOALS CTA (Styling Updated) */}
       <GoalsCTASection onAction={createRipple} />
 
-      {/* 7. KEY FEATURES (Moved Here) */}
+      {/* 8. KEY FEATURES (Moved Here) */}
       <KeyFeaturesSection />
 
-      {/* 8. FAQ */}
+      {/* 9. FAQ */}
       <FAQSection />
 
-      {/* 9. FOOTER */}
-      <Footer />
+      {/* 10. FOOTER */}
+      <Footer onNavigate={onNavigate} />
     </div>
   );
 };
