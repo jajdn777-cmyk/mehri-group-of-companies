@@ -21,7 +21,7 @@ const StaggeredText = ({ text, className = "", delayStart = 0, withUnderline = f
       opacity: 1,
       y: 0,
       transition: {
-        type: "spring",
+        type: "spring" as const,
         damping: 20,
         stiffness: 100,
       },
@@ -30,7 +30,7 @@ const StaggeredText = ({ text, className = "", delayStart = 0, withUnderline = f
       opacity: 0,
       y: 50, // Start slightly lower
       transition: {
-        type: "spring",
+        type: "spring" as const,
         damping: 20,
         stiffness: 100,
       },
@@ -514,7 +514,3 @@ export const LandingSection = ({ onStart }: any) => {
     </div>
   );
 };
-
-const ChevronDown = ({ size, className }: any) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="m6 9 6 6 6-6"/></svg>
-);
