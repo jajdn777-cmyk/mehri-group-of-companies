@@ -176,9 +176,8 @@ export const AlmaView = ({
     // Generate Title Side-Effect (Non-Blocking)
     if (activeChat.messages.length === 1) {
        ai.models.generateContent({
-          model: 'gemini-3-flash-preview',
-          contents: [{ role: 'user', parts: [{ text: `Generate a 2-4 word title for: "${userMsg}". No quotes.` }] }],
-          config: { thinkingConfig: { thinkingBudget: 0 } }
+          model: 'gemini-2.5-flash',
+          contents: [{ role: 'user', parts: [{ text: `Generate a 2-4 word title for: "${userMsg}". No quotes.` }] }]
        }).then(res => {
           const newTitle = res.text?.trim().replace(/"/g, '') || "Session";
           setChats(prev => prev.map((c: any) => c.id === activeChatId ? { ...c, title: newTitle } : c));
@@ -186,7 +185,7 @@ export const AlmaView = ({
     }
 
     try {
-      const contextPrompt = `
+      const systemContext = `
         SYSTEM: You are Alma, elite performance coach.
         User: ${userName}. Date: ${currentToday}. Units: ${units}.
         Has GTL1 Watch: ${userProfile?.hasWatch ? 'Yes' : 'No'}.
@@ -204,20 +203,33 @@ export const AlmaView = ({
       `;
 
       // 3. Start Streaming - SANITIZE HISTORY
-      // Important: We must filter out empty messages to prevent 400 errors
-      const chatHistory = newMessages
-        .filter(m => m.text && m.text.trim().length > 0)
-        .map(m => ({ role: m.role, parts: [{ text: m.text }] }));
+      // Important: Ensure strictly alternating roles (User -> Model -> User -> Model)
+      // and remove empty messages to prevent 400 errors.
+      
+      const chatHistory: any[] = [];
+      const validMessages = newMessages.filter(m => m.text && m.text.trim().length > 0);
+      let prevRole = null;
+
+      for (const m of validMessages) {
+          // If we see two users in a row, insert a dummy model response to satisfy the API
+          if (prevRole === 'user' && m.role === 'user') {
+              chatHistory.push({ role: 'model', parts: [{ text: "..." }] });
+          }
+          // If we see two models in a row, skip the second one (rare, but good for safety)
+          if (prevRole === 'model' && m.role === 'model') {
+              continue;
+          }
+          
+          chatHistory.push({ role: m.role, parts: [{ text: m.text }] });
+          prevRole = m.role;
+      }
 
       const result = await ai.models.generateContentStream({
-        model: 'gemini-3-flash-preview',
-        contents: [
-          ...chatHistory,
-          { role: 'user', parts: [{ text: contextPrompt }] }
-        ],
+        model: 'gemini-2.5-flash',
+        contents: chatHistory,
         config: {
-          tools: [{ functionDeclarations: [logWorkoutTool, deleteWorkoutTool, saveMemoryTool] }],
-          thinkingConfig: { thinkingBudget: 0 } // STRICTLY DISABLE THINKING for speed & stability
+          systemInstruction: systemContext,
+          tools: [{ functionDeclarations: [logWorkoutTool, deleteWorkoutTool, saveMemoryTool] }]
         }
       });
 
@@ -311,15 +323,14 @@ export const AlmaView = ({
             }
 
             const toolResultStream = await ai.models.generateContentStream({
-                model: 'gemini-3-flash-preview',
+                model: 'gemini-2.5-flash',
                 contents: [
                     ...chatHistory,
-                    { role: 'user', parts: [{ text: contextPrompt }] },
                     { role: 'model', parts: modelParts }, 
                     { role: 'function', parts: functionResponseParts } 
                 ],
                 config: {
-                    thinkingConfig: { thinkingBudget: 0 } // STRICTLY DISABLE THINKING for speed & stability
+                    systemInstruction: systemContext
                 }
             });
 
@@ -339,7 +350,10 @@ export const AlmaView = ({
       }
 
       // 7. Final State Save to DB
-      const finalChatState = { ...updatedChat, messages: [...newMessages, { role: 'model', text: fullText }], lastModified: Date.now() };
+      // IMPORTANT: If fullText is empty (e.g. only tool call), save a placeholder to avoid empty history bugs later
+      const finalTextToSave = fullText || "Action completed.";
+      
+      const finalChatState = { ...updatedChat, messages: [...newMessages, { role: 'model', text: finalTextToSave }], lastModified: Date.now() };
       setChats(prev => prev.map(c => c.id === activeChatId ? finalChatState : c));
       if (usernameToSave) api("SAVE_SESSION", { ...finalChatState, username: usernameToSave });
 
@@ -499,17 +513,3 @@ export const AlmaView = ({
     </div>
   );
 };
-// Corrected streaming code to handle empty messages properly
-if (message && message.content && message.content.trim() !== '') {
-    chatHistory.push(message);
-    updateChatDisplay(chatHistory);
-} else {
-    console.warn('Received an empty message or invalid content, ignoring it.');
-}
-// Corrected streaming code to handle empty messages properly
-if (message && message.content && message.content.trim() !== '') {
-    chatHistory.push(message);
-    updateChatDisplay(chatHistory);
-} else {
-    console.warn('Received an empty message or invalid content, ignoring it.');
-}
