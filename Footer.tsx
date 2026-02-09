@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
 import { ArrowRight, Shield, FileText, X, Lock, Users, BookOpen, Facebook as FacebookIcon, Instagram as InstagramIcon, Check, Loader2 } from 'lucide-react';
 import { MehriLogo } from './Logo.tsx';
-import { PRIVACY_POLICY, TERMS_OF_SERVICE } from './constants.ts';
 
 const ABOUT_US_CONTENT = `
 ABOUT MEHRI GROUP
@@ -47,27 +46,9 @@ const LegalModal = ({ title, content, onClose }: { title: string, content: strin
   </div>
 );
 
-export const Footer = () => {
-  const [activeModal, setActiveModal] = useState<'privacy' | 'terms' | 'about' | null>(null);
+export const Footer = ({ onNavigate }: any) => {
+  const [activeModal, setActiveModal] = useState<'about' | null>(null);
   const [formStatus, setFormStatus] = useState<'idle' | 'submitting' | 'success'>('idle');
-
-  const getContent = () => {
-      switch(activeModal) {
-          case 'privacy': return PRIVACY_POLICY;
-          case 'terms': return TERMS_OF_SERVICE;
-          case 'about': return ABOUT_US_CONTENT;
-          default: return '';
-      }
-  };
-
-  const getTitle = () => {
-      switch(activeModal) {
-          case 'privacy': return 'Privacy Policy';
-          case 'terms': return 'Terms of Service';
-          case 'about': return 'About Us';
-          default: return '';
-      }
-  };
 
   const handleContactSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -86,7 +67,7 @@ export const Footer = () => {
         
         if (response.ok) {
             setFormStatus('success');
-            form.reset(); // Clears all text entries immediately
+            form.reset(); 
         } else {
             alert("There was a problem submitting your form. Please try again.");
             setFormStatus('idle');
@@ -99,7 +80,6 @@ export const Footer = () => {
 
   return (
     <>
-      {/* GLOBAL SUCCESS MODAL - "Thank You Page" Overlay */}
       {formStatus === 'success' && createPortal(
         <div className="fixed inset-0 z-[10000] flex items-center justify-center p-4 bg-slate-900/95 backdrop-blur-2xl animate-fade-in">
             <div className="bg-white rounded-[40px] p-8 md:p-14 max-w-lg text-center relative shadow-2xl w-full border border-slate-100 flex flex-col items-center animate-scale-in">
@@ -122,10 +102,10 @@ export const Footer = () => {
       )}
 
       <footer className="bg-black text-white pt-20 border-t border-slate-900 font-sans relative overflow-hidden">
-        {activeModal && (
+        {activeModal === 'about' && (
           <LegalModal 
-            title={getTitle()} 
-            content={getContent()} 
+            title="About Us" 
+            content={ABOUT_US_CONTENT} 
             onClose={() => setActiveModal(null)} 
           />
         )}
@@ -223,10 +203,10 @@ export const Footer = () => {
                 © 2026 MEHRI Group. Powered by GTL-1 Technology.
              </p>
              <div className="flex gap-8">
-                <button onClick={() => setActiveModal('privacy')} className="text-slate-500 hover:text-white text-[10px] font-black uppercase tracking-widest transition-colors flex items-center gap-2">
+                <button onClick={() => onNavigate('privacy')} className="text-slate-500 hover:text-white text-[10px] font-black uppercase tracking-widest transition-colors flex items-center gap-2">
                    <Shield size={12}/> Privacy Policy
                 </button>
-                <button onClick={() => setActiveModal('terms')} className="text-slate-500 hover:text-white text-[10px] font-black uppercase tracking-widest transition-colors flex items-center gap-2">
+                <button onClick={() => onNavigate('terms')} className="text-slate-500 hover:text-white text-[10px] font-black uppercase tracking-widest transition-colors flex items-center gap-2">
                    <FileText size={12}/> Terms of Service
                 </button>
              </div>
