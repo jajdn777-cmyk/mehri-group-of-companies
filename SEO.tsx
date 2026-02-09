@@ -1,3 +1,4 @@
+
 import React, { useEffect } from 'react';
 
 interface SEOProps {
@@ -21,12 +22,12 @@ interface SEOProps {
  */
 export const SEO: React.FC<SEOProps> = ({ 
   title, 
-  description = "Elite performance tracking and bio-metric architecture for the high-achiever. Mehri Group of Companies delivers executive fitness solutions through precision hardware and AI-driven coaching.", 
+  description = "Elite performance tracking and biometric architecture. Mehri Group delivers executive fitness via GTL-1 hardware and Alma AI coaching.", 
   view,
   article
 }) => {
   const brandName = "Mehri Group of Companies";
-  const defaultTitle = `${brandName} | Professional Wellness & Executive Fitness`;
+  const defaultTitle = `${brandName} | Executive Wellness & AI Fitness`;
   const finalTitle = title ? `${title} | ${brandName}` : defaultTitle;
 
   useEffect(() => {
