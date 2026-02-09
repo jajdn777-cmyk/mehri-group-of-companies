@@ -23,8 +23,8 @@ import { OnboardingGoalSection } from './OnboardingGoal.tsx';
 import { SettingsView } from './Settings.tsx';
 import { Loader } from './Loader.tsx';
 import { OnboardingTour } from './OnboardingTour.tsx';
-import { PrivacyView } from './Privacy.tsx';
-import { TermsView } from './Terms.tsx';
+import { PrivacyPolicy } from './PrivacyPolicy.tsx';
+import { TermsOfService } from './TermsOfService.tsx';
 import { SEO } from './SEO.tsx';
 
 // --- SCROLL PRESERVATION COMPONENT ---
@@ -91,7 +91,8 @@ const VALID_ROUTES: Record<string, { view: string, dashView?: string }> = {
   '/goal': { view: 'goal' },
   '/settings': { view: 'settings' },
   '/privacy': { view: 'privacy' }, 
-  '/terms': { view: 'terms' }, 
+  '/terms': { view: 'terms' },
+  '/terms-of-service': { view: 'terms' },
   '/contact': { view: 'landing' }, 
   '/dashboard': { view: 'main', dashView: 'dashboard' },
   '/stats': { view: 'main', dashView: 'stats' },
@@ -334,7 +335,7 @@ const App = () => {
             if (nextView === 'goal') path = '/goal';
             if (nextView === 'settings') path = '/settings';
             if (nextView === 'privacy') path = '/privacy';
-            if (nextView === 'terms') path = '/terms';
+            if (nextView === 'terms') path = '/terms-of-service';
             if (nextView === 'main') {
                 if (nextDashView === 'dashboard') path = '/dashboard';
                 else if (nextDashView) path = `/${nextDashView}`;
@@ -490,6 +491,8 @@ const App = () => {
     }
     if (view === 'auth') return 'Sign In';
     if (view === 'settings') return 'Settings';
+    if (view === 'privacy') return 'Privacy Policy';
+    if (view === 'terms') return 'Terms of Service';
     return undefined;
   };
 
@@ -525,10 +528,10 @@ const App = () => {
       )}
       
       <main className={`${view === 'landing' || view === 'privacy' || view === 'terms' || dashView === 'write' ? '' : 'pt-28 md:pt-52 px-0 md:px-12 pb-20'}`}>
-        {view === 'landing' && <LandingSection onStart={() => navigateTo('auth-signup')} />}
-        {view === 'auth' && <AuthSection onComplete={handleAuthComplete} initialView={authMode} />}
-        {view === 'privacy' && <PrivacyView onNavigate={navigateTo} />}
-        {view === 'terms' && <TermsView onNavigate={navigateTo} />}
+        {view === 'landing' && <LandingSection onStart={() => navigateTo('auth-signup')} onNavigate={navigateTo} />}
+        {view === 'auth' && <AuthSection onComplete={handleAuthComplete} initialView={authMode} onNavigate={navigateTo} />}
+        {view === 'privacy' && <PrivacyPolicy onNavigate={navigateTo} />}
+        {view === 'terms' && <TermsOfService onNavigate={navigateTo} />}
         {view === 'specs' && <SpecsSection specs={userSpecs} onComplete={(s: any) => { 
             setUserSpecs(s); 
             api("UPDATE_PROFILE", { username: userHandle, specs: s });
