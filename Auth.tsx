@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { detectSystemUnits, api, getWeightUnit } from './utils.ts';
-import { GOOGLE_CLIENT_ID, PRIVACY_POLICY, TERMS_OF_SERVICE } from './constants.ts';
+import { GOOGLE_CLIENT_ID } from './constants.ts';
 import { checkEmailAvailability, checkUsernameAvailability } from './validationService.ts';
 import { Loader } from './Loader.tsx';
 import { Eye, EyeOff, ArrowRight, Activity, Zap, Target, Heart, X } from 'lucide-react';
@@ -15,17 +15,6 @@ const GOALS = [
   { id: 'Vitality', icon: Heart, desc: 'Health & longevity' }
 ];
 
-const LEGAL_TEXT = {
-  terms: {
-    title: "Terms of Service",
-    content: TERMS_OF_SERVICE
-  },
-  privacy: {
-    title: "Privacy Policy",
-    content: PRIVACY_POLICY
-  }
-};
-
 const Toast = ({ message, type, onClose }: { message: string, type: 'error' | 'success', onClose: () => void }) => (
   <div className={`fixed top-6 left-1/2 -translate-x-1/2 z-[9000] flex items-center gap-3 px-6 py-4 rounded-2xl shadow-2xl backdrop-blur-md animate-fade-in w-[90%] max-w-sm justify-between ${type === 'error' ? 'bg-slate-900 text-[#A7F3D0] border border-[#A7F3D0]/20' : 'bg-[#A7F3D0] text-slate-900'}`}>
     <div className="flex items-center gap-3">
@@ -35,30 +24,7 @@ const Toast = ({ message, type, onClose }: { message: string, type: 'error' | 's
   </div>
 );
 
-const LegalModal = ({ type, onClose }: { type: 'terms' | 'privacy', onClose: () => void }) => (
-  <div className="fixed inset-0 z-[8000] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-fade-in" onClick={onClose}>
-    <div className="bg-white rounded-[30px] w-full max-w-lg shadow-2xl overflow-hidden flex flex-col max-h-[80vh]" onClick={e => e.stopPropagation()}>
-      <div className="p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50">
-        <h3 className="text-xl font-black uppercase tracking-tight text-slate-900 flex items-center gap-2">
-          {type === 'terms' ? 'Terms of Service' : 'Privacy Policy'}
-        </h3>
-        <button onClick={onClose} className="p-2 hover:bg-slate-200 rounded-full transition-colors text-slate-400 hover:text-slate-900"><X size={20}/></button>
-      </div>
-      <div className="p-8 overflow-y-auto custom-scrollbar">
-        <p className="whitespace-pre-line text-sm text-slate-600 leading-relaxed font-medium font-sans">
-          {LEGAL_TEXT[type].content}
-        </p>
-      </div>
-      <div className="p-6 border-t border-slate-100 bg-slate-50 flex justify-end">
-        <button onClick={onClose} className="px-8 py-3 bg-slate-900 text-white rounded-xl font-black uppercase text-[10px] tracking-widest hover:bg-emerald-500 transition-colors">
-          I Understand
-        </button>
-      </div>
-    </div>
-  </div>
-);
-
-export const AuthSection = ({ onComplete, initialView = 'login' }: any) => {
+export const AuthSection = ({ onComplete, initialView = 'login', onNavigate }: any) => {
   const [isLogin, setIsLogin] = useState(initialView === 'login');
   
   // Inputs
@@ -79,7 +45,6 @@ export const AuthSection = ({ onComplete, initialView = 'login' }: any) => {
   const [loadingText, setLoadingText] = useState('');
   const [shake, setShake] = useState(false);
   const [toast, setToast] = useState<{msg: string, type: 'error' | 'success'} | null>(null);
-  const [legalModal, setLegalModal] = useState<'terms' | 'privacy' | null>(null);
 
   const [onboardingStep, setOnboardingStep] = useState(0); 
   const [googleData, setGoogleData] = useState<any>(null);
@@ -253,7 +218,6 @@ export const AuthSection = ({ onComplete, initialView = 'login' }: any) => {
     <>
       <Loader isVisible={isLoading} text={loadingText} />
       {toast && <Toast message={toast.msg} type={toast.type} onClose={() => setToast(null)} />}
-      {legalModal && <LegalModal type={legalModal} onClose={() => setLegalModal(null)} />}
 
       {onboardingStep > 0 ? (
         <div className="fixed inset-0 bg-white z-[7000] flex items-center justify-center p-6 animate-fade-in font-sans h-[100dvh]">
@@ -393,10 +357,10 @@ export const AuthSection = ({ onComplete, initialView = 'login' }: any) => {
               </button>
 
               <p className="text-[9px] text-slate-400 text-center leading-relaxed">
-                By continuing, you agree to our 
-                <span onClick={() => setLegalModal('terms')} className="text-[#A7F3D0] hover:text-emerald-500 cursor-pointer font-bold mx-1">Terms</span>
+                By signing up, you agree to our 
+                <button onClick={() => onNavigate('terms')} className="text-[#A7F3D0] hover:text-emerald-500 cursor-pointer font-bold mx-1 uppercase tracking-wider hover:underline">Terms of Service</button>
                 and
-                <span onClick={() => setLegalModal('privacy')} className="text-[#A7F3D0] hover:text-emerald-500 cursor-pointer font-bold ml-1">Privacy Policy</span>.
+                <button onClick={() => onNavigate('privacy')} className="text-[#A7F3D0] hover:text-emerald-500 cursor-pointer font-bold ml-1 uppercase tracking-wider hover:underline">Privacy Policy</button>.
               </p>
             </div>
             <div className="absolute -top-10 -right-10 w-40 h-40 bg-[#A7F3D0] rounded-full blur-[80px] opacity-60 pointer-events-none" />
