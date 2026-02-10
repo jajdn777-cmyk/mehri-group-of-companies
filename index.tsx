@@ -28,31 +28,6 @@ import { TermsOfService } from './TermsOfService.tsx';
 import { SEO } from './SEO.tsx';
 import { supabase } from './supabaseClient.ts';
 
-// --- BOOT SCREEN (LOADING SHIELD) ---
-const BootScreen = () => (
-  <div className="fixed inset-0 z-[99999] bg-slate-950 flex flex-col items-center justify-center font-sans">
-     <div className="relative flex flex-col items-center gap-8 animate-pulse">
-        <img 
-          src="https://i.ibb.co/8D5MPnyX/logo1-pixian-ai.png" 
-          className="w-32 md:w-40 h-auto object-contain drop-shadow-2xl"
-          alt="MEHRI OS"
-        />
-        <div className="flex flex-col items-center gap-2">
-           <div className="h-0.5 w-32 bg-slate-800 rounded-full overflow-hidden">
-              <div className="h-full bg-[#A7F3D0] w-1/3 animate-[loading-bar_1s_infinite_ease-in-out]" />
-           </div>
-           <p className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-500">Initializing Core</p>
-        </div>
-     </div>
-     <style>{`
-        @keyframes loading-bar {
-           0% { transform: translateX(-100%); }
-           100% { transform: translateX(300%); }
-        }
-     `}</style>
-  </div>
-);
-
 // --- SCROLL PRESERVATION COMPONENT ---
 const ScrollToTop = ({ view, dashView }: { view: string, dashView?: string }) => {
   useEffect(() => {
@@ -230,6 +205,9 @@ const App = () => {
   // --- SMART ENTRY AUTH CONTROLLER ---
   useEffect(() => {
     const { data: authListener } = supabase.auth.onAuthStateChange(async (event, session) => {
+      // Prevent loading screen from reappearing on token refresh
+      if (event === 'TOKEN_REFRESHED') return;
+
       // 1. Session Detected (Login, Signup, or Persisted)
       if (session?.user) {
         setIsCheckingAuth(true); // Keep shield up while checking DB
@@ -467,12 +445,11 @@ const App = () => {
   return (
     <div className="min-h-screen bg-[#FCFCFC] font-sans text-slate-900 selection:bg-emerald-100 relative overflow-x-hidden">
       
-      {isCheckingAuth && <BootScreen />}
-
       <ScrollToTop view={view} dashView={dashView} />
       <SEO title={getSEOTitle()} view={`${view}-${dashView}`} />
 
-      <Loader isVisible={isLoading} text={loadingText} />
+      {/* Unified Loader that handles both app transitions and initial auth check */}
+      <Loader isVisible={isLoading || isCheckingAuth} text={loadingText || "Initializing Core..."} />
       
       {showOnboarding && (
         <OnboardingTour 
