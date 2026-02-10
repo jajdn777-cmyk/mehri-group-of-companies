@@ -1,15 +1,30 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { ArrowLeft, Shield, Lock } from 'lucide-react';
 import { MehriLogo } from './Logo.tsx';
 import { PRIVACY_POLICY } from './constants.ts';
 
 export const PrivacyPolicy = ({ onNavigate }: any) => {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  const handleBack = () => {
+    // Check if there is history to go back to (user navigated within app)
+    // window.history.state is usually non-null if we used pushState
+    if (window.history.length > 1) {
+      window.history.back();
+    } else {
+      // Fallback: If user landed directly here or refreshed, go to landing
+      onNavigate('landing');
+    }
+  };
+
   return (
     <div className="min-h-screen bg-slate-900 font-sans text-slate-300 animate-fade-in selection:bg-emerald-500/30">
       <div className="fixed top-0 left-0 right-0 h-24 bg-slate-900/95 backdrop-blur-md z-50 flex items-center justify-between px-6 md:px-12 border-b border-slate-800">
          <div className="flex items-center gap-6">
-            <button onClick={() => onNavigate('landing')} className="p-2 -ml-2 hover:bg-slate-800 rounded-full transition-colors group">
+            <button onClick={handleBack} className="p-2 -ml-2 hover:bg-slate-800 rounded-full transition-colors group">
                <ArrowLeft size={24} className="text-slate-400 group-hover:text-white"/>
             </button>
             <div onClick={() => onNavigate('landing')} className="cursor-pointer">
