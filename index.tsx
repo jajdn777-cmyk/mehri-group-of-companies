@@ -26,6 +26,7 @@ import { OnboardingTour } from './OnboardingTour.tsx';
 import { PrivacyPolicy } from './PrivacyPolicy.tsx';
 import { TermsOfService } from './TermsOfService.tsx';
 import { SEO } from './SEO.tsx';
+import { supabase } from './supabaseClient.ts';
 
 // --- SCROLL PRESERVATION COMPONENT ---
 const ScrollToTop = ({ view, dashView }: { view: string, dashView?: string }) => {
@@ -102,7 +103,7 @@ const VALID_ROUTES: Record<string, { view: string, dashView?: string }> = {
   '/alma': { view: 'main', dashView: 'alma' },
   '/alma-meals': { view: 'main', dashView: 'alma-meals' },
   '/blogs': { view: 'main', dashView: 'blogs' },
-  '/write': { view: 'main', dashView: 'write' }, // NEW ROUTE
+  '/write': { view: 'main', dashView: 'write' }, 
 };
 
 const App = () => {
@@ -129,6 +130,30 @@ const App = () => {
   // Use Refs to access current state in async functions without closures staleness
   const viewRef = useRef(view);
   useEffect(() => { viewRef.current = view; }, [view]);
+
+  // --- BROWSER HISTORY LISTENER ---
+  useEffect(() => {
+    const handlePopState = () => {
+      const path = window.location.pathname.replace(/\/$/, "") || "/";
+      const route = VALID_ROUTES[path];
+      
+      const session = localStorage.getItem('mehri_session_user');
+
+      if (route) {
+        if ((route.view === 'main' || route.view === 'settings') && !session) {
+           setView('landing');
+        } else {
+           setView(route.view as any);
+           if (route.dashView) setDashView(route.dashView as any);
+        }
+      } else {
+        setView('landing');
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
 
   const [showShop, setShowShop] = useState(false);
   const [showAd, setShowAd] = useState(false); 
@@ -198,18 +223,93 @@ const App = () => {
     return () => clearInterval(adTimer);
   }, [view]);
 
-  // --- CHECK AUTH ON LOAD ---
+  // --- AUTH LISTENER & ONBOARDING FLOW ---
+  useEffect(() => {
+    const { data: authListener } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if (event === 'SIGNED_IN' && session?.user) {
+        const user = session.user;
+        const metadata = user.user_metadata || {};
+        
+        // 1. Identify User in Profiles Table
+        const { data: profile, error } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('id', user.id)
+          .single();
+
+        let currentProfile = profile;
+
+        // 2. New User Flow: Create Profile if missing
+        if (!currentProfile) {
+           const newUsername = `@${(metadata.full_name || user.email?.split('@')[0] || 'user').replace(/\s+/g, '').toLowerCase()}`;
+           const { data: newProfile, error: createError } = await supabase
+             .from('profiles')
+             .insert({
+               id: user.id,
+               email: user.email,
+               full_name: metadata.full_name,
+               username: newUsername,
+               units: 'metric',
+               join_date: new Date().toISOString()
+             })
+             .select()
+             .single();
+           
+           if (newProfile) {
+             currentProfile = newProfile;
+             setIsNewUserFlow(true);
+           }
+        }
+
+        // 3. Update Local Session State
+        if (currentProfile) {
+           localStorage.setItem('mehri_session_user', currentProfile.username);
+           setUserName(currentProfile.full_name || '');
+           setUserHandle(currentProfile.username);
+           
+           // 4. Sequential Onboarding Check
+           if (!currentProfile.weight || !currentProfile.height) {
+              // Incomplete Profile -> Go to Specs
+              handleTransition('specs', undefined, "Initiating Calibration...");
+           } else {
+              // Complete Profile -> Go to Dashboard
+              await loadUserData(currentProfile.username);
+              handleTransition('main', 'dashboard', "Authenticating...");
+           }
+        }
+      } else if (event === 'SIGNED_OUT') {
+         localStorage.removeItem('mehri_session_user');
+         setView('landing');
+      }
+    });
+
+    return () => {
+      authListener.subscription.unsubscribe();
+    };
+  }, []);
+
+  // --- CHECK LOCAL AUTH ON LOAD (FALLBACK) ---
   useEffect(() => {
     let mounted = true;
     const checkAuth = async () => {
        try {
            const sessionUser = localStorage.getItem('mehri_session_user');
-           if (sessionUser && mounted) {
+           // Only run this check if we aren't already being handled by the onAuthStateChange listener
+           const { data: { session } } = await supabase.auth.getSession();
+           
+           if (sessionUser && mounted && !session) {
+               // This handles case where localStorage persists but supabase session expired/missing
+               // We try to rely on Supabase session first.
+               // But if we have a handle and no session, we might need to re-login or just load data (read-only?)
+               // For now, we trust the sync.
                setUserHandle(sessionUser);
                if (view === 'landing' || view === 'auth') {
                    setView('main');
                }
                await loadUserData(sessionUser);
+           } else if (session && mounted) {
+               // Supabase session exists, listener will handle it or we are already logged in
+               if (sessionUser) await loadUserData(sessionUser);
            }
        } catch (error: any) {
            console.warn("Auth check error:", error);
@@ -240,9 +340,6 @@ const App = () => {
         
         if (response?.status === 'error' && response?.message === 'Not logged in') {
             console.warn("Session error during sync.");
-            if (viewRef.current === 'landing' || viewRef.current === 'auth') {
-                // Silent failure - let user click login again
-            }
             return;
         }
 
@@ -380,6 +477,7 @@ const App = () => {
     }
   };
 
+  // Legacy manual auth complete handler (for standard email login)
   const handleAuthComplete = async (data: any) => {
       const nameVal = data.name || data.auth?.name || '';
       const unitsVal = data.units || data.preferences?.units || 'metric';
@@ -397,10 +495,12 @@ const App = () => {
         joinDate: data.joinDate || '1/27/2026'
       };
       setUserProfile(newProfile);
-      
       setUserPreferences(prev => ({ ...prev, units: unitsVal }));
 
-      if (data.isNewUser) {
+      // Profile checks for manual login
+      const { data: profile } = await supabase.from('profiles').select('*').eq('username', data.username).single();
+      
+      if (data.isNewUser || (profile && (!profile.weight || !profile.height))) {
           setIsNewUserFlow(true);
           handleTransition('specs', undefined, "Calibrating New Profile...");
       } else {
