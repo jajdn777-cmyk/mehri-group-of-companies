@@ -1,6 +1,6 @@
 
 import React, { useEffect, useRef, useState } from 'react';
-import { Target, Users, Brain, Eraser, LineChart, MessageSquare, ArrowRight, HelpCircle, ChevronDown, Trophy, Activity, Check } from 'lucide-react';
+import { Target, Users, Brain, Eraser, LineChart, MessageSquare, ArrowRight, HelpCircle, ChevronDown, Trophy, Activity, Check, Smartphone } from 'lucide-react';
 import { Footer } from './Footer.tsx';
 import { motion, useScroll, useTransform, useInView } from 'framer-motion';
 
@@ -104,18 +104,91 @@ const CountUpStat = ({ end, suffix = "", duration = 2 }: { end: number, suffix?:
 // --- SECTION COMPONENTS ---
 
 const WhatWeDoSection = () => (
-  <section className="max-w-4xl mx-auto px-6 md:px-8 py-24 text-center bg-white">
-     <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.8 }}
-     >
-       <span className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 mb-6 block">What We Do</span>
-       <h2 className="text-2xl md:text-4xl font-medium text-slate-900 leading-relaxed font-serif">
-          Mehri Fitness helps people track workouts, recovery, and health trends across devices. Users can train using just their phone or pair the GTL-1 smartwatch for deeper biometric insights, all supported by Alma AI guidance.
-       </h2>
-     </motion.div>
+  <section className="relative py-24 md:py-32 bg-white overflow-hidden">
+     {/* Ambient Background */}
+     <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-[radial-gradient(circle,_var(--tw-gradient-stops))] from-slate-50 via-transparent to-transparent opacity-60" />
+     </div>
+
+     <div className="max-w-7xl mx-auto px-6 md:px-8 relative z-10">
+        <div className="text-center mb-16 md:mb-20">
+           <motion.span 
+             initial={{ opacity: 0, y: 10 }}
+             whileInView={{ opacity: 1, y: 0 }}
+             viewport={{ once: true }}
+             className="text-[10px] font-black uppercase tracking-[0.4em] text-emerald-500 mb-4 block"
+           >
+              The Ecosystem
+           </motion.span>
+           <motion.h2 
+             initial={{ opacity: 0, y: 10 }}
+             whileInView={{ opacity: 1, y: 0 }}
+             viewport={{ once: true }}
+             transition={{ delay: 0.1 }}
+             className="text-4xl md:text-6xl font-black text-slate-900 uppercase tracking-tighter leading-none"
+           >
+              What We Do
+           </motion.h2>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+           {/* Column 1: Tracking */}
+           <motion.div 
+             initial={{ opacity: 0, y: 30 }}
+             whileInView={{ opacity: 1, y: 0 }}
+             viewport={{ once: true }}
+             transition={{ delay: 0.2 }}
+             whileHover={{ y: -10 }}
+             className="bg-white p-8 md:p-10 rounded-[40px] border border-slate-100 shadow-[0_10px_40px_-10px_rgba(0,0,0,0.05)] group"
+           >
+              <div className="w-16 h-16 bg-slate-50 rounded-2xl flex items-center justify-center text-slate-900 mb-8 group-hover:bg-slate-900 group-hover:text-white transition-colors duration-300">
+                 <Activity size={28} />
+              </div>
+              <h3 className="text-xl font-black uppercase tracking-tight mb-4 text-slate-900">Universal Tracking</h3>
+              <p className="text-sm text-slate-500 font-medium leading-relaxed">
+                 Mehri Fitness helps people track workouts, recovery, and health trends across devices.
+              </p>
+           </motion.div>
+
+           {/* Column 2: Hardware (Highlighted) */}
+           <motion.div 
+             initial={{ opacity: 0, y: 30 }}
+             whileInView={{ opacity: 1, y: 0 }}
+             viewport={{ once: true }}
+             transition={{ delay: 0.3 }}
+             whileHover={{ y: -10 }}
+             className="bg-slate-900 p-8 md:p-10 rounded-[40px] shadow-2xl relative overflow-hidden group"
+           >
+              <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/10 rounded-full blur-[80px] -mr-20 -mt-20 group-hover:bg-emerald-500/20 transition-colors" />
+              
+              <div className="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center text-emerald-400 mb-8 backdrop-blur-md">
+                 <Smartphone size={28} />
+              </div>
+              <h3 className="text-xl font-black uppercase tracking-tight mb-4 text-white">Biometric Hardware</h3>
+              <p className="text-sm text-slate-400 font-medium leading-relaxed">
+                 Users can train using just their phone or pair the GTL-1 smartwatch for deeper biometric insights.
+              </p>
+           </motion.div>
+
+           {/* Column 3: AI */}
+           <motion.div 
+             initial={{ opacity: 0, y: 30 }}
+             whileInView={{ opacity: 1, y: 0 }}
+             viewport={{ once: true }}
+             transition={{ delay: 0.4 }}
+             whileHover={{ y: -10 }}
+             className="bg-white p-8 md:p-10 rounded-[40px] border border-slate-100 shadow-[0_10px_40px_-10px_rgba(0,0,0,0.05)] group"
+           >
+              <div className="w-16 h-16 bg-emerald-50 rounded-2xl flex items-center justify-center text-emerald-600 mb-8 group-hover:bg-emerald-500 group-hover:text-white transition-colors duration-300">
+                 <Brain size={28} />
+              </div>
+              <h3 className="text-xl font-black uppercase tracking-tight mb-4 text-slate-900">Neural Intelligence</h3>
+              <p className="text-sm text-slate-500 font-medium leading-relaxed">
+                 All supported by Alma AI guidance to interpret your physiological data.
+              </p>
+           </motion.div>
+        </div>
+     </div>
   </section>
 );
 
