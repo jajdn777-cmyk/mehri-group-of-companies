@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { createRoot } from 'react-dom/client';
 import ReactGA from "react-ga4";
 import { safeParse, detectSystemUnits, calculateStreak, api, updateUserCache } from './utils.ts';
-import { getLocalTodayStr } from './constants.ts';
+import { getLocalTodayStr, ADMIN_EMAIL } from './constants.ts';
 import { Header } from './Header.tsx';
 import { ShopModal } from './ShopModal.tsx';
 import { AdInterstitial } from './AdInterstitial.tsx';
@@ -28,10 +28,34 @@ import { TermsOfService } from './TermsOfService.tsx';
 import { SEO } from './SEO.tsx';
 import { supabase } from './supabaseClient.ts';
 
+// --- BOOT SCREEN (LOADING SHIELD) ---
+const BootScreen = () => (
+  <div className="fixed inset-0 z-[99999] bg-slate-950 flex flex-col items-center justify-center font-sans">
+     <div className="relative flex flex-col items-center gap-8 animate-pulse">
+        <img 
+          src="https://i.ibb.co/8D5MPnyX/logo1-pixian-ai.png" 
+          className="w-32 md:w-40 h-auto object-contain drop-shadow-2xl"
+          alt="MEHRI OS"
+        />
+        <div className="flex flex-col items-center gap-2">
+           <div className="h-0.5 w-32 bg-slate-800 rounded-full overflow-hidden">
+              <div className="h-full bg-[#A7F3D0] w-1/3 animate-[loading-bar_1s_infinite_ease-in-out]" />
+           </div>
+           <p className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-500">Initializing Core</p>
+        </div>
+     </div>
+     <style>{`
+        @keyframes loading-bar {
+           0% { transform: translateX(-100%); }
+           100% { transform: translateX(300%); }
+        }
+     `}</style>
+  </div>
+);
+
 // --- SCROLL PRESERVATION COMPONENT ---
 const ScrollToTop = ({ view, dashView }: { view: string, dashView?: string }) => {
   useEffect(() => {
-    // Instant reset to top on any view change
     window.scrollTo(0, 0);
   }, [view, dashView]);
   return null;
@@ -110,12 +134,8 @@ const App = () => {
   // --- INITIAL ROUTING LOGIC ---
   const getInitialState = () => {
     const path = window.location.pathname.replace(/\/$/, "") || "/"; 
-    const session = localStorage.getItem('mehri_session_user');
-    
+    // We defer session checks to the Smart Entry logic, but set initial route view
     if (VALID_ROUTES[path]) {
-        if ((VALID_ROUTES[path].view === 'main' || VALID_ROUTES[path].view === 'settings') && !session) {
-            return { view: 'landing', dashView: 'dashboard' };
-        }
         return VALID_ROUTES[path];
     }
     return { view: 'landing', dashView: 'dashboard' };
@@ -127,42 +147,21 @@ const App = () => {
   const [dashView, setDashView] = useState<'dashboard' | 'stats' | 'goals' | 'routes' | 'challenges' | 'alma' | 'alma-meals' | 'blogs' | 'write'>(initialState.dashView as any);
   const [authMode, setAuthMode] = useState<'login' | 'signup'>('login');
   
+  // GLOBAL LOADING SHIELD
+  const [isCheckingAuth, setIsCheckingAuth] = useState(true);
+
   // Use Refs to access current state in async functions without closures staleness
   const viewRef = useRef(view);
   useEffect(() => { viewRef.current = view; }, [view]);
-
-  // --- BROWSER HISTORY LISTENER ---
-  useEffect(() => {
-    const handlePopState = () => {
-      const path = window.location.pathname.replace(/\/$/, "") || "/";
-      const route = VALID_ROUTES[path];
-      
-      const session = localStorage.getItem('mehri_session_user');
-
-      if (route) {
-        if ((route.view === 'main' || route.view === 'settings') && !session) {
-           setView('landing');
-        } else {
-           setView(route.view as any);
-           if (route.dashView) setDashView(route.dashView as any);
-        }
-      } else {
-        setView('landing');
-      }
-    };
-
-    window.addEventListener('popstate', handlePopState);
-    return () => window.removeEventListener('popstate', handlePopState);
-  }, []);
 
   const [showShop, setShowShop] = useState(false);
   const [showAd, setShowAd] = useState(false); 
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [isNewUserFlow, setIsNewUserFlow] = useState(false); 
   
-  // Loading State
+  // Loading State (Internal app loading, separate from BootScreen)
   const [isLoading, setIsLoading] = useState(false);
-  const [loadingText, setLoadingText] = useState('Connecting to Database...');
+  const [loadingText, setLoadingText] = useState('Processing...');
 
   // Data State - SOLE SOURCE OF TRUTH
   const [workouts, setWorkouts] = useState<any[]>([]);
@@ -212,37 +211,42 @@ const App = () => {
     }
   }, []);
 
-  // --- CINEMATIC AD TIMER (5 MINUTES) ---
+  // --- BROWSER HISTORY LISTENER ---
   useEffect(() => {
-    const adTimer = setInterval(() => {
-       if (view !== 'auth' && view !== 'specs' && view !== 'goal') {
-         setShowAd(true);
-       }
-    }, 300000); 
+    const handlePopState = () => {
+      const path = window.location.pathname.replace(/\/$/, "") || "/";
+      const route = VALID_ROUTES[path];
+      if (route) {
+           setView(route.view as any);
+           if (route.dashView) setDashView(route.dashView as any);
+      } else {
+        setView('landing');
+      }
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
 
-    return () => clearInterval(adTimer);
-  }, [view]);
-
-  // --- AUTH LISTENER & ONBOARDING FLOW ---
+  // --- SMART ENTRY AUTH CONTROLLER ---
   useEffect(() => {
     const { data: authListener } = supabase.auth.onAuthStateChange(async (event, session) => {
-      if (event === 'SIGNED_IN' && session?.user) {
+      // 1. Session Detected (Login, Signup, or Persisted)
+      if (session?.user) {
+        setIsCheckingAuth(true); // Keep shield up while checking DB
         const user = session.user;
         const metadata = user.user_metadata || {};
-        
-        // 1. Identify User in Profiles Table
-        const { data: profile, error } = await supabase
+
+        // 2. Identify User in Database
+        let { data: profile } = await supabase
           .from('profiles')
           .select('*')
           .eq('id', user.id)
           .single();
 
-        let currentProfile = profile;
-
-        // 2. New User Flow: Create Profile if missing
-        if (!currentProfile) {
+        // 3. CASE A: Profile Missing (Brand New User) -> Create Profile
+        if (!profile) {
            const newUsername = `@${(metadata.full_name || user.email?.split('@')[0] || 'user').replace(/\s+/g, '').toLowerCase()}`;
-           const { data: newProfile, error: createError } = await supabase
+           const { data: newProfile, error } = await supabase
              .from('profiles')
              .insert({
                id: user.id,
@@ -256,30 +260,45 @@ const App = () => {
              .single();
            
            if (newProfile) {
-             currentProfile = newProfile;
+             profile = newProfile;
              setIsNewUserFlow(true);
            }
         }
 
-        // 3. Update Local Session State
-        if (currentProfile) {
-           localStorage.setItem('mehri_session_user', currentProfile.username);
-           setUserName(currentProfile.full_name || '');
-           setUserHandle(currentProfile.username);
-           
-           // 4. Sequential Onboarding Check
-           if (!currentProfile.weight || !currentProfile.height) {
-              // Incomplete Profile -> Go to Specs
-              handleTransition('specs', undefined, "Initiating Calibration...");
-           } else {
-              // Complete Profile -> Go to Dashboard
-              await loadUserData(currentProfile.username);
-              handleTransition('main', 'dashboard', "Authenticating...");
+        // 4. Determine Route based on Profile State
+        if (profile) {
+           // Sync Local State immediately
+           localStorage.setItem('mehri_session_user', profile.username);
+           setUserName(profile.full_name || '');
+           setUserHandle(profile.username);
+
+           // CASE B: Incomplete Specs -> Force Onboarding
+           if (!profile.weight || !profile.height) {
+              handleTransition('specs', undefined, undefined, true); // true = skip internal loader, BootScreen handles it
+           } 
+           // CASE C: Complete Profile (Returning User) -> Dashboard
+           else {
+              // Admin Special Case is implicitly handled here (routes to dashboard, admin features unlocked by email)
+              await loadUserData(profile.username); // Pre-load data behind shield
+              handleTransition('main', 'dashboard', undefined, true);
            }
         }
-      } else if (event === 'SIGNED_OUT') {
-         localStorage.removeItem('mehri_session_user');
+        
+        // 5. Lower Shield
+        setIsCheckingAuth(false);
+
+      } else if (event === 'SIGNED_OUT' || event === 'USER_DELETED') {
+         // Handle Logout
+         localStorage.clear();
+         setWorkouts([]);
+         setUserName('');
          setView('landing');
+         setIsCheckingAuth(false);
+      } else if (event === 'INITIAL_SESSION') {
+         // If no session exists on startup, remove shield so landing page shows
+         if (!session) {
+             setIsCheckingAuth(false);
+         }
       }
     });
 
@@ -288,68 +307,15 @@ const App = () => {
     };
   }, []);
 
-  // --- CHECK LOCAL AUTH ON LOAD (FALLBACK) ---
-  useEffect(() => {
-    let mounted = true;
-    const checkAuth = async () => {
-       try {
-           const sessionUser = localStorage.getItem('mehri_session_user');
-           // Only run this check if we aren't already being handled by the onAuthStateChange listener
-           const { data: { session } } = await supabase.auth.getSession();
-           
-           if (sessionUser && mounted && !session) {
-               // This handles case where localStorage persists but supabase session expired/missing
-               // We try to rely on Supabase session first.
-               // But if we have a handle and no session, we might need to re-login or just load data (read-only?)
-               // For now, we trust the sync.
-               setUserHandle(sessionUser);
-               if (view === 'landing' || view === 'auth') {
-                   setView('main');
-               }
-               await loadUserData(sessionUser);
-           } else if (session && mounted) {
-               // Supabase session exists, listener will handle it or we are already logged in
-               if (sessionUser) await loadUserData(sessionUser);
-           }
-       } catch (error: any) {
-           console.warn("Auth check error:", error);
-       }
-    };
-    if (view !== 'privacy' && view !== 'terms') {
-        checkAuth();
-    }
-    return () => { mounted = false; };
-  }, []);
-
   // --- DATABASE SYNC ENGINE ---
-  useEffect(() => {
-    localStorage.setItem('mehri_view', view);
-    if (userName) localStorage.setItem('mehri_name', JSON.stringify(userName));
-    if (userHandle) localStorage.setItem('mehri_handle', JSON.stringify(userHandle));
-  }, [view, userName, userHandle]);
-
   const loadUserData = async (handle: string) => {
-    // Only show full loader on initial load or critical updates
-    if (viewRef.current === 'landing' || viewRef.current === 'auth') {
-        setIsLoading(true);
-        setLoadingText("Syncing with Cloud Database...");
-    }
-    
     try {
         const response: any = await api("SYNC_USER", { username: handle });
-        
-        if (response?.status === 'error' && response?.message === 'Not logged in') {
-            console.warn("Session error during sync.");
-            return;
-        }
-
         if (response?.status === 'success' && response?.data) {
            const d = response.data;
-           
            if (d.user) {
               setUserName(d.user.auth.name || "");
               setUserHandle(d.user.username);
-              
               const newProfile = {
                  ...userProfile,
                  username: d.user.username,
@@ -361,52 +327,24 @@ const App = () => {
                  currentStreak: d.user.streaks?.current || 0
               };
               setUserProfile(newProfile);
-              
               if (d.user.specs) setUserSpecs(d.user.specs);
               if (d.user.preferences) setUserPreferences(d.user.preferences);
            }
-
+           // Data hydration...
            const fixDate = (item: any) => {
               if (item.data_json && item.data_json.date) return item.data_json.date;
               if (item.date && typeof item.date === 'string' && item.date.match(/^\d{4}-\d{2}-\d{2}$/)) return item.date;
-              const dateVal = item.date;
-              if(!dateVal) return getLocalTodayStr();
-              if (typeof dateVal === 'string' && dateVal.includes('T')) return dateVal.split('T')[0];
-              return dateVal;
+              return item.date || getLocalTodayStr();
            };
-
-           if (d.workouts) {
-               const cleanWorkouts = d.workouts.map((w: any) => ({ ...w, date: fixDate(w) }));
-               setWorkouts(cleanWorkouts);
-           }
-           if (d.goals) {
-               const cleanGoals = d.goals.map((g: any) => ({ ...g, startDate: fixDate(g) }));
-               setUserGoals(cleanGoals);
-           }
-           if (d.routes) {
-               const cleanRoutes = (d.routes || []).map((r: any) => ({
-                   ...r,
-                   points: r.points || r.data?.points || [] 
-               }));
-               setRoutes(cleanRoutes);
-           }
-           if (d.meals) {
-               const cleanMeals = d.meals.map((m: any) => ({ ...m, date: fixDate(m) }));
-               setUserMeals(cleanMeals);
-           }
+           if (d.workouts) setWorkouts(d.workouts.map((w: any) => ({ ...w, date: fixDate(w) })));
+           if (d.goals) setUserGoals(d.goals.map((g: any) => ({ ...g, startDate: fixDate(g) })));
+           if (d.routes) setRoutes(d.routes || []);
+           if (d.meals) setUserMeals(d.meals.map((m: any) => ({ ...m, date: fixDate(m) })));
            if (d.blogs) setBlogs(d.blogs || []);
            if (d.challenges) setUserChallenges(d.challenges || []);
-           
-           if (d.alma) {
-               setAlmaMemories(d.alma.memories || []);
-               setAlmaChats(d.alma.chats || []);
-           }
+           if (d.alma) { setAlmaMemories(d.alma.memories || []); setAlmaChats(d.alma.chats || []); }
         }
-    } catch (e: any) {
-        console.error("Critical Sync Error:", e);
-    } finally {
-        setIsLoading(false);
-    }
+    } catch (e) { console.error("Sync Error:", e); }
   };
 
   const currentStreak = calculateStreak(workouts, userPreferences.restDay);
@@ -417,7 +355,7 @@ const App = () => {
     customText?: string,
     skipLoader?: boolean
   ) => {
-    if (!skipLoader) {
+    if (!skipLoader && !isCheckingAuth) {
         setLoadingText(customText || "Loading...");
         setIsLoading(true);
     }
@@ -437,39 +375,25 @@ const App = () => {
                 if (nextDashView === 'dashboard') path = '/dashboard';
                 else if (nextDashView) path = `/${nextDashView}`;
             }
-            try {
-              window.history.pushState({}, '', path);
-            } catch (e) {
-              // History API restricted
-            }
+            try { window.history.pushState({}, '', path); } catch (e) {}
 
-            if (nextView) setView(nextView);
+            setView(nextView);
             if (nextDashView) setDashView(nextDashView);
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
         if (!skipLoader) setIsLoading(false);
     };
 
-    if (skipLoader) {
+    if (skipLoader || isCheckingAuth) {
         executeTransition();
-        setIsLoading(false);
     } else {
         setTimeout(executeTransition, 500);
     }
   };
 
   const navigateTo = (v: string) => {
-    if (v === 'auth-login') {
-        setAuthMode('login');
-        handleTransition('auth');
-        return;
-    }
-    if (v === 'auth-signup') {
-        setAuthMode('signup');
-        handleTransition('auth');
-        return;
-    }
-
+    if (v === 'auth-login') { setAuthMode('login'); handleTransition('auth'); return; }
+    if (v === 'auth-signup') { setAuthMode('signup'); handleTransition('auth'); return; }
     if (['dashboard', 'stats', 'goals', 'routes', 'challenges', 'alma', 'alma-meals', 'blogs', 'write'].includes(v)) {
       handleTransition('main', v as any);
     } else { 
@@ -477,36 +401,21 @@ const App = () => {
     }
   };
 
-  // Legacy manual auth complete handler (for standard email login)
+  // Manual Auth Handler (Legacy/Non-Google)
   const handleAuthComplete = async (data: any) => {
-      const nameVal = data.name || data.auth?.name || '';
-      const unitsVal = data.units || data.preferences?.units || 'metric';
+      // Re-use smart logic via manual trigger if needed, but usually onAuthStateChange catches this too
+      // if supabase.auth.signInWithPassword is used.
+      // However, for immediate UI feedback in manual login:
+      setIsCheckingAuth(true); // Raise shield manually
+      await loadUserData(data.username);
       
-      setUserName(nameVal);
-      setUserHandle(data.username);
-      
-      const [first, ...rest] = nameVal.split(' ');
-      const newProfile = {
-        ...userProfile,
-        firstName: first || '',
-        lastName: rest.join(' ') || '',
-        username: data.username,
-        email: data.email || '',
-        joinDate: data.joinDate || '1/27/2026'
-      };
-      setUserProfile(newProfile);
-      setUserPreferences(prev => ({ ...prev, units: unitsVal }));
-
-      // Profile checks for manual login
       const { data: profile } = await supabase.from('profiles').select('*').eq('username', data.username).single();
-      
-      if (data.isNewUser || (profile && (!profile.weight || !profile.height))) {
-          setIsNewUserFlow(true);
-          handleTransition('specs', undefined, "Calibrating New Profile...");
+      if (profile && (!profile.weight || !profile.height)) {
+          handleTransition('specs', undefined, undefined, true);
       } else {
-          await loadUserData(data.username);
-          handleTransition('main', 'dashboard', "Welcome Back, Athlete.");
+          handleTransition('main', 'dashboard', undefined, true);
       }
+      setIsCheckingAuth(false);
   };
 
   const handleWatchPurchase = () => {
@@ -514,7 +423,6 @@ const App = () => {
     setUserProfile(newProfile);
     api("UPDATE_PROFILE", { username: userHandle, profile: { hasWatch: true } });
     setShowShop(false);
-    setShowAd(false); 
     alert("MEHRI Watch V1 Linked successfully. Profile Status: Elite.");
   };
 
@@ -524,50 +432,16 @@ const App = () => {
         setLoadingText("Securely Logging Out...");
         await api("LOGOUT", {});
     }
-
-    localStorage.removeItem('mehri_session_user');
-    localStorage.removeItem('mehri_name');
-    localStorage.removeItem('mehri_handle');
-    setWorkouts([]);
-    setRoutes([]);
-    setUserGoals([]);
-    setUserMeals([]);
-    setBlogs([]);
-    setUserChallenges([]);
-    setAlmaChats([]);
-    setAlmaMemories([]);
-    
-    setUserName('');
-    setUserHandle('');
-    setUserProfile(defaultProfile);
-    
-    if (remoteLogout) {
-        setTimeout(() => {
-            try { window.history.pushState({}, '', '/'); } catch (e) {}
-            setView('landing');
-            setIsLoading(false);
-        }, 800);
-    }
+    // Auth Listener will handle state clearing
   };
 
   // --- BLOG HANDLERS ---
   const handlePublishBlog = async (data: any) => {
     const tempId = Date.now();
-    const newPost = { 
-        id: tempId, 
-        author: userName || 'Admin', 
-        username: userHandle, 
-        category: 'Insight', 
-        likes: 0, 
-        ...data 
-    };
-    
+    const newPost = { id: tempId, author: userName || 'Admin', username: userHandle, category: 'Insight', likes: 0, ...data };
     setBlogs([newPost, ...blogs]);
     setDashView('blogs');
-    
-    try {
-        await api("PUBLISH_BLOG", { ...newPost, username: userHandle });
-    } catch(e) { console.error(e); }
+    try { await api("PUBLISH_BLOG", { ...newPost, username: userHandle }); } catch(e) { console.error(e); }
   };
 
   const handleDeleteBlog = async (id: number) => {
@@ -578,33 +452,25 @@ const App = () => {
           } else {
               alert("Could not delete blog post: " + res.message);
           }
-      } catch (e) {
-          console.error(e);
-          alert("Network error deleting blog.");
-      }
+      } catch (e) { console.error(e); }
   };
 
   // Helper for dynamic SEO titles
   const getSEOTitle = () => {
-    if (view === 'main') {
-        return dashView.charAt(0).toUpperCase() + dashView.slice(1);
-    }
+    if (view === 'main') return dashView.charAt(0).toUpperCase() + dashView.slice(1);
     if (view === 'auth') return 'Sign In';
     if (view === 'settings') return 'Settings';
     if (view === 'privacy') return 'Privacy Policy';
-    if (view === 'terms') return 'Terms of Service';
     return undefined;
   };
 
   return (
     <div className="min-h-screen bg-[#FCFCFC] font-sans text-slate-900 selection:bg-emerald-100 relative overflow-x-hidden">
       
+      {isCheckingAuth && <BootScreen />}
+
       <ScrollToTop view={view} dashView={dashView} />
       <SEO title={getSEOTitle()} view={`${view}-${dashView}`} />
-
-      <div className="fixed top-0 left-0 right-0 h-[1px] bg-slate-100 z-[10000]">
-         <div className={`h-full bg-[#A7F3D0] transition-all duration-1000 ease-out ${isLoading ? 'w-[90%]' : 'w-full opacity-0'}`} />
-      </div>
 
       <Loader isVisible={isLoading} text={loadingText} />
       
@@ -615,7 +481,8 @@ const App = () => {
         />
       )}
       
-      {view !== 'privacy' && view !== 'terms' && dashView !== 'write' && (
+      {/* HEADER RENDER LOGIC */}
+      {!isCheckingAuth && view !== 'privacy' && view !== 'terms' && dashView !== 'write' && (
         <Header 
           currentView={view === 'main' ? dashView : view} 
           onNavigate={navigateTo} 
@@ -627,106 +494,77 @@ const App = () => {
         />
       )}
       
+      {/* MAIN CONTENT AREA */}
       <main className={`${view === 'landing' || view === 'privacy' || view === 'terms' || dashView === 'write' ? '' : 'pt-28 md:pt-52 px-0 md:px-12 pb-20'}`}>
-        {view === 'landing' && <LandingSection onStart={() => navigateTo('auth-signup')} onNavigate={navigateTo} />}
-        {view === 'auth' && <AuthSection onComplete={handleAuthComplete} initialView={authMode} onNavigate={navigateTo} />}
-        {view === 'privacy' && <PrivacyPolicy onNavigate={navigateTo} />}
-        {view === 'terms' && <TermsOfService onNavigate={navigateTo} />}
-        {view === 'specs' && <SpecsSection specs={userSpecs} onComplete={(s: any) => { 
-            setUserSpecs(s); 
-            api("UPDATE_PROFILE", { username: userHandle, specs: s });
-            handleTransition('goal', undefined, "Calibrating Bio-Metrics..."); 
-        }} userPreferences={userPreferences} />}
-        {view === 'goal' && (
-            <OnboardingGoalSection onComplete={(goal: string) => { 
-                handleTransition('main', 'dashboard', "Finalizing Setup..."); 
-                if (isNewUserFlow) {
-                    setTimeout(() => setShowOnboarding(true), 1500); 
-                }
-            }} />
-        )}
-        
-        {view === 'settings' && (
-          <div className="max-w-7xl mx-auto px-4 md:px-0">
-             <SettingsView 
-               userProfile={userProfile} 
-               setUserProfile={setUserProfile} 
-               userPreferences={userPreferences} 
-               setUserPreferences={setUserPreferences}
-               userSpecs={userSpecs}
-               setUserSpecs={setUserSpecs}
-               workouts={workouts}
-               blogs={blogs}
-               onShop={() => setShowShop(true)}
-               userHandle={userHandle}
-             />
-          </div>
-        )}
+        {!isCheckingAuth && (
+            <>
+                {view === 'landing' && <LandingSection onStart={() => navigateTo('auth-signup')} onNavigate={navigateTo} />}
+                {view === 'auth' && <AuthSection onComplete={handleAuthComplete} initialView={authMode} onNavigate={navigateTo} />}
+                {view === 'privacy' && <PrivacyPolicy onNavigate={navigateTo} />}
+                {view === 'terms' && <TermsOfService onNavigate={navigateTo} />}
+                
+                {view === 'specs' && (
+                    <SpecsSection specs={userSpecs} userPreferences={userPreferences} onComplete={(s: any) => { 
+                        setUserSpecs(s); 
+                        api("UPDATE_PROFILE", { username: userHandle, specs: s });
+                        handleTransition('goal', undefined, "Calibrating Bio-Metrics..."); 
+                    }} />
+                )}
+                
+                {view === 'goal' && (
+                    <OnboardingGoalSection onComplete={(goal: string) => { 
+                        handleTransition('main', 'dashboard', "Finalizing Setup..."); 
+                        if (isNewUserFlow) setTimeout(() => setShowOnboarding(true), 1500); 
+                    }} />
+                )}
+                
+                {view === 'settings' && (
+                  <div className="max-w-7xl mx-auto px-4 md:px-0">
+                     <SettingsView 
+                       userProfile={userProfile} setUserProfile={setUserProfile} 
+                       userPreferences={userPreferences} setUserPreferences={setUserPreferences}
+                       userSpecs={userSpecs} setUserSpecs={setUserSpecs}
+                       workouts={workouts} blogs={blogs} onShop={() => setShowShop(true)} userHandle={userHandle}
+                     />
+                  </div>
+                )}
 
-        {view === 'main' && (
-          <div className={`${dashView === 'write' ? '' : 'max-w-7xl mx-auto'}`}>
-            {dashView === 'dashboard' && <DashboardView workouts={workouts} setWorkouts={setWorkouts} userGoals={userGoals} setUserGoals={setUserGoals} routes={routes} userSpecs={userSpecs} userProfile={userProfile} userPreferences={userPreferences} userHandle={userHandle} onForceSync={() => loadUserData(userHandle)} />}
-            {dashView === 'stats' && <div className="px-4 md:px-0"><StatsView workouts={workouts} userPreferences={userPreferences} /></div>}
-            {dashView === 'routes' && <RoutesView routes={routes} setRoutes={setRoutes} userPreferences={userPreferences} userProfile={userProfile} userHandle={userHandle} />}
-            {dashView === 'challenges' && <div className="px-4 md:px-0"><ChallengesView userChallenges={userChallenges} setUserChallenges={setUserChallenges} userHandle={userHandle} /></div>}
-            
-            {/* NEW BLOG COMPONENTS */}
-            {dashView === 'blogs' && (
-               <BlogList 
-                  blogs={blogs} 
-                  setBlogs={setBlogs} 
-                  userProfile={userProfile} 
-                  onNavigate={navigateTo} 
-                  onDelete={handleDeleteBlog}
-               />
-            )}
-            {dashView === 'write' && (
-               <BlogWriting 
-                  onClose={() => navigateTo('blogs')} 
-                  onPublish={handlePublishBlog} 
-                  userName={userName}
-                  userProfile={userProfile}
-               />
-            )}
+                {view === 'main' && (
+                  <div className={`${dashView === 'write' ? '' : 'max-w-7xl mx-auto'}`}>
+                    {dashView === 'dashboard' && <DashboardView workouts={workouts} setWorkouts={setWorkouts} userGoals={userGoals} setUserGoals={setUserGoals} routes={routes} userSpecs={userSpecs} userProfile={userProfile} userPreferences={userPreferences} userHandle={userHandle} onForceSync={() => loadUserData(userHandle)} />}
+                    {dashView === 'stats' && <div className="px-4 md:px-0"><StatsView workouts={workouts} userPreferences={userPreferences} /></div>}
+                    {dashView === 'routes' && <RoutesView routes={routes} setRoutes={setRoutes} userPreferences={userPreferences} userProfile={userProfile} userHandle={userHandle} />}
+                    {dashView === 'challenges' && <div className="px-4 md:px-0"><ChallengesView userChallenges={userChallenges} setUserChallenges={setUserChallenges} userHandle={userHandle} /></div>}
+                    
+                    {dashView === 'blogs' && <BlogList blogs={blogs} setBlogs={setBlogs} userProfile={userProfile} onNavigate={navigateTo} onDelete={handleDeleteBlog} />}
+                    {dashView === 'write' && <BlogWriting onClose={() => navigateTo('blogs')} onPublish={handlePublishBlog} userName={userName} userProfile={userProfile} />}
 
-            {dashView === 'alma' && (
-              <div className="px-2 md:px-0">
-                <AlmaView 
-                  workouts={workouts} 
-                  setWorkouts={setWorkouts} 
-                  userSpecs={userSpecs} 
-                  userName={userName}
-                  memories={almaMemories}
-                  setMemories={setAlmaMemories}
-                  chats={almaChats}
-                  setChats={setAlmaChats}
-                  routes={routes}
-                  userPreferences={userPreferences}
-                  userProfile={userProfile}
-                  userHandle={userHandle}
-                />
-              </div>
-            )}
-            {dashView === 'alma-meals' && (
-              <div className="px-4 md:px-0">
-                <AlmaMealsView 
-                  onNavigate={navigateTo} 
-                  userMeals={userMeals} 
-                  setUserMeals={setUserMeals}
-                  userSpecs={userSpecs}
-                  userProfile={userProfile}
-                  workouts={workouts}
-                  userHandle={userHandle}
-                />
-              </div>
-            )}
-            {dashView === 'goals' && <GoalsView userGoals={userGoals} setUserGoals={setUserGoals} onNavigate={navigateTo} userPreferences={userPreferences} userProfile={userProfile} userHandle={userHandle} workouts={workouts} />}
-          </div>
+                    {dashView === 'alma' && (
+                      <div className="px-2 md:px-0">
+                        <AlmaView 
+                          workouts={workouts} setWorkouts={setWorkouts} userSpecs={userSpecs} userName={userName}
+                          memories={almaMemories} setMemories={setAlmaMemories} chats={almaChats} setChats={setAlmaChats}
+                          routes={routes} userPreferences={userPreferences} userProfile={userProfile} userHandle={userHandle}
+                        />
+                      </div>
+                    )}
+                    {dashView === 'alma-meals' && (
+                      <div className="px-4 md:px-0">
+                        <AlmaMealsView 
+                          onNavigate={navigateTo} userMeals={userMeals} setUserMeals={setUserMeals}
+                          userSpecs={userSpecs} userProfile={userProfile} workouts={workouts} userHandle={userHandle}
+                        />
+                      </div>
+                    )}
+                    {dashView === 'goals' && <GoalsView userGoals={userGoals} setUserGoals={setUserGoals} onNavigate={navigateTo} userPreferences={userPreferences} userProfile={userProfile} userHandle={userHandle} workouts={workouts} />}
+                  </div>
+                )}
+            </>
         )}
       </main>
       
       {showShop && <ShopModal onClose={() => setShowShop(false)} onBuy={handleWatchPurchase} />}
-      <AdInterstitial isOpen={showAd} onClose={() => setShowAd(false)} />
+      <AdInterstitial isOpen={showAd && !isCheckingAuth} onClose={() => setShowAd(false)} />
     </div>
   );
 };
