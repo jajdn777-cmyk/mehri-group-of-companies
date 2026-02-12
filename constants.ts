@@ -43,17 +43,17 @@ Effective Date: January 27, 2026
 Version: 2.4 (Global/Enterprise Compliance)
 
 1. INTRODUCTION AND SCOPE
-The MEHRI Group ("we," "us," or "our") operates at the intersection of biotechnology, consumer electronics, and artificial intelligence. This Privacy Policy governs your use of the Mehri Group platform, the GTL-1 Smartwatch hardware, and the Alma AI coaching interface. We are committed to transparency regarding the collection, encryption, and utilization of your physiological data. This policy applies to users globally, with specific addendums for residents of the European Economic Area (EEA), California (CCPA/CPRA), and Brazil (LGPD).
+The MEHRI Group ("we," "us," or "our") operates at the intersection of biotechnology, consumer electronics, and artificial intelligence. This Privacy Policy governs your use of the Mehri Group platform, the Mehri fitness tracker hardware, and the Alma AI coaching interface. We are committed to transparency regarding the collection, encryption, and utilization of your physiological data. This policy applies to users globally, with specific addendums for residents of the European Economic Area (EEA), California (CCPA/CPRA), and Brazil (LGPD).
 
 2. BIOMETRIC DATA CONTROLLER & PROCESSING
 MEHRI Group acts as the Data Controller for your personal information.
-- Biometric Data Collection: When you use the GTL-1, we collect high-frequency physiological telemetry including but not limited to: Heart Rate Variability (HRV), Blood Oxygen Saturation (SpO2), Accelerometer patterns (Gait Analysis), and Sleep Staging architecture (REM/Deep/Light cycles).
+- Biometric Data Collection: When you use the Mehri fitness tracker, we collect high-frequency physiological telemetry including but not limited to: Heart Rate Variability (HRV), Blood Oxygen Saturation (SpO2), Accelerometer patterns (Gait Analysis), and Sleep Staging architecture (REM/Deep/Light cycles).
 - Purpose of Processing: This data is processed strictly to provide: (a) Real-time performance analytics; (b) "Alma" AI-driven coaching insights; and (c) Long-term health trend visualization.
 - No Sale of Biometric Data: We do NOT sell, rent, or trade your physiological data to third-party advertisers or data brokers. Your biological signature is yours alone.
 
 3. DATA SOVEREIGNTY AND ENCRYPTION STANDARDS
 We employ military-grade security architectures to protect your digital biological profile.
-- Edge Encryption: All sensor data is encrypted locally on the GTL-1 Cortex-M processor using AES-256 hardware encryption before transmission via Bluetooth 5.3.
+- Edge Encryption: All sensor data is encrypted locally on the Mehri fitness tracker Cortex-M processor using AES-256 hardware encryption before transmission via Bluetooth 5.3.
 - Transit Security: Data synchronization occurs exclusively over TLS 1.3 encrypted channels.
 - At-Rest Encryption: User databases are sharded and encrypted using XChaCha20-Poly1305 algorithms.
 - Anonymization: For the purpose of improving the Alma neural engine, data is stripped of all Personally Identifiable Information (PII) before being used in aggregate training sets.
@@ -92,28 +92,28 @@ MEHRI GROUP TERMS OF SERVICE & USER AGREEMENT
 Last Updated: January 27, 2026
 
 1. ACCEPTANCE OF AGREEMENT
-By accessing the Mehri Group of Companies website, downloading our mobile application, or activating a GTL-1 Smartwatch, you enter into a binding legal agreement with MEHRI Group ("Company", "we", "us"). If you do not agree to these terms, you must immediately discontinue use of our ecosystem and return any hardware within the applicable return window.
+By accessing the Mehri Group of Companies website, downloading our mobile application, or activating a Mehri fitness tracker, you enter into a binding legal agreement with MEHRI Group ("Company", "we", "us"). If you do not agree to these terms, you must immediately discontinue use of our ecosystem and return any hardware within the applicable return window.
 
-2. HARDWARE LIMITED WARRANTY (GTL-1 SERIES)
-We warrant that the GTL-1 Smartwatch shall be free from defects in materials and workmanship under normal use for a period of one (1) year from the date of retail purchase.
+2. HARDWARE LIMITED WARRANTY (MEHRI FITNESS TRACKER SERIES)
+We warrant that the Mehri fitness tracker shall be free from defects in materials and workmanship under normal use for a period of one (1) year from the date of retail purchase.
 - Exclusions: This warranty does not cover: (a) cosmetic damage like scratches or dents; (b) damage caused by accident, abuse, misuse, liquid contact exceeding IP68 ratings; (c) damage caused by operating the device outside the user manual guidelines.
 - Remedy: In the event of a defect, MEHRI Group will, at its option, repair the product using new or refurbished parts, or replace the product.
 
 3. MEDICAL DISCLAIMER AND SAFETY WARNINGS
-THE GTL-1 SMARTWATCH AND MEHRI GROUP PLATFORM ARE NOT MEDICAL DEVICES.
+THE MEHRI FITNESS TRACKER AND MEHRI GROUP PLATFORM ARE NOT MEDICAL DEVICES.
 - No Medical Advice: The data, insights, text, graphics, and suggestions provided by the "Alma" AI coach are for informational and recreational purposes only. They are not intended to diagnose, treat, cure, or prevent any disease.
 - Consultation Required: Always consult with a qualified physician before starting any new exercise regime, especially if you have a history of heart disease, high blood pressure, or other chronic conditions.
-- Emergency Situations: Do not rely on the GTL-1 for emergency monitoring. The optical heart rate sensor may be affected by motion artifacts and should not be used as a clinical vital signs monitor.
+- Emergency Situations: Do not rely on the Mehri fitness tracker for emergency monitoring. The optical heart rate sensor may be affected by motion artifacts and should not be used as a clinical vital signs monitor.
 
 4. USER CONDUCT AND ACCOUNT SECURITY
 You are responsible for maintaining the confidentiality of your account credentials. You agree not to:
-- Reverse engineer, decompile, or disassemble the GTL-1 firmware or Mehri Group source code.
+- Reverse engineer, decompile, or disassemble the Mehri fitness tracker firmware or Mehri Group source code.
 - Use the ecosystem to harass, abuse, or harm another person or group.
 - Upload invalid data or use automation tools (bots) to manipulate leaderboard standings or challenges.
 Violation of these rules may result in immediate termination of your account without refund.
 
 5. INTELLECTUAL PROPERTY RIGHTS
-The Mehri Group design, the "Alma" personality engine, the GTL-1 industrial design, and all associated logos and trademarks are the exclusive property of MEHRI Group. You are granted a limited, non-exclusive, non-transferable license to use the software solely in connection with the GTL-1 hardware.
+The Mehri Group design, the "Alma" personality engine, the Mehri fitness tracker industrial design, and all associated logos and trademarks are the exclusive property of MEHRI Group. You are granted a limited, non-exclusive, non-transferable license to use the software solely in connection with the Mehri fitness tracker hardware.
 
 6. DISPUTE RESOLUTION AND CLASS ACTION WAIVER
 PLEASE READ THIS SECTION CAREFULLY. IT AFFECTS YOUR LEGAL RIGHTS.
