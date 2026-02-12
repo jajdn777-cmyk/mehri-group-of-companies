@@ -205,14 +205,15 @@ const App = () => {
   }, []);
 
   // --- FAILSAFE LOADER TIMEOUT ---
-  // If the loader (auth check or app loading) gets stuck for more than 8 seconds, force it off.
+  // If the loader (auth check or app loading) gets stuck, force it off.
   useEffect(() => {
     if (isLoading || isCheckingAuth) {
+      // Reduced timeout to 5s to be more responsive to "forever loading" complaints
       const timer = setTimeout(() => {
         console.warn("Loader timed out. Forcing UI reveal.");
         setIsLoading(false);
         setIsCheckingAuth(false);
-      }, 8000);
+      }, 5000);
       return () => clearTimeout(timer);
     }
   }, [isLoading, isCheckingAuth]);
@@ -232,59 +233,67 @@ const App = () => {
       // 1. Session Detected (Login, Signup, or Initial Load)
       if ((event === 'SIGNED_IN' || event === 'INITIAL_SESSION') && session?.user) {
         setIsCheckingAuth(true); // Raise shield strictly for loading
-        const user = session.user;
-        const metadata = user.user_metadata || {};
-
-        // 2. Identify User in Database
-        let { data: profile } = await supabase
-          .from('profiles')
-          .select('*')
-          .eq('id', user.id)
-          .single();
-
-        // 3. CASE A: Profile Missing (Brand New User) -> Create Profile
-        if (!profile) {
-           const newUsername = `@${(metadata.full_name || user.email?.split('@')[0] || 'user').replace(/\s+/g, '').toLowerCase()}`;
-           const { data: newProfile, error } = await supabase
-             .from('profiles')
-             .insert({
-               id: user.id,
-               email: user.email,
-               full_name: metadata.full_name,
-               username: newUsername,
-               units: 'metric',
-               join_date: new Date().toISOString()
-             })
-             .select()
-             .single();
-           
-           if (newProfile) {
-             profile = newProfile;
-             setIsNewUserFlow(true);
-           }
-        }
-
-        // 4. Determine Route based on Profile State
-        if (profile) {
-           // Sync Local State immediately
-           localStorage.setItem('mehri_session_user', profile.username);
-           setUserName(profile.full_name || '');
-           setUserHandle(profile.username);
-
-           // CASE B: Incomplete Specs -> Force Onboarding
-           if (!profile.weight || !profile.height) {
-              handleTransition('specs', undefined, undefined, true); // true = skip internal loader
-           } 
-           // CASE C: Complete Profile (Returning User) -> Dashboard
-           else {
-              await loadUserData(profile.username); // Pre-load data behind shield
-              handleTransition('main', 'dashboard', undefined, true);
-           }
-        }
         
-        // 5. Lower Shield & Mark Session as Loaded
-        hasLoadedSession.current = true;
-        setIsCheckingAuth(false);
+        try {
+            const user = session.user;
+            const metadata = user.user_metadata || {};
+
+            // 2. Identify User in Database
+            let { data: profile } = await supabase
+              .from('profiles')
+              .select('*')
+              .eq('id', user.id)
+              .single();
+
+            // 3. CASE A: Profile Missing (Brand New User) -> Create Profile
+            if (!profile) {
+               const newUsername = `@${(metadata.full_name || user.email?.split('@')[0] || 'user').replace(/\s+/g, '').toLowerCase()}`;
+               const { data: newProfile, error } = await supabase
+                 .from('profiles')
+                 .insert({
+                   id: user.id,
+                   email: user.email,
+                   full_name: metadata.full_name,
+                   username: newUsername,
+                   units: 'metric',
+                   join_date: new Date().toISOString()
+                 })
+                 .select()
+                 .single();
+               
+               if (newProfile) {
+                 profile = newProfile;
+                 setIsNewUserFlow(true);
+               }
+            }
+
+            // 4. Determine Route based on Profile State
+            if (profile) {
+               // Sync Local State immediately
+               localStorage.setItem('mehri_session_user', profile.username);
+               setUserName(profile.full_name || '');
+               setUserHandle(profile.username);
+
+               // CASE B: Incomplete Specs -> Force Onboarding
+               if (!profile.weight || !profile.height) {
+                  handleTransition('specs', undefined, undefined, true); // true = skip internal loader
+               } 
+               // CASE C: Complete Profile (Returning User) -> Dashboard
+               else {
+                  await loadUserData(profile.username); // Pre-load data behind shield
+                  handleTransition('main', 'dashboard', undefined, true);
+               }
+            }
+        } catch (error) {
+            console.error("Critical Auth Error:", error);
+            // Fallback to landing if auth processing fails completely
+            setView('landing');
+        } finally {
+            // 5. Lower Shield & Mark Session as Loaded
+            // CRITICAL: This ensures the loader ALWAYS disappears, even if errors occur above
+            hasLoadedSession.current = true;
+            setIsCheckingAuth(false);
+        }
 
       } else if (event === 'SIGNED_OUT' || event === 'USER_DELETED') {
          // Handle Logout
@@ -403,16 +412,19 @@ const App = () => {
   // Manual Auth Handler (Legacy/Non-Google)
   const handleAuthComplete = async (data: any) => {
       setIsCheckingAuth(true); // Raise shield manually
-      await loadUserData(data.username);
-      
-      const { data: profile } = await supabase.from('profiles').select('*').eq('username', data.username).single();
-      if (profile && (!profile.weight || !profile.height)) {
-          handleTransition('specs', undefined, undefined, true);
-      } else {
-          handleTransition('main', 'dashboard', undefined, true);
+      try {
+          await loadUserData(data.username);
+          
+          const { data: profile } = await supabase.from('profiles').select('*').eq('username', data.username).single();
+          if (profile && (!profile.weight || !profile.height)) {
+              handleTransition('specs', undefined, undefined, true);
+          } else {
+              handleTransition('main', 'dashboard', undefined, true);
+          }
+      } finally {
+          setIsCheckingAuth(false);
+          hasLoadedSession.current = true;
       }
-      setIsCheckingAuth(false);
-      hasLoadedSession.current = true;
   };
 
   const handleWatchPurchase = () => {
@@ -475,7 +487,15 @@ const App = () => {
       <SEO title={getSEOTitle()} view={`${view}-${dashView}`} />
 
       {/* Unified Loader that handles both app transitions and initial auth check */}
-      <Loader isVisible={isLoading || isCheckingAuth} text={loadingText || "Initializing Core..."} />
+      <Loader 
+        isVisible={isLoading || isCheckingAuth} 
+        text={loadingText || "Initializing Core..."} 
+        onDismiss={() => {
+            console.warn("Manual loader dismiss triggered");
+            setIsLoading(false);
+            setIsCheckingAuth(false);
+        }}
+      />
       
       {showOnboarding && (
         <OnboardingTour 
