@@ -25,7 +25,7 @@ const LockedBiometricsWidget = () => (
        </div>
        <div>
           <h3 className="text-xl font-black uppercase text-white tracking-tight leading-none">Biometrics Locked</h3>
-          <p className="text-slate-400 font-bold uppercase tracking-widest text-[10px] mt-2">Link GTL1 Sensor to unlock</p>
+          <p className="text-slate-400 font-bold uppercase tracking-widest text-[10px] mt-2">Link Mehri fitness tracker to unlock</p>
        </div>
        
        <div className="flex gap-3 opacity-40 select-none scale-90">
@@ -52,7 +52,7 @@ const EmptyWorkoutState = ({ onAdd }: { onAdd: () => void }) => (
      <div className="space-y-2 max-w-md px-4">
         <h3 className="text-2xl font-black uppercase tracking-tight text-slate-900">No Data Recorded</h3>
         <p className="text-slate-500 font-medium text-sm leading-relaxed">
-           Your dashboard is waiting for input. Log your first activity to initialize the GTL-1 analytics engine.
+           Your dashboard is waiting for input. Log your first activity to initialize the Mehri fitness tracker analytics engine.
         </p>
      </div>
      <button 
@@ -879,7 +879,7 @@ export const DashboardView = ({ workouts, setWorkouts, userGoals, setUserGoals, 
               <div className="bg-slate-900 p-8 md:p-10 rounded-[30px] md:rounded-[50px] text-white shadow-2xl relative overflow-hidden group">
                 <Zap size={60} className="absolute -bottom-6 -right-6 opacity-10 group-hover:rotate-12 transition-transform duration-700" />
                 <h4 className="text-lg font-black uppercase text-emerald-400 mb-2 tracking-wide">Sync Ecosystem</h4>
-                <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-6">MEHRI Watch V1 detected</p>
+                <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-6">Mehri fitness tracker detected</p>
                 <button className="w-full py-4 bg-white/10 rounded-2xl font-black uppercase text-[10px] tracking-widest border border-white/10 hover:bg-white/20 transition-all magnetic-btn">Check Connection</button>
               </div>
             </div>
