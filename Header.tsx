@@ -87,11 +87,10 @@ export const Header = ({ currentView, onNavigate, onSignOut, onShop, userProfile
   );
 
   // Dynamic Logo Sizing
-  // If Dashboard or Scrolled: Use the larger size to compensate for visual shrinkage
-  // If Landing (Transparent): Keep original size as requested
+  // Both dashboard and landing page now share the same larger dimension: h-40 md:h-64
   const logoClasses = (isDashboard || scrolled)
-    ? "h-48 md:h-80 -mt-10 md:-mt-20 -ml-4 md:-ml-10" // Dashboard/Scrolled: Increased size
-    : "h-40 md:h-64 -mt-8 md:-mt-16 -ml-3 md:-ml-8";   // Landing: Original size
+    ? "h-40 md:h-64 -mt-8 md:-mt-16 -ml-3 md:-ml-8" // Dashboard: Same size as Landing
+    : "h-40 md:h-64 -mt-8 md:-mt-16 -ml-3 md:-ml-8"; // Landing: Original large size
 
   return (
     <>
