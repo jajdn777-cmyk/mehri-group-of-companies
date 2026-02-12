@@ -1,36 +1,89 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Route as RouteIcon, Save, RefreshCcw, Trash2, Map, Navigation, Locate, Crosshair } from 'lucide-react';
 import { getDistVal, getDistUnit, api } from './utils.ts';
+import L from 'leaflet';
 
-declare var L: any;
+// Fix for Leaflet default icon issues in React
+// CRITICAL FIX: Use CDN URLs instead of importing non-JS assets directly to prevent module loader crashes
+const ICON_URL = 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png';
+const SHADOW_URL = 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png';
+
+// Safe icon initialization
+try {
+  let DefaultIcon = L.icon({
+      iconUrl: ICON_URL,
+      shadowUrl: SHADOW_URL,
+      iconSize: [25, 41],
+      iconAnchor: [12, 41]
+  });
+  L.Marker.prototype.options.icon = DefaultIcon;
+} catch (e) {
+  console.warn("Leaflet icon setup failed", e);
+}
 
 export const RoutesView = ({ routes, setRoutes, userPreferences, userProfile, userHandle }: any) => {
   const mapRef = useRef<any>(null);
   const polylineRef = useRef<any>(null);
   const userMarkerRef = useRef<any>(null);
+  
   const [routeName, setRouteName] = useState('');
   const [currentPoints, setCurrentPoints] = useState<any[]>([]);
   const [currentDistanceKm, setCurrentDistanceKm] = useState(0);
   const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
+  const [isSaving, setIsSaving] = useState(false);
 
-  const units = userPreferences.units;
+  // Defensive Checks for Props
+  const units = userPreferences?.units || 'metric';
   const distUnit = getDistUnit(units);
 
+  // Debug logging - remove this after confirming routes load
   useEffect(() => {
-    if (!mapRef.current) {
-      mapRef.current = L.map('map-container', {
-          dragging: true,
-          tap: true
-      }).setView([51.505, -0.09], 13);
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(mapRef.current);
-      
-      mapRef.current.on('click', (e: any) => {
-        const { lat, lng } = e.latlng;
-        setCurrentPoints(prev => [...prev, [lat, lng]]);
-      });
+    console.log('RoutesView - Props received:', {
+      routesCount: routes?.length || 0,
+      routes: routes,
+      userProfile: userProfile,
+      userHandle: userHandle
+    });
+  }, [routes, userProfile, userHandle]);
 
-      handleLocate();
+  useEffect(() => {
+    // Prevent double initialization
+    if (mapRef.current !== null) return;
+
+    try {
+      const container = document.getElementById('map-container');
+      if (container) {
+        // Initialize Map
+        mapRef.current = L.map('map-container', {
+            dragging: true,
+            scrollWheelZoom: "center"
+        }).setView([51.505, -0.09], 13);
+        
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(mapRef.current);
+        
+        mapRef.current.on('click', (e: any) => {
+          const { lat, lng } = e.latlng;
+          if (lat && lng) {
+             setCurrentPoints(prev => [...prev, [lat, lng]]);
+          }
+        });
+
+        handleLocate();
+      }
+    } catch (err) {
+      console.error("Map initialization error:", err);
     }
+    
+    // Cleanup
+    return () => {
+        if (mapRef.current) {
+            mapRef.current.off();
+            mapRef.current.remove();
+            mapRef.current = null;
+        }
+    };
   }, []);
 
   useEffect(() => {
@@ -41,6 +94,7 @@ export const RoutesView = ({ routes, setRoutes, userPreferences, userProfile, us
         polylineRef.current = L.polyline(currentPoints, { color: '#10b981', weight: 5 }).addTo(mapRef.current);
       }
 
+      // Calculate Distance
       let distMeters = 0;
       for (let i = 1; i < currentPoints.length; i++) {
         const p1 = L.latLng(currentPoints[i-1][0], currentPoints[i-1][1]);
@@ -77,8 +131,6 @@ export const RoutesView = ({ routes, setRoutes, userPreferences, userProfile, us
       }, (error) => {
         console.warn("Geolocation error:", error);
       });
-    } else {
-      alert("Geolocation is not available");
     }
   };
 
@@ -91,57 +143,115 @@ export const RoutesView = ({ routes, setRoutes, userPreferences, userProfile, us
   };
 
   const saveRoute = async () => {
-    if (!routeName) { alert('Please name your route before saving.'); return; }
-    if (currentPoints.length < 2) { alert('Please draw at least 2 points on the map.'); return; }
-    
-    const usernameToSave = userProfile.username || userHandle;
-
-    if (!usernameToSave) {
-        alert("Session Error: Please refresh the page.");
-        return;
+    // 1. Validation Checks
+    if (!routeName.trim()) { 
+        alert('Please name your route before saving.'); 
+        return; 
     }
+    if (currentPoints.length < 2) { 
+        alert('Please draw at least 2 points on the map.'); 
+        return; 
+    }
+    
+    setIsSaving(true);
 
-    const newRoute = {
-      id: Date.now(),
-      username: usernameToSave,
-      name: routeName,
+    // FIXED: Only send the fields that exist in the database schema
+    const payload = {
+      name: routeName.trim(),
       distance: currentDistanceKm, 
-      points: currentPoints,
-      data: { distance: currentDistanceKm, points: currentPoints }
+      points: currentPoints // This will be stored as JSONB in Supabase
     };
     
-    const res = await api("SAVE_ROUTE", newRoute);
+    try {
+        const res = await api("SAVE_ROUTE", payload);
+        console.log('Save route response:', res); // Debug log
 
-    if (res.status === 'success') {
-      setRoutes([...routes, newRoute]);
-      setRouteName('');
-      setCurrentPoints([]);
-      setCurrentDistanceKm(0);
-      if (polylineRef.current) {
-        mapRef.current.removeLayer(polylineRef.current);
-        polylineRef.current = null;
-      }
-      alert("Route saved to database!");
-    } else {
-      alert(`Failed to save route: ${res.message || "Unknown error"}`);
+        if (res.status === 'success') {
+          // Success: Update UI with the saved route data from Supabase
+          const savedRoute = res.data || {
+              id: Date.now(), // Fallback if no data returned
+              ...payload,
+              user_id: userProfile?.id,
+              created_at: new Date().toISOString()
+          };
+          
+          console.log('Saved route object:', savedRoute); // Debug log
+          
+          if (setRoutes) {
+             setRoutes((prev: any[]) => {
+               const updated = [...(prev || []), savedRoute];
+               console.log('Updated routes array:', updated); // Debug log
+               return updated;
+             });
+          }
+          
+          // Reset Form
+          setRouteName('');
+          setCurrentPoints([]);
+          setCurrentDistanceKm(0);
+          if (polylineRef.current && mapRef.current) {
+            mapRef.current.removeLayer(polylineRef.current);
+            polylineRef.current = null;
+          }
+          alert("Route saved successfully!");
+        } else {
+          // Handle explicit errors from the API
+          console.error("Save Route Error:", res);
+          if (res.message === 'Not logged in') {
+             alert("Your session has expired. Please refresh the page to log in again.");
+          } else {
+             alert(`Failed to save route: ${res.message || "Unknown error"}`);
+          }
+        }
+    } catch (e) {
+        console.error("Unexpected Save Error:", e);
+        alert("An unexpected error occurred while saving.");
+    } finally {
+        setIsSaving(false);
     }
   };
 
-  const deleteRoute = (id: number) => {
+  const deleteRoute = async (id: number) => {
     if (confirm('Delete this route?')) {
-      api("DELETE_ROUTE", { id });
-      setRoutes(routes.filter((r:any) => r.id !== id));
+      // Optimistic UI update
+      if (setRoutes) {
+         setRoutes((prev: any[]) => prev.filter((r:any) => r.id !== id));
+      }
+      
+      const res = await api("DELETE_ROUTE", { id });
+      if (res.status !== 'success') {
+          console.warn("Delete sync failed", res.message);
+          // You could re-fetch routes here if delete failed
+      }
     }
+  };
+
+  // Helper function to safely parse points (handles both array and JSON string)
+  const parsePoints = (points: any): number => {
+    if (Array.isArray(points)) {
+      return points.length;
+    }
+    if (typeof points === 'string') {
+      try {
+        const parsed = JSON.parse(points);
+        return Array.isArray(parsed) ? parsed.length : 0;
+      } catch {
+        return 0;
+      }
+    }
+    return 0;
   };
 
   return (
     <div className="space-y-8 md:space-y-12 animate-fade-in pb-32 px-4 md:px-0">
+      {/* Header Section */}
       <div className="flex flex-col lg:flex-row justify-between items-end gap-6">
         <div className="w-full lg:w-auto">
           <h2 className="text-3xl md:text-4xl font-black uppercase tracking-tighter text-slate-900">Route Planner</h2>
           <p className="text-slate-400 mt-2 font-medium text-sm md:text-base">Click on the map to plot your path. Save to use in workouts.</p>
         </div>
         
+        {/* Controls Bar */}
         <div className="bg-white p-4 rounded-[20px] md:rounded-[30px] shadow-xl border border-slate-100 flex flex-col md:flex-row items-stretch md:items-center gap-4 w-full lg:w-auto">
           <div className="flex items-center gap-4 px-4 border-b md:border-b-0 md:border-r border-slate-100 pb-4 md:pb-0 justify-between md:justify-start">
              <div className="text-right">
@@ -160,6 +270,7 @@ export const RoutesView = ({ routes, setRoutes, userPreferences, userProfile, us
                placeholder="Name your route..." 
                value={routeName}
                onChange={e => setRouteName(e.target.value)}
+               disabled={isSaving}
              />
           </div>
 
@@ -173,20 +284,25 @@ export const RoutesView = ({ routes, setRoutes, userPreferences, userProfile, us
                </button>
              )}
              
-             <button onClick={saveRoute} className="flex-1 md:flex-none bg-slate-900 text-white px-6 py-3 rounded-xl font-black uppercase text-[10px] tracking-widest hover:bg-emerald-500 transition-all flex items-center justify-center gap-2 shadow-lg active:scale-95">
-                <Save size={16}/> Save
+             <button 
+                onClick={saveRoute} 
+                disabled={isSaving}
+                className="flex-1 md:flex-none bg-slate-900 text-white px-6 py-3 rounded-xl font-black uppercase text-[10px] tracking-widest hover:bg-emerald-500 transition-all flex items-center justify-center gap-2 shadow-lg active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+             >
+                <Save size={16}/> {isSaving ? "Saving..." : "Save"}
              </button>
              
-             <button onClick={() => { setCurrentPoints([]); setCurrentDistanceKm(0); if (polylineRef.current) { mapRef.current.removeLayer(polylineRef.current); polylineRef.current = null; } }} className="bg-slate-100 text-slate-400 px-4 py-3 rounded-xl hover:text-red-500 transition-all shrink-0" title="Reset Map">
+             <button onClick={() => { setCurrentPoints([]); setCurrentDistanceKm(0); if (polylineRef.current && mapRef.current) { mapRef.current.removeLayer(polylineRef.current); polylineRef.current = null; } }} className="bg-slate-100 text-slate-400 px-4 py-3 rounded-xl hover:text-red-500 transition-all shrink-0" title="Reset Map">
                 <RefreshCcw size={16}/>
              </button>
           </div>
         </div>
       </div>
       
+      {/* Map and List Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 md:gap-12">
         <div className="lg:col-span-3">
-          <div className="relative h-[300px] md:h-[600px] w-full rounded-[40px] md:rounded-[60px] border-4 border-white shadow-xl overflow-hidden z-0">
+          <div className="relative h-[300px] md:h-[600px] w-full rounded-[40px] md:rounded-[60px] border-4 border-white shadow-xl overflow-hidden z-0 bg-slate-100">
              <div id="map-container" className="h-full w-full relative z-0" />
              
              {currentPoints.length === 0 && (
@@ -200,6 +316,7 @@ export const RoutesView = ({ routes, setRoutes, userPreferences, userProfile, us
           </div>
         </div>
         
+        {/* Saved Routes List */}
         <div className="space-y-8">
            <div className="bg-white p-6 md:p-8 rounded-[40px] md:rounded-[50px] border border-slate-100 shadow-sm space-y-6 h-full flex flex-col">
               <div className="flex items-center gap-3 border-b border-slate-50 pb-4">
@@ -208,14 +325,16 @@ export const RoutesView = ({ routes, setRoutes, userPreferences, userProfile, us
               </div>
               
               <div className="space-y-3 flex-1 overflow-y-auto custom-scrollbar pr-2 max-h-[300px] md:max-h-[500px]">
-                 {routes.length > 0 ? routes.map((r: any) => (
+                 {routes && routes.length > 0 ? routes.map((r: any) => (
                    <div key={r.id} className="p-5 rounded-3xl bg-slate-50 hover:bg-white hover:shadow-md transition-all border border-transparent hover:border-slate-100 group cursor-default">
                       <div className="flex justify-between items-start">
                          <div className="space-y-1">
                             <p className="font-black text-slate-900 text-sm leading-tight">{r.name}</p>
                             <div className="flex items-center gap-2">
                                <span className="bg-emerald-100 text-emerald-600 px-2 py-0.5 rounded text-[10px] font-bold">{getDistVal(r.distance, units, 2)} {distUnit}</span>
-                               <span className="text-[9px] text-slate-400 uppercase font-bold">{r.points.length} pts</span>
+                               <span className="text-[9px] text-slate-400 uppercase font-bold">
+                                 {parsePoints(r.points)} pts
+                               </span>
                             </div>
                          </div>
                          <button onClick={() => deleteRoute(r.id)} className="w-8 h-8 flex items-center justify-center rounded-full bg-white text-slate-300 hover:text-red-500 hover:bg-red-50 transition-all shadow-sm"><Trash2 size={14}/></button>
@@ -228,6 +347,8 @@ export const RoutesView = ({ routes, setRoutes, userPreferences, userProfile, us
                       </div>
                       <p className="text-[10px] font-black uppercase tracking-widest text-slate-500">No routes saved</p>
                       <p className="text-[10px] text-slate-400 mt-2 max-w-[150px]">Draw on the map and click 'Save' to see them here.</p>
+                      {/* Debug info - remove after testing */}
+                      <p className="text-[8px] text-slate-300 mt-4">Routes prop: {routes ? `Array(${routes.length})` : 'null/undefined'}</p>
                    </div>
                  )}
               </div>
