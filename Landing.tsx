@@ -1,8 +1,8 @@
 
 import React, { useEffect, useRef, useState } from 'react';
-import { Target, Users, Brain, Eraser, LineChart, MessageSquare, ArrowRight, HelpCircle, ChevronDown, Trophy, Activity, Check, Smartphone } from 'lucide-react';
+import { Target, Users, Brain, Eraser, LineChart, MessageSquare, ArrowRight, HelpCircle, ChevronDown, Trophy, Activity, Check } from 'lucide-react';
 import { Footer } from './Footer.tsx';
-import { motion, useScroll, useTransform, useInView } from 'framer-motion';
+import { motion, useScroll, useTransform, useInView, AnimatePresence } from 'framer-motion';
 
 // --- PREMIUM ANIMATION COMPONENTS ---
 
@@ -101,94 +101,157 @@ const CountUpStat = ({ end, suffix = "", duration = 2 }: { end: number, suffix?:
   return <span ref={ref}>0{suffix}</span>;
 };
 
+// --- ALMA LIVE DEMO COMPONENTS ---
+
+const TypingIndicator = () => (
+  <div className="flex gap-1 px-2 py-1 items-center h-5">
+    {[0, 1, 2].map((i) => (
+      <motion.div 
+        key={i}
+        className="w-1.5 h-1.5 bg-slate-400/50 rounded-full"
+        animate={{ y: [0, -4, 0] }}
+        transition={{ duration: 0.6, repeat: Infinity, delay: i * 0.2 }}
+      />
+    ))}
+  </div>
+);
+
+const TypewriterText = ({ text, onComplete }: { text: string, onComplete?: () => void }) => {
+  const [display, setDisplay] = useState('');
+  
+  useEffect(() => {
+    let i = 0;
+    const timer = setInterval(() => {
+      if (i < text.length) {
+        setDisplay(text.substring(0, i + 1));
+        i++;
+      } else {
+        clearInterval(timer);
+        onComplete?.();
+      }
+    }, 25); // Speed of typing
+    return () => clearInterval(timer);
+  }, [text]);
+
+  return <span>{display}</span>;
+};
+
+const AlmaLiveDemo = () => {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-20% 0px -20% 0px" });
+  const [step, setStep] = useState(0); 
+  // 0: Hidden
+  // 1: Typing 1
+  // 2: Msg 1
+  // 3: Typing 2
+  // 4: Msg 2
+
+  useEffect(() => {
+    if (isInView && step === 0) {
+      const t = setTimeout(() => setStep(1), 600);
+      return () => clearTimeout(t);
+    }
+  }, [isInView, step]);
+
+  useEffect(() => {
+    if (step === 1) {
+      const t = setTimeout(() => setStep(2), 1200); // Thinking delay
+      return () => clearTimeout(t);
+    }
+    if (step === 3) {
+      const t = setTimeout(() => setStep(4), 1000); // Thinking delay 2
+      return () => clearTimeout(t);
+    }
+  }, [step]);
+
+  return (
+    <div ref={ref} className="relative w-full max-w-md bg-slate-800 rounded-[40px] border border-slate-700/50 p-6 shadow-2xl transform rotate-3 hover:rotate-0 transition-transform duration-700 group cursor-default">
+       <div className="flex items-center gap-4 mb-8 border-b border-slate-700/50 pb-6">
+          <div className="w-12 h-12 rounded-full bg-slate-700 overflow-hidden border-2 border-emerald-400 shadow-lg shadow-emerald-400/20 relative">
+             <img src="https://images.unsplash.com/photo-1594381898411-846e7d193883?auto=format&fit=crop&w=200" className="w-full h-full object-cover" />
+             <div className="absolute inset-0 bg-emerald-500/10 animate-pulse" />
+          </div>
+          <div>
+             <p className="text-white font-bold">Alma</p>
+             <p className="text-emerald-400 text-xs uppercase font-black tracking-widest flex items-center gap-2">
+               <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse shadow-[0_0_8px_#34D399]"/> Online
+             </p>
+          </div>
+       </div>
+       
+       <div className="space-y-4 min-h-[180px] flex flex-col justify-end pb-4">
+          <AnimatePresence mode="wait">
+            {step === 1 && (
+               <motion.div 
+                 key="typing1"
+                 initial={{ opacity: 0, y: 10, scale: 0.9 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.1 } }}
+                 className="bg-slate-700/50 rounded-2xl rounded-tl-sm p-4 w-fit self-start"
+               >
+                 <TypingIndicator />
+               </motion.div>
+            )}
+            
+            {step >= 2 && (
+               <motion.div 
+                 key="msg1"
+                 initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+                 className="bg-slate-700/50 rounded-2xl rounded-tl-sm p-4 text-sm text-slate-300 self-start"
+               >
+                 <TypewriterText 
+                    text="Hey there. I noticed your HRV dropped 12% after yesterday's 10k run." 
+                    onComplete={() => step === 2 && setTimeout(() => setStep(3), 800)}
+                 />
+               </motion.div>
+            )}
+          </AnimatePresence>
+
+          <AnimatePresence mode="wait">
+            {step === 3 && (
+               <motion.div 
+                 key="typing2"
+                 initial={{ opacity: 0, y: 10, scale: 0.9 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.1 } }}
+                 className="bg-emerald-500/10 border border-emerald-500/20 rounded-2xl rounded-tl-sm p-4 w-fit self-start mt-2"
+               >
+                 <TypingIndicator />
+               </motion.div>
+            )}
+
+            {step >= 4 && (
+               <motion.div 
+                 key="msg2"
+                 initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+                 className="bg-emerald-500/10 border border-emerald-500/20 rounded-2xl rounded-tl-sm p-4 text-sm text-emerald-100 self-start mt-2 shadow-[0_0_30px_-5px_rgba(16,185,129,0.1)]"
+               >
+                 <TypewriterText 
+                    text="Recommendation: Focus on zone 2 recovery today. Want me to schedule a light 20min yoga session?" 
+                    onComplete={() => setStep(5)}
+                 />
+               </motion.div>
+            )}
+          </AnimatePresence>
+       </div>
+       
+       {/* Decorative Elements */}
+       <div className="absolute -top-4 -right-4 w-20 h-20 bg-emerald-500 rounded-full blur-[40px] opacity-10 animate-pulse pointer-events-none" />
+    </div>
+  );
+};
+
 // --- SECTION COMPONENTS ---
 
 const WhatWeDoSection = () => (
-  <section className="relative py-24 md:py-32 bg-white overflow-hidden">
-     {/* Ambient Background */}
-     <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-[radial-gradient(circle,_var(--tw-gradient-stops))] from-slate-50 via-transparent to-transparent opacity-60" />
-     </div>
-
-     <div className="max-w-7xl mx-auto px-6 md:px-8 relative z-10">
-        <div className="text-center mb-16 md:mb-20">
-           <motion.span 
-             initial={{ opacity: 0, y: 10 }}
-             whileInView={{ opacity: 1, y: 0 }}
-             viewport={{ once: true }}
-             className="text-[10px] font-black uppercase tracking-[0.4em] text-emerald-500 mb-4 block"
-           >
-              The Ecosystem
-           </motion.span>
-           <motion.h2 
-             initial={{ opacity: 0, y: 10 }}
-             whileInView={{ opacity: 1, y: 0 }}
-             viewport={{ once: true }}
-             transition={{ delay: 0.1 }}
-             className="text-4xl md:text-6xl font-black text-slate-900 uppercase tracking-tighter leading-none"
-           >
-              What We Do
-           </motion.h2>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
-           {/* Column 1: Tracking */}
-           <motion.div 
-             initial={{ opacity: 0, y: 30 }}
-             whileInView={{ opacity: 1, y: 0 }}
-             viewport={{ once: true }}
-             transition={{ delay: 0.2 }}
-             whileHover={{ y: -10 }}
-             className="bg-white p-8 md:p-10 rounded-[40px] border border-slate-100 shadow-[0_10px_40px_-10px_rgba(0,0,0,0.05)] group"
-           >
-              <div className="w-16 h-16 bg-slate-50 rounded-2xl flex items-center justify-center text-slate-900 mb-8 group-hover:bg-slate-900 group-hover:text-white transition-colors duration-300">
-                 <Activity size={28} />
-              </div>
-              <h3 className="text-xl font-black uppercase tracking-tight mb-4 text-slate-900">Universal Tracking</h3>
-              <p className="text-sm text-slate-500 font-medium leading-relaxed">
-                 Mehri Fitness helps people track workouts, recovery, and health trends across devices.
-              </p>
-           </motion.div>
-
-           {/* Column 2: Hardware (Highlighted) */}
-           <motion.div 
-             initial={{ opacity: 0, y: 30 }}
-             whileInView={{ opacity: 1, y: 0 }}
-             viewport={{ once: true }}
-             transition={{ delay: 0.3 }}
-             whileHover={{ y: -10 }}
-             className="bg-slate-900 p-8 md:p-10 rounded-[40px] shadow-2xl relative overflow-hidden group"
-           >
-              <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/10 rounded-full blur-[80px] -mr-20 -mt-20 group-hover:bg-emerald-500/20 transition-colors" />
-              
-              <div className="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center text-emerald-400 mb-8 backdrop-blur-md">
-                 <Smartphone size={28} />
-              </div>
-              <h3 className="text-xl font-black uppercase tracking-tight mb-4 text-white">Biometric Hardware</h3>
-              <p className="text-sm text-slate-400 font-medium leading-relaxed">
-                 Users can train using just their phone or pair the Mehri fitness tracker for deeper biometric insights.
-              </p>
-           </motion.div>
-
-           {/* Column 3: AI */}
-           <motion.div 
-             initial={{ opacity: 0, y: 30 }}
-             whileInView={{ opacity: 1, y: 0 }}
-             viewport={{ once: true }}
-             transition={{ delay: 0.4 }}
-             whileHover={{ y: -10 }}
-             className="bg-white p-8 md:p-10 rounded-[40px] border border-slate-100 shadow-[0_10px_40px_-10px_rgba(0,0,0,0.05)] group"
-           >
-              <div className="w-16 h-16 bg-emerald-50 rounded-2xl flex items-center justify-center text-emerald-600 mb-8 group-hover:bg-emerald-500 group-hover:text-white transition-colors duration-300">
-                 <Brain size={28} />
-              </div>
-              <h3 className="text-xl font-black uppercase tracking-tight mb-4 text-slate-900">Neural Intelligence</h3>
-              <p className="text-sm text-slate-500 font-medium leading-relaxed">
-                 All supported by Alma AI guidance to interpret your physiological data.
-              </p>
-           </motion.div>
-        </div>
-     </div>
+  <section className="max-w-4xl mx-auto px-6 md:px-8 py-24 text-center bg-white">
+     <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.8 }}
+     >
+       <span className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 mb-6 block">What We Do</span>
+       <h2 className="text-2xl md:text-4xl font-medium text-slate-900 leading-relaxed font-serif">
+          Mehri Fitness helps people track workouts, recovery, and health trends across devices. Users can train using just their phone or pair the GTL-1 smartwatch for deeper biometric insights, all supported by Alma AI guidance.
+       </h2>
+     </motion.div>
   </section>
 );
 
@@ -217,9 +280,9 @@ const KeyFeaturesSection = () => (
            <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center mx-auto shadow-sm text-emerald-500 mb-4">
               <Users size={24} />
            </div>
-           <h3 className="text-lg md:text-xl font-black uppercase tracking-tight text-slate-900">Mehri fitness tracker Integration</h3>
+           <h3 className="text-lg md:text-xl font-black uppercase tracking-tight text-slate-900">GTL-1 Wearable Integration</h3>
            <p className="text-sm text-slate-500 leading-relaxed font-medium">
-              Seamlessly sync with our flagship hardware. The Mehri fitness tracker provides the high-fidelity sensor data that powers the entire MEHRI ecosystem.
+              Seamlessly sync with our flagship hardware. The GTL-1 Smartwatch provides the high-fidelity sensor data that powers the entire MEHRI ecosystem.
            </p>
         </div>
      </div>
@@ -266,24 +329,24 @@ const FAQSection = () => (
      </div>
      <div className="bg-white rounded-[30px] md:rounded-[40px] shadow-xl border border-slate-100 p-6 md:p-12">
         <FAQItem 
-           question="Does Mehri Fitness work without the Mehri fitness tracker?" 
-           answer="Yes. You can use Mehri Fitness with just your smartphone to track workouts, log meals, and access Alma coaching. The Mehri fitness tracker is optional hardware for automated biometric data like continuous heart rate and sleep tracking." 
+           question="Does Mehri Fitness work without the GTL-1?" 
+           answer="Yes. You can use Mehri Fitness with just your smartphone to track workouts, log meals, and access Alma coaching. The GTL-1 is optional hardware for automated biometric data like continuous heart rate and sleep tracking." 
         />
         <FAQItem 
-           question="Is the Mehri fitness tracker compatible with iOS and Android?" 
-           answer="Yes, the Mehri fitness tracker features universal compatibility. It syncs seamlessly via Bluetooth 5.3 to the Mehri app on both iOS and Android platforms." 
+           question="Is the GTL-1 compatible with iOS and Android?" 
+           answer="Yes, the GTL-1 Smartwatch features universal compatibility. It syncs seamlessly via Bluetooth 5.3 to the Mehri app on both iOS and Android platforms." 
         />
         <FAQItem 
            question="Is this a medical device?" 
-           answer="No. Mehri Fitness and the Mehri fitness tracker are wellness tools designed for recreational use, training, and performance tracking. They are not medical devices and should not be used to diagnose or treat medical conditions." 
+           answer="No. Mehri Fitness and the GTL-1 are wellness tools designed for recreational use, training, and performance tracking. They are not medical devices and should not be used to diagnose or treat medical conditions." 
         />
         <FAQItem 
            question="Is my biometric data secure?" 
            answer="Yes. We prioritize your privacy. Biometric data is encrypted locally on the device and during transmission to ensure your personal health information remains secure." 
         />
         <FAQItem 
-           question="What is the battery life of the Mehri fitness tracker?" 
-           answer="The Mehri fitness tracker is engineered for endurance, boasting an intelligent 14-day battery life on a single charge under typical usage conditions." 
+           question="What is the battery life of the GTL-1?" 
+           answer="The GTL-1 is engineered for endurance, boasting an intelligent 14-day battery life on a single charge under typical usage conditions." 
         />
      </div>
   </section>
@@ -388,7 +451,7 @@ const GoalsCTASection = ({ onAction }: { onAction: () => void }) => (
 
 // --- MAIN LANDING COMPONENT ---
 
-export const LandingSection = ({ onStart, onNavigate }: any) => {
+export const LandingSection = ({ onStart }: any) => {
   // Removed explicit type annotation from unused parameter to satisfy GoalsCTASection prop type
   const createRipple = () => {
     onStart(); 
@@ -446,7 +509,7 @@ export const LandingSection = ({ onStart, onNavigate }: any) => {
             <div className="flex-1 space-y-8 md:space-y-12 z-10 text-center lg:text-left">
               <div className="space-y-6">
                 <div className="flex flex-col md:flex-row items-center gap-4 justify-center lg:justify-start">
-                   <span className="bg-emerald-400 text-slate-900 px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-[0.3em] shadow-[0_0_20px_rgba(52,211,153,0.4)]">Mehri fitness tracker Series</span>
+                   <span className="bg-emerald-400 text-slate-900 px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-[0.3em] shadow-[0_0_20px_rgba(52,211,153,0.4)]">GTL1 Series</span>
                    <span className="text-slate-500 text-[10px] font-bold uppercase tracking-widest flex items-center gap-2"><span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"/> In Stock</span>
                 </div>
                 <h2 className="text-4xl md:text-7xl font-black text-white uppercase tracking-tighter leading-[0.9]">
@@ -456,7 +519,7 @@ export const LandingSection = ({ onStart, onNavigate }: any) => {
               
               <div className="space-y-8">
                 <p className="text-slate-400 text-base md:text-xl font-medium leading-relaxed max-w-xl mx-auto lg:mx-0">
-                  The Mehri fitness tracker is a precision instrument for your wrist. Milled from aerospace-grade titanium, it provides continuous physiological tracking to inform your training decisions. While optional, it unlocks the full depth of Mehri's biometric analysis.
+                  The GTL-1 is a precision instrument for your wrist. Milled from aerospace-grade titanium, it provides continuous physiological tracking to inform your training decisions. While optional, it unlocks the full depth of Mehri's biometric analysis.
                 </p>
                 
                 <ul className="space-y-3 inline-block text-left">
@@ -495,7 +558,7 @@ export const LandingSection = ({ onStart, onNavigate }: any) => {
                <div className="relative z-10 grid grid-cols-2 gap-4 md:gap-6 w-full max-w-lg">
                   <motion.div whileHover={{ y: -10 }} className="space-y-6 pt-12">
                      <div className="aspect-[3/4] rounded-[30px] md:rounded-[40px] overflow-hidden shadow-2xl border-4 border-slate-800 relative group/img">
-                         <img src="https://images2.imgbox.com/56/17/7wy6uJHG_o.jpeg" onError={(e) => e.currentTarget.src='https://images.unsplash.com/photo-1579586337278-3befd40fd17a?q=80&w=800'} className="w-full h-full object-cover transition-all duration-700" alt="Mehri fitness tracker Watch Face" />
+                         <img src="https://images2.imgbox.com/56/17/7wy6uJHG_o.jpeg" onError={(e) => e.currentTarget.src='https://images.unsplash.com/photo-1579586337278-3befd40fd17a?q=80&w=800'} className="w-full h-full object-cover transition-all duration-700" alt="GTL1 Watch Face" />
                          <div className="absolute bottom-0 left-0 w-full p-4 md:p-6 bg-gradient-to-t from-black/80 to-transparent">
                             <p className="text-white font-black text-sm md:text-lg">Focus Mode</p>
                          </div>
@@ -503,7 +566,7 @@ export const LandingSection = ({ onStart, onNavigate }: any) => {
                   </motion.div>
                   <motion.div whileHover={{ y: -10 }} className="space-y-6 pb-12">
                      <div className="aspect-[3/4] rounded-[30px] md:rounded-[40px] overflow-hidden shadow-2xl border-4 border-slate-800 relative group/img">
-                         <img src="https://images2.imgbox.com/3b/e6/QhMzpqDY_o.jpeg" onError={(e) => e.currentTarget.src='https://images.unsplash.com/photo-1551816230-ef5deaed4a26?q=80&w=800'} className="w-full h-full object-cover transition-all duration-700" alt="Mehri fitness tracker Side Profile" />
+                         <img src="https://images2.imgbox.com/3b/e6/QhMzpqDY_o.jpeg" onError={(e) => e.currentTarget.src='https://images.unsplash.com/photo-1551816230-ef5deaed4a26?q=80&w=800'} className="w-full h-full object-cover transition-all duration-700" alt="GTL1 Side Profile" />
                          <div className="absolute bottom-0 left-0 w-full p-4 md:p-6 bg-gradient-to-t from-black/80 to-transparent">
                             <p className="text-white font-black text-sm md:text-lg">Titanium</p>
                          </div>
@@ -514,7 +577,7 @@ export const LandingSection = ({ onStart, onNavigate }: any) => {
         </div>
       </ScrollReveal>
 
-      {/* 4. ALMA AI SECTION (Reordered) */}
+      {/* 4. ALMA AI SECTION (Live Demo Updated) */}
       <ScrollReveal className="max-w-7xl mx-auto px-6 md:px-8 py-20">
         <div className="bg-slate-900 rounded-[40px] md:rounded-[80px] p-8 md:p-24 flex flex-col-reverse lg:flex-row items-center gap-12 md:gap-20 relative overflow-hidden shadow-2xl">
            <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-slate-800 via-slate-900 to-slate-900 pointer-events-none" />
@@ -573,28 +636,7 @@ export const LandingSection = ({ onStart, onNavigate }: any) => {
            </div>
 
            <div className="flex-1 w-full relative z-10 flex justify-center mt-8 lg:mt-0">
-              <div className="relative w-full max-w-md bg-slate-800 rounded-[40px] border border-slate-700/50 p-6 shadow-2xl transform rotate-3 hover:rotate-0 transition-transform duration-700 group">
-                 <div className="flex items-center gap-4 mb-8 border-b border-slate-700/50 pb-6">
-                    <div className="w-12 h-12 rounded-full bg-slate-700 overflow-hidden border-2 border-emerald-400 shadow-lg shadow-emerald-400/20">
-                       <img src="https://images.unsplash.com/photo-1594381898411-846e7d193883?auto=format&fit=crop&w=200" className="w-full h-full object-cover" />
-                    </div>
-                    <div>
-                       <p className="text-white font-bold">Alma</p>
-                       <p className="text-emerald-400 text-xs uppercase font-black tracking-widest">Online</p>
-                    </div>
-                 </div>
-                 <div className="space-y-4">
-                    <div className="bg-slate-700/50 rounded-2xl p-4 text-sm text-slate-300">
-                       Hey there. I noticed your HRV dropped 12% after yesterday's 10k run.
-                    </div>
-                    <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-2xl p-4 text-sm text-emerald-100">
-                       Recommendation: Focus on zone 2 recovery today. Want me to schedule a light 20min yoga session?
-                    </div>
-                 </div>
-                 
-                 {/* Decorative Elements */}
-                 <div className="absolute -top-4 -right-4 w-20 h-20 bg-emerald-500 rounded-full blur-[40px] opacity-20 animate-pulse" />
-              </div>
+              <AlmaLiveDemo />
            </div>
         </div>
       </ScrollReveal>
@@ -615,7 +657,7 @@ export const LandingSection = ({ onStart, onNavigate }: any) => {
       <FAQSection />
 
       {/* 10. FOOTER */}
-      <Footer onNavigate={onNavigate} />
+      <Footer />
     </div>
   );
 };
