@@ -427,9 +427,16 @@ const App = () => {
     if (remoteLogout) {
         setIsLoading(true);
         setLoadingText("Securely Logging Out...");
+        // 1. Clear session server-side
         await api("LOGOUT", {});
+        
+        // 2. Force Hard Reset Client-Side
+        localStorage.clear();
+        sessionStorage.clear();
+        
+        // 3. Force page reload to clear memory state effectively
+        window.location.href = '/'; 
     }
-    // Auth Listener will handle state clearing
   };
 
   // --- BLOG HANDLERS ---
