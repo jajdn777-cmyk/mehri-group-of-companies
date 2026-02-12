@@ -133,7 +133,7 @@ const BiometricsSection = () => (
        </div>
        <div>
           <h3 className="text-2xl md:text-3xl font-black uppercase text-white tracking-tight leading-none">Biometrics Locked</h3>
-          <p className="text-slate-400 font-bold uppercase tracking-widest text-[10px] md:text-xs mt-2 md:mt-3">Link GTL1 Sensor to visualize deep health metrics</p>
+          <p className="text-slate-400 font-bold uppercase tracking-widest text-[10px] md:text-xs mt-2 md:mt-3">Link Mehri fitness tracker to visualize deep health metrics</p>
        </div>
        
        <div className="flex gap-2 md:gap-4 opacity-40 select-none scale-90 md:scale-100">
