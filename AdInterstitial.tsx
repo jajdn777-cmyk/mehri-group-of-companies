@@ -98,7 +98,7 @@ export const AdInterstitial = ({ isOpen, onClose }: AdInterstitialProps) => {
                 src={AD_ASSET_URL}
                 onLoad={() => setImageLoaded(true)}
                 className="w-full h-full object-cover relative z-0"
-                alt="MEHRI Watch GTL-1 Titanium"
+                alt="Mehri fitness tracker"
               />
               
               {/* Gradient Overlay */}
@@ -130,7 +130,7 @@ export const AdInterstitial = ({ isOpen, onClose }: AdInterstitialProps) => {
                    transition={{ delay: 0.9 }}
                    className="text-slate-400 font-medium text-sm md:text-lg leading-relaxed max-w-md mx-auto"
                 >
-                  Elevate your biological telemetry with the aerospace-grade GTL-1. Now syncing with Alma 3.0.
+                  Elevate your biological telemetry with the aerospace-grade Mehri fitness tracker. Now syncing with Alma 3.0.
                 </motion.p>
               </div>
 
