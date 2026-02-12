@@ -85,6 +85,7 @@ export const BlogWriting = ({ onClose, userName, userProfile }: any) => {
   const handleSelectionChange = () => {
     const selection = window.getSelection();
     
+    // 1. Handle Floating Toolbar (Text Selection)
     if (!selection || selection.isCollapsed || !editorRef.current?.contains(selection.anchorNode)) {
       setShowToolbar(false);
       setShowLinkInput(false);
@@ -107,23 +108,36 @@ export const BlogWriting = ({ onClose, userName, userProfile }: any) => {
       setShowToolbar(true);
     }
 
+    // 2. Handle Side Menu (Empty Line Detection)
     if (selection && selection.isCollapsed && editorRef.current?.contains(selection.anchorNode)) {
       const anchorNode = selection.anchorNode;
-      let parentBlock = anchorNode.nodeType === 3 ? anchorNode.parentElement : anchorNode as HTMLElement;
+      // Traverse up to find the direct child of the editor (the block element)
+      let parentBlock = (anchorNode && anchorNode.nodeType === 3 ? anchorNode.parentElement : anchorNode) as HTMLElement;
       
-      while (parentBlock && parentBlock.parentElement !== editorRef.current) {
+      // Ensure we are inside the editor and find the top-level block
+      while (parentBlock && parentBlock.parentElement !== editorRef.current && parentBlock !== editorRef.current) {
          parentBlock = parentBlock.parentElement as HTMLElement;
       }
 
-      if (parentBlock && (parentBlock.innerText === '\n' || parentBlock.innerText === '' || parentBlock.innerHTML === '<br>')) {
-         const rect = parentBlock.getBoundingClientRect();
-         setSideMenuPos(rect.top); 
-      } else {
-         setSideMenuPos(null);
-         setIsSideMenuExpanded(false);
-         setShowVideoInput(false);
+      if (parentBlock && parentBlock !== editorRef.current) {
+         // Check if block is effectively empty
+         const textContent = parentBlock.textContent || '';
+         const hasText = textContent.trim().length > 0;
+         const hasMedia = parentBlock.querySelector('img') || parentBlock.querySelector('iframe') || parentBlock.querySelector('figure');
+
+         // If no text and no media, show the plus button
+         if (!hasText && !hasMedia) {
+             const rect = parentBlock.getBoundingClientRect();
+             setSideMenuPos(rect.top); 
+             return;
+         }
       }
     }
+    
+    // If condition not met, hide menu
+    setSideMenuPos(null);
+    setIsSideMenuExpanded(false);
+    setShowVideoInput(false);
   };
 
   const saveCursorPosition = () => {
@@ -316,8 +330,8 @@ export const BlogWriting = ({ onClose, userName, userProfile }: any) => {
       {/* 2. SIDE MENU (PLUS BUTTON) */}
       {sideMenuPos !== null && (
          <div 
-            className="absolute left-[calc(50%-380px)] z-[5000] flex items-center gap-2 transition-all duration-300"
-            style={{ top: sideMenuPos - 6 }} 
+            className="fixed left-[calc(50%-380px)] z-[5000] flex items-center gap-2 transition-all duration-200"
+            style={{ top: sideMenuPos - 4 }} 
          >
             <button 
                 onClick={() => setIsSideMenuExpanded(!isSideMenuExpanded)} 
