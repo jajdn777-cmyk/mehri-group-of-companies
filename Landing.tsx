@@ -166,7 +166,7 @@ const WhatWeDoSection = () => (
               </div>
               <h3 className="text-xl font-black uppercase tracking-tight mb-4 text-white">Biometric Hardware</h3>
               <p className="text-sm text-slate-400 font-medium leading-relaxed">
-                 Users can train using just their phone or pair the GTL-1 smartwatch for deeper biometric insights.
+                 Users can train using just their phone or pair the Mehri fitness tracker for deeper biometric insights.
               </p>
            </motion.div>
 
@@ -217,9 +217,9 @@ const KeyFeaturesSection = () => (
            <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center mx-auto shadow-sm text-emerald-500 mb-4">
               <Users size={24} />
            </div>
-           <h3 className="text-lg md:text-xl font-black uppercase tracking-tight text-slate-900">GTL-1 Wearable Integration</h3>
+           <h3 className="text-lg md:text-xl font-black uppercase tracking-tight text-slate-900">Mehri fitness tracker Integration</h3>
            <p className="text-sm text-slate-500 leading-relaxed font-medium">
-              Seamlessly sync with our flagship hardware. The GTL-1 Smartwatch provides the high-fidelity sensor data that powers the entire MEHRI ecosystem.
+              Seamlessly sync with our flagship hardware. The Mehri fitness tracker provides the high-fidelity sensor data that powers the entire MEHRI ecosystem.
            </p>
         </div>
      </div>
@@ -266,24 +266,24 @@ const FAQSection = () => (
      </div>
      <div className="bg-white rounded-[30px] md:rounded-[40px] shadow-xl border border-slate-100 p-6 md:p-12">
         <FAQItem 
-           question="Does Mehri Fitness work without the GTL-1?" 
-           answer="Yes. You can use Mehri Fitness with just your smartphone to track workouts, log meals, and access Alma coaching. The GTL-1 is optional hardware for automated biometric data like continuous heart rate and sleep tracking." 
+           question="Does Mehri Fitness work without the Mehri fitness tracker?" 
+           answer="Yes. You can use Mehri Fitness with just your smartphone to track workouts, log meals, and access Alma coaching. The Mehri fitness tracker is optional hardware for automated biometric data like continuous heart rate and sleep tracking." 
         />
         <FAQItem 
-           question="Is the GTL-1 compatible with iOS and Android?" 
-           answer="Yes, the GTL-1 Smartwatch features universal compatibility. It syncs seamlessly via Bluetooth 5.3 to the Mehri app on both iOS and Android platforms." 
+           question="Is the Mehri fitness tracker compatible with iOS and Android?" 
+           answer="Yes, the Mehri fitness tracker features universal compatibility. It syncs seamlessly via Bluetooth 5.3 to the Mehri app on both iOS and Android platforms." 
         />
         <FAQItem 
            question="Is this a medical device?" 
-           answer="No. Mehri Fitness and the GTL-1 are wellness tools designed for recreational use, training, and performance tracking. They are not medical devices and should not be used to diagnose or treat medical conditions." 
+           answer="No. Mehri Fitness and the Mehri fitness tracker are wellness tools designed for recreational use, training, and performance tracking. They are not medical devices and should not be used to diagnose or treat medical conditions." 
         />
         <FAQItem 
            question="Is my biometric data secure?" 
            answer="Yes. We prioritize your privacy. Biometric data is encrypted locally on the device and during transmission to ensure your personal health information remains secure." 
         />
         <FAQItem 
-           question="What is the battery life of the GTL-1?" 
-           answer="The GTL-1 is engineered for endurance, boasting an intelligent 14-day battery life on a single charge under typical usage conditions." 
+           question="What is the battery life of the Mehri fitness tracker?" 
+           answer="The Mehri fitness tracker is engineered for endurance, boasting an intelligent 14-day battery life on a single charge under typical usage conditions." 
         />
      </div>
   </section>
@@ -446,7 +446,7 @@ export const LandingSection = ({ onStart, onNavigate }: any) => {
             <div className="flex-1 space-y-8 md:space-y-12 z-10 text-center lg:text-left">
               <div className="space-y-6">
                 <div className="flex flex-col md:flex-row items-center gap-4 justify-center lg:justify-start">
-                   <span className="bg-emerald-400 text-slate-900 px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-[0.3em] shadow-[0_0_20px_rgba(52,211,153,0.4)]">GTL1 Series</span>
+                   <span className="bg-emerald-400 text-slate-900 px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-[0.3em] shadow-[0_0_20px_rgba(52,211,153,0.4)]">Mehri fitness tracker Series</span>
                    <span className="text-slate-500 text-[10px] font-bold uppercase tracking-widest flex items-center gap-2"><span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"/> In Stock</span>
                 </div>
                 <h2 className="text-4xl md:text-7xl font-black text-white uppercase tracking-tighter leading-[0.9]">
@@ -456,7 +456,7 @@ export const LandingSection = ({ onStart, onNavigate }: any) => {
               
               <div className="space-y-8">
                 <p className="text-slate-400 text-base md:text-xl font-medium leading-relaxed max-w-xl mx-auto lg:mx-0">
-                  The GTL-1 is a precision instrument for your wrist. Milled from aerospace-grade titanium, it provides continuous physiological tracking to inform your training decisions. While optional, it unlocks the full depth of Mehri's biometric analysis.
+                  The Mehri fitness tracker is a precision instrument for your wrist. Milled from aerospace-grade titanium, it provides continuous physiological tracking to inform your training decisions. While optional, it unlocks the full depth of Mehri's biometric analysis.
                 </p>
                 
                 <ul className="space-y-3 inline-block text-left">
@@ -495,7 +495,7 @@ export const LandingSection = ({ onStart, onNavigate }: any) => {
                <div className="relative z-10 grid grid-cols-2 gap-4 md:gap-6 w-full max-w-lg">
                   <motion.div whileHover={{ y: -10 }} className="space-y-6 pt-12">
                      <div className="aspect-[3/4] rounded-[30px] md:rounded-[40px] overflow-hidden shadow-2xl border-4 border-slate-800 relative group/img">
-                         <img src="https://images2.imgbox.com/56/17/7wy6uJHG_o.jpeg" onError={(e) => e.currentTarget.src='https://images.unsplash.com/photo-1579586337278-3befd40fd17a?q=80&w=800'} className="w-full h-full object-cover transition-all duration-700" alt="GTL1 Watch Face" />
+                         <img src="https://images2.imgbox.com/56/17/7wy6uJHG_o.jpeg" onError={(e) => e.currentTarget.src='https://images.unsplash.com/photo-1579586337278-3befd40fd17a?q=80&w=800'} className="w-full h-full object-cover transition-all duration-700" alt="Mehri fitness tracker Watch Face" />
                          <div className="absolute bottom-0 left-0 w-full p-4 md:p-6 bg-gradient-to-t from-black/80 to-transparent">
                             <p className="text-white font-black text-sm md:text-lg">Focus Mode</p>
                          </div>
@@ -503,7 +503,7 @@ export const LandingSection = ({ onStart, onNavigate }: any) => {
                   </motion.div>
                   <motion.div whileHover={{ y: -10 }} className="space-y-6 pb-12">
                      <div className="aspect-[3/4] rounded-[30px] md:rounded-[40px] overflow-hidden shadow-2xl border-4 border-slate-800 relative group/img">
-                         <img src="https://images2.imgbox.com/3b/e6/QhMzpqDY_o.jpeg" onError={(e) => e.currentTarget.src='https://images.unsplash.com/photo-1551816230-ef5deaed4a26?q=80&w=800'} className="w-full h-full object-cover transition-all duration-700" alt="GTL1 Side Profile" />
+                         <img src="https://images2.imgbox.com/3b/e6/QhMzpqDY_o.jpeg" onError={(e) => e.currentTarget.src='https://images.unsplash.com/photo-1551816230-ef5deaed4a26?q=80&w=800'} className="w-full h-full object-cover transition-all duration-700" alt="Mehri fitness tracker Side Profile" />
                          <div className="absolute bottom-0 left-0 w-full p-4 md:p-6 bg-gradient-to-t from-black/80 to-transparent">
                             <p className="text-white font-black text-sm md:text-lg">Titanium</p>
                          </div>
