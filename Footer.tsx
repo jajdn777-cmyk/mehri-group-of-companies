@@ -14,7 +14,7 @@ THE MEHRI VISION
 We envision a future where technology doesn't just track you—it understands you. From our Silicon Valley headquarters to our global user base, we are building an ecosystem where every heartbeat, every step, and every night of sleep contributes to a clearer picture of your potential. We are building the operating system for the human body.
 
 WHAT WE DO
-- Hardware Engineering: Creating robust, aerospace-grade wearables like the GTL-1 Smartwatch, milled from titanium and sapphire.
+- Hardware Engineering: Creating robust, aerospace-grade wearables like the Mehri fitness tracker, milled from titanium and sapphire.
 - AI Development: Training "Alma", our neural coaching engine, to provide context-aware health advice that adapts to your specific metabolic profile.
 - Community Building: Fostering a worldwide network of athletes, bio-hackers, and everyday achievers committed to self-improvement.
 
@@ -115,7 +115,7 @@ export const Footer = ({ onNavigate }: any) => {
         <div className="max-w-7xl mx-auto px-8 pb-12">
           <div className="flex flex-col md:flex-row items-center justify-between gap-8 mb-20 bg-slate-900/50 p-10 rounded-[40px] border border-slate-800 backdrop-blur-sm">
              <div className="space-y-2 text-center md:text-left">
-                <h3 className="text-3xl font-black uppercase tracking-tighter text-white">Secure Your GTL-1</h3>
+                <h3 className="text-3xl font-black uppercase tracking-tighter text-white">Secure Your Tracker</h3>
                 <p className="text-slate-400 text-sm font-medium">Limited stock available for the 2026 release batch.</p>
              </div>
              <a 
@@ -134,7 +134,7 @@ export const Footer = ({ onNavigate }: any) => {
                    <MehriLogo size="lg" className="brightness-0 invert" />
                 </div>
                 <p className="text-slate-500 text-sm leading-relaxed max-w-xs">
-                   Mehri Group of Companies is the premier ecosystem for elite performance tracking. Powered by the GTL-1 hardware kernel.
+                   Mehri Group of Companies is the premier ecosystem for elite performance tracking. Powered by the Mehri fitness tracker hardware kernel.
                 </p>
                 <div className="space-y-4 pt-2">
                    <a 
@@ -175,7 +175,7 @@ export const Footer = ({ onNavigate }: any) => {
              <div className="lg:col-span-3 space-y-8">
                 <h4 className="text-sm font-black uppercase tracking-widest text-slate-600">Product</h4>
                 <ul className="space-y-4">
-                   <li><a href="https://a.co/d/f49Dhaq" target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-emerald-400 text-sm font-medium transition-colors">GTL-1 Smartwatch</a></li>
+                   <li><a href="https://a.co/d/f49Dhaq" target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-emerald-400 text-sm font-medium transition-colors">Mehri fitness tracker</a></li>
                 </ul>
                 <h4 className="text-sm font-black uppercase tracking-widest text-slate-600 pt-4">Support</h4>
                 <ul className="space-y-4">
@@ -200,7 +200,7 @@ export const Footer = ({ onNavigate }: any) => {
           </div>
           <div className="pt-12 flex flex-col md:flex-row justify-between items-center gap-6">
              <p className="text-slate-600 text-[10px] font-bold uppercase tracking-widest">
-                © 2026 MEHRI Group. Powered by GTL-1 Technology.
+                © 2026 MEHRI Group. Powered by Mehri fitness tracker Technology.
              </p>
              <div className="flex gap-8">
                 <button onClick={() => onNavigate('privacy')} className="text-slate-500 hover:text-white text-[10px] font-black uppercase tracking-widest transition-colors flex items-center gap-2">
