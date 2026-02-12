@@ -86,6 +86,13 @@ export const Header = ({ currentView, onNavigate, onSignOut, onShop, userProfile
     </button>
   );
 
+  // Dynamic Logo Sizing
+  // If Dashboard or Scrolled: Use the larger size to compensate for visual shrinkage
+  // If Landing (Transparent): Keep original size as requested
+  const logoClasses = (isDashboard || scrolled)
+    ? "h-48 md:h-80 -mt-10 md:-mt-20 -ml-4 md:-ml-10" // Dashboard/Scrolled: Increased size
+    : "h-40 md:h-64 -mt-8 md:-mt-16 -ml-3 md:-ml-8";   // Landing: Original size
+
   return (
     <>
       {/* HEADER BAR - Adjusted alignment (items-start) and trimmed height to reduce dead space */}
@@ -103,7 +110,7 @@ export const Header = ({ currentView, onNavigate, onSignOut, onShop, userProfile
 
             {/* LOGO (LEFT ALIGNED) - Pulled up with negative margin */}
             <div 
-              className="flex items-center cursor-pointer hover:scale-[1.02] active:scale-95 transition-all z-50" 
+              className="flex items-center cursor-pointer hover:scale-[1.02] active:scale-95 transition-all z-50 shrink-0" 
               onClick={() => {
                 if (userProfile?.username) {
                   onNavigate('dashboard');
@@ -112,11 +119,11 @@ export const Header = ({ currentView, onNavigate, onSignOut, onShop, userProfile
                 }
               }}
             >
-              {/* Direct IMG for precise size control - Fixed dimensions, pulled up via negative margin */}
+              {/* Direct IMG for precise size control - Conditional classes applied here */}
               <img 
                  src="https://i.ibb.co/8D5MPnyX/logo1-pixian-ai.png" 
                  alt="MEHRI Logo" 
-                 className="w-auto object-contain drop-shadow-sm h-32 md:h-52 -mt-7 md:-mt-12 -ml-2 md:-ml-6"
+                 className={`w-auto object-contain drop-shadow-sm transition-all duration-500 ${logoClasses}`}
               />
             </div>
         </div>
