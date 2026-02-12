@@ -56,7 +56,7 @@ const BlogReaderModal = ({ post, onClose }: any) => {
             color: rgba(0, 0, 0, 0.84);
          }
          .blog-content p { margin-bottom: 24px; }
-         .blog-content p:first-of-type::first-letter {
+         .blog-content > p:first-of-type::first-letter {
             float: left;
             font-size: 72px;
             line-height: 60px;
