@@ -1,18 +1,29 @@
+
 import React, { useEffect, useState } from 'react';
 
 interface LoaderProps {
   isVisible: boolean;
   text: string;
+  onDismiss?: () => void;
 }
 
-export const Loader = ({ isVisible, text }: LoaderProps) => {
+export const Loader = ({ isVisible, text, onDismiss }: LoaderProps) => {
   const [shouldRender, setShouldRender] = useState(isVisible);
   const [isExiting, setIsExiting] = useState(false);
+  const [showDismiss, setShowDismiss] = useState(false);
 
   useEffect(() => {
     if (isVisible) {
       setShouldRender(true);
       setIsExiting(false);
+      setShowDismiss(false);
+      
+      // If loading takes longer than 6 seconds, show manual dismiss
+      const dismissTimer = setTimeout(() => {
+          setShowDismiss(true);
+      }, 6000);
+      
+      return () => clearTimeout(dismissTimer);
     } else {
       setIsExiting(true);
       const timer = setTimeout(() => setShouldRender(false), 800);
@@ -72,6 +83,16 @@ export const Loader = ({ isVisible, text }: LoaderProps) => {
              <div className="h-full bg-[#A7F3D0] w-1/2 animate-[loading-bar_1.5s_infinite_ease-in-out]" />
           </div>
         </div>
+
+        {/* Emergency Dismiss Button */}
+        {showDismiss && onDismiss && (
+            <button 
+                onClick={onDismiss}
+                className="absolute top-32 text-[9px] font-bold text-slate-400 uppercase tracking-widest hover:text-red-500 transition-colors animate-fade-in border-b border-transparent hover:border-red-500 pb-0.5"
+            >
+                Taking too long? Tap to Cancel
+            </button>
+        )}
       </div>
 
       <style>{`
@@ -110,8 +131,7 @@ export const Loader = ({ isVisible, text }: LoaderProps) => {
 };
 
 /**
- * HIGH-FIDELITY ATHLETIC RUNNER - UPDATED
- * Straightened stride for more natural look.
+ * HIGH-FIDELITY ATHLETIC RUNNER
  */
 const RunnerSprite = () => (
   <div className="w-8 h-8 relative">
@@ -154,11 +174,5 @@ const RunnerSprite = () => (
         <path d="M13 7 L15 9 L14 11" />
         <path d="M13 7 L11 9 L12 11" />
      </svg>
-  </div>
-);
-
-export const Skeleton = ({ className }: { className?: string }) => (
-  <div className={`bg-slate-100 relative overflow-hidden rounded-xl ${className}`}>
-    <div className="absolute inset-0 -translate-x-full animate-[shimmer_1.5s_infinite] bg-gradient-to-r from-transparent via-white/50 to-transparent" />
   </div>
 );
