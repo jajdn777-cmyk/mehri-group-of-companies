@@ -1,3 +1,4 @@
+
 import React, { useState, useRef } from 'react';
 import { X, Check, ArrowRight, Heart, Moon, Droplets, Activity, Smartphone, ChevronRight, ChevronLeft } from 'lucide-react';
 
@@ -46,7 +47,7 @@ export const ShopModal = ({ onClose, onBuy }: any) => {
           {/* LEFT: IMAGERY */}
           <div className="w-full lg:w-1/2 bg-slate-100 relative group h-[40vh] lg:h-full shrink-0">
              <div className="absolute top-6 left-6 z-20 flex gap-2">
-                <span className="bg-slate-900 text-white px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-widest">GTL-1 Series</span>
+                <span className="bg-slate-900 text-white px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-widest">Mehri fitness tracker Series</span>
                 <span className="bg-emerald-400 text-slate-900 px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-widest">In Stock</span>
              </div>
 
@@ -54,7 +55,7 @@ export const ShopModal = ({ onClose, onBuy }: any) => {
                  <img 
                     src={selectedColor === 'Pink' ? PRODUCT_IMAGES[0] : PRODUCT_IMAGES[5]} 
                     className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
-                    alt="MEHRI Watch GTL1"
+                    alt="Mehri fitness tracker"
                  />
                  <div className="absolute inset-0 bg-gradient-to-t from-slate-900/40 to-transparent pointer-events-none" />
              </div>
@@ -85,7 +86,7 @@ export const ShopModal = ({ onClose, onBuy }: any) => {
           {/* RIGHT: DETAILS */}
           <div className="w-full lg:w-1/2 p-8 lg:p-16 flex flex-col overflow-y-auto">
              <div className="mb-8">
-                <h2 className="text-4xl lg:text-6xl font-black uppercase text-slate-900 tracking-tighter leading-none mb-4">GTL-1 <br/><span className="text-slate-400">Titanium</span></h2>
+                <h2 className="text-4xl lg:text-6xl font-black uppercase text-slate-900 tracking-tighter leading-none mb-4">Mehri fitness tracker <br/><span className="text-slate-400">Titanium</span></h2>
                 <div className="flex items-center gap-4 text-sm font-bold text-slate-500">
                    <div className="flex text-emerald-500"><Check size={16}/> <Check size={16}/> <Check size={16}/> <Check size={16}/> <Check size={16}/></div>
                    <span>450+ Verified Reviews</span>
