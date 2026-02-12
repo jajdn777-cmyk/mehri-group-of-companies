@@ -105,7 +105,6 @@ export const updateUserCache = (username: string, newData: any) => {
   try {
     const key = `mehri_data_${username}`;
     const current = getUserCache(username) || {};
-    // Only update profile/specs, NOT logging history
     const merged = { ...current, ...newData, lastUpdated: Date.now() };
     localStorage.setItem(key, JSON.stringify(merged));
   } catch (e) {}
@@ -159,8 +158,13 @@ export const calculateStreak = (workouts: any[], restDayOfWeek?: string) => {
 // --- REAL SUPABASE API LAYER ---
 export const api = async (action: string, payload: any) => {
   try {
-    const { data: { user } } = await supabase.auth.getUser();
-    const userId = user?.id;
+    const { data: authData, error: authError } = await supabase.auth.getUser();
+    
+    if (authError && action !== 'LOGIN' && action !== 'REGISTER') {
+        return { status: 'error', message: 'Authentication failed. Please login again.' };
+    }
+    
+    const userId = authData?.user?.id;
 
     if (action === 'REGISTER') {
       const { data, error } = await supabase.auth.signUp({
@@ -357,6 +361,13 @@ export const api = async (action: string, payload: any) => {
 
     if (action === 'PUBLISH_BLOG') {
        if(!userId) return { status: 'error', message: 'Not logged in' };
+       
+       // STRICT ADMIN CHECK
+       const { data: userData } = await supabase.from('profiles').select('email').eq('id', userId).single();
+       if (userData?.email !== 'jajdn777@gmail.com') {
+           return { status: 'error', message: 'Unauthorized: Admin privileges required.' };
+       }
+
        const { data, error } = await supabase.from('blogs').insert({
           user_id: userId,
           title: payload.title,
@@ -400,17 +411,18 @@ export const api = async (action: string, payload: any) => {
     if (action === 'SAVE_ROUTE') {
        if(!userId) return { status: 'error', message: 'Not logged in' };
        
-       // Removed explicit 'points' column to prevent errors if column missing.
-       // 'data' column (jsonb) contains all detail including points.
-       const { error } = await supabase.from('routes').insert({
+       const { data, error } = await supabase.from('routes').insert({
           user_id: userId,
           name: payload.name,
           distance: payload.distance,
-          data: payload.data // Contains { points: [], ... }
-       });
+          points: payload.points // JSONB column - will store array of [lat, lng] pairs
+       }).select().single();
        
-       if (error) return { status: 'error', message: error.message };
-       return { status: 'success' };
+       if (error) {
+          console.error('Route save error:', error);
+          return { status: 'error', message: error.message };
+       }
+       return { status: 'success', data };
     }
 
     if (action === 'DELETE_ROUTE') {
