@@ -127,6 +127,8 @@ const App = () => {
 
   // Use Refs to access current state in async functions without closures staleness
   const viewRef = useRef(view);
+  const hasLoadedSession = useRef(false); // Track if we've already handled the session load
+  
   useEffect(() => { viewRef.current = view; }, [view]);
 
   const [showShop, setShowShop] = useState(false);
@@ -202,15 +204,34 @@ const App = () => {
     return () => window.removeEventListener('popstate', handlePopState);
   }, []);
 
+  // --- FAILSAFE LOADER TIMEOUT ---
+  // If the loader (auth check or app loading) gets stuck for more than 8 seconds, force it off.
+  useEffect(() => {
+    if (isLoading || isCheckingAuth) {
+      const timer = setTimeout(() => {
+        console.warn("Loader timed out. Forcing UI reveal.");
+        setIsLoading(false);
+        setIsCheckingAuth(false);
+      }, 8000);
+      return () => clearTimeout(timer);
+    }
+  }, [isLoading, isCheckingAuth]);
+
   // --- SMART ENTRY AUTH CONTROLLER ---
   useEffect(() => {
     const { data: authListener } = supabase.auth.onAuthStateChange(async (event, session) => {
-      // Prevent loading screen from reappearing on token refresh
-      if (event === 'TOKEN_REFRESHED') return;
+      // IGNORE NON-CRITICAL EVENTS TO PREVENT UI FLASHING
+      if (event === 'TOKEN_REFRESHED' || event === 'USER_UPDATED') return;
 
-      // 1. Session Detected (Login, Signup, or Persisted)
-      if (session?.user) {
-        setIsCheckingAuth(true); // Keep shield up while checking DB
+      // Prevent redundant loading logic if we've already loaded the session
+      // This fixes the issue where switching tabs causes the loader to reappear
+      if (event === 'SIGNED_IN' && hasLoadedSession.current) {
+         return;
+      }
+
+      // 1. Session Detected (Login, Signup, or Initial Load)
+      if ((event === 'SIGNED_IN' || event === 'INITIAL_SESSION') && session?.user) {
+        setIsCheckingAuth(true); // Raise shield strictly for loading
         const user = session.user;
         const metadata = user.user_metadata || {};
 
@@ -252,17 +273,17 @@ const App = () => {
 
            // CASE B: Incomplete Specs -> Force Onboarding
            if (!profile.weight || !profile.height) {
-              handleTransition('specs', undefined, undefined, true); // true = skip internal loader, BootScreen handles it
+              handleTransition('specs', undefined, undefined, true); // true = skip internal loader
            } 
            // CASE C: Complete Profile (Returning User) -> Dashboard
            else {
-              // Admin Special Case is implicitly handled here (routes to dashboard, admin features unlocked by email)
               await loadUserData(profile.username); // Pre-load data behind shield
               handleTransition('main', 'dashboard', undefined, true);
            }
         }
         
-        // 5. Lower Shield
+        // 5. Lower Shield & Mark Session as Loaded
+        hasLoadedSession.current = true;
         setIsCheckingAuth(false);
 
       } else if (event === 'SIGNED_OUT' || event === 'USER_DELETED') {
@@ -271,12 +292,12 @@ const App = () => {
          setWorkouts([]);
          setUserName('');
          setView('landing');
+         hasLoadedSession.current = false;
          setIsCheckingAuth(false);
-      } else if (event === 'INITIAL_SESSION') {
-         // If no session exists on startup, remove shield so landing page shows
-         if (!session) {
-             setIsCheckingAuth(false);
-         }
+      } else if (event === 'INITIAL_SESSION' && !session) {
+         // No session found on startup -> show landing
+         hasLoadedSession.current = true; // Mark as checked even if no session
+         setIsCheckingAuth(false);
       }
     });
 
@@ -381,9 +402,6 @@ const App = () => {
 
   // Manual Auth Handler (Legacy/Non-Google)
   const handleAuthComplete = async (data: any) => {
-      // Re-use smart logic via manual trigger if needed, but usually onAuthStateChange catches this too
-      // if supabase.auth.signInWithPassword is used.
-      // However, for immediate UI feedback in manual login:
       setIsCheckingAuth(true); // Raise shield manually
       await loadUserData(data.username);
       
@@ -394,6 +412,7 @@ const App = () => {
           handleTransition('main', 'dashboard', undefined, true);
       }
       setIsCheckingAuth(false);
+      hasLoadedSession.current = true;
   };
 
   const handleWatchPurchase = () => {
