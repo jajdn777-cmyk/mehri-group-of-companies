@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { detectSystemUnits, api, getWeightUnit } from './utils.ts';
 import { checkEmailAvailability, checkUsernameAvailability } from './validationService.ts';
 import { Loader } from './Loader.tsx';
-import { Eye, EyeOff, ArrowRight, Activity, Zap, Target, Heart, X, Check } from 'lucide-react';
+import { Eye, EyeOff, ArrowRight, Activity, Zap, Target, Heart, X, Check, Mail, Newspaper } from 'lucide-react';
 import { supabase } from './supabaseClient.ts';
 
 declare const window: any;
@@ -35,6 +35,10 @@ export const AuthSection = ({ onComplete, initialView = 'login', onNavigate }: a
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [units, setUnits] = useState<'imperial' | 'metric'>('metric');
+  
+  // Newsletter State (Defaulted to true)
+  const [optInNewsletter, setOptInNewsletter] = useState(true);
+  const [optInNews, setOptInNews] = useState(true);
   
   // Error States
   const [emailError, setEmailError] = useState('');
@@ -140,9 +144,30 @@ export const AuthSection = ({ onComplete, initialView = 'login', onNavigate }: a
         return;
     }
     setIsLoading(true);
+    setLoadingText("Creating Account...");
+    
     try {
+        // 1. Core Registration
         const res = await api("REGISTER", { name, username: `@${username.toLowerCase()}`, email, password, units });
+        
         if (res.status === 'success') {
+            
+            // 2. Newsletter Logic (Post-Auth Success)
+            if (optInNewsletter || optInNews) {
+                setLoadingText("Updating Subscriptions...");
+                try {
+                    await supabase.from('newsletter_subscriptions').insert({
+                        email: email,
+                        is_subscribed: true,
+                        opt_in_newsletter: optInNewsletter,
+                        opt_in_news: optInNews
+                    });
+                } catch (subError) {
+                    console.error("Newsletter subscription failed:", subError);
+                    // We do NOT block entry if this fails, just log it
+                }
+            }
+
             localStorage.setItem('mehri_session_user', `@${username.toLowerCase()}`);
             onComplete({ name, username: `@${username.toLowerCase()}`, isNewUser: true });
         } else {
@@ -152,7 +177,11 @@ export const AuthSection = ({ onComplete, initialView = 'login', onNavigate }: a
             else showToast(res.message);
             triggerShake();
         }
-    } catch (e) { showToast("Registration error."); } finally { setIsLoading(false); }
+    } catch (e) { 
+        showToast("Registration error."); 
+    } finally { 
+        setIsLoading(false); 
+    }
   };
 
   const isSignupReady = !emailError && !usernameError && name && email && username && password && password === confirmPassword && password.length >= 8;
@@ -163,7 +192,7 @@ export const AuthSection = ({ onComplete, initialView = 'login', onNavigate }: a
       {toast && <Toast message={toast.msg} type={toast.type} onClose={() => setToast(null)} />}
 
       <div className="fixed inset-0 bg-white z-[6000] flex flex-col items-center justify-center p-6 animate-fade-in font-sans h-[100dvh]">
-          <div className={`w-full max-w-md relative ${shake ? 'animate-shake' : ''} max-h-full overflow-y-auto`}>
+          <div className={`w-full max-w-md relative ${shake ? 'animate-shake' : ''} max-h-full overflow-y-auto custom-scrollbar`}>
             <div className="bg-white border border-slate-100 rounded-[30px] p-8 md:p-10 shadow-2xl relative z-10 flex flex-col gap-6">
               <div className="text-center space-y-2">
                 <h2 className="text-3xl font-black uppercase tracking-tighter text-slate-900 font-serif">{isLogin ? "Welcome Back" : "Join MEHRI"}</h2>
@@ -229,6 +258,41 @@ export const AuthSection = ({ onComplete, initialView = 'login', onNavigate }: a
                         </div>
                         <input type="password" placeholder="Password (Min 8)" className="w-full bg-slate-50 border-none text-slate-900 text-sm font-bold rounded-xl px-5 py-4 focus:ring-2 focus:ring-[#A7F3D0] outline-none" value={password} onChange={e => setPassword(e.target.value)} />
                         <input type="password" placeholder="Confirm Password" className="w-full bg-slate-50 border-none text-slate-900 text-sm font-bold rounded-xl px-5 py-4 focus:ring-2 focus:ring-[#A7F3D0] outline-none" value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} />
+                        
+                        {/* Newsletter Subscriptions */}
+                        <div className="space-y-3 pt-2">
+                           <label className="flex items-start gap-3 cursor-pointer group">
+                              <div className="relative flex items-center">
+                                 <input 
+                                    type="checkbox" 
+                                    className="peer appearance-none h-5 w-5 border-2 border-slate-200 rounded-md checked:bg-[#A7F3D0] checked:border-[#A7F3D0] transition-all cursor-pointer"
+                                    checked={optInNewsletter}
+                                    onChange={e => setOptInNewsletter(e.target.checked)}
+                                 />
+                                 <Check size={12} className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-slate-900 opacity-0 peer-checked:opacity-100 pointer-events-none transition-opacity" strokeWidth={4} />
+                              </div>
+                              <div className="flex-1">
+                                 <p className="text-xs font-bold text-slate-600 group-hover:text-slate-900 flex items-center gap-2"><Mail size={12}/> Subscribe to Weekly Newsletter</p>
+                                 <p className="text-[10px] text-slate-400 mt-0.5">Get elite training tips straight to your inbox.</p>
+                              </div>
+                           </label>
+                           
+                           <label className="flex items-start gap-3 cursor-pointer group">
+                              <div className="relative flex items-center">
+                                 <input 
+                                    type="checkbox" 
+                                    className="peer appearance-none h-5 w-5 border-2 border-slate-200 rounded-md checked:bg-[#A7F3D0] checked:border-[#A7F3D0] transition-all cursor-pointer"
+                                    checked={optInNews}
+                                    onChange={e => setOptInNews(e.target.checked)}
+                                 />
+                                 <Check size={12} className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-slate-900 opacity-0 peer-checked:opacity-100 pointer-events-none transition-opacity" strokeWidth={4} />
+                              </div>
+                              <div className="flex-1">
+                                 <p className="text-xs font-bold text-slate-600 group-hover:text-slate-900 flex items-center gap-2"><Newspaper size={12}/> Receive Fitness News & Updates</p>
+                                 <p className="text-[10px] text-slate-400 mt-0.5">Stay updated on MEHRI ecosystem and features.</p>
+                              </div>
+                           </label>
+                        </div>
                      </>
                  )}
               </div>
