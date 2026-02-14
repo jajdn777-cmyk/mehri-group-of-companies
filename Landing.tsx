@@ -249,7 +249,7 @@ const WhatWeDoSection = () => (
      >
        <span className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 mb-6 block">What We Do</span>
        <h2 className="text-2xl md:text-4xl font-medium text-slate-900 leading-relaxed font-serif">
-          Mehri Fitness helps people track workouts, recovery, and health trends across devices. Users can train using just their phone or pair the GTL-1 smartwatch for deeper biometric insights, all supported by Alma AI guidance.
+          Mehri Fitness helps people track workouts, recovery, and health trends across devices. Users can train using just their phone or pair the Mehri fitness tracker for deeper biometric insights, all supported by Alma AI coaching.
        </h2>
      </motion.div>
   </section>
@@ -280,9 +280,9 @@ const KeyFeaturesSection = () => (
            <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center mx-auto shadow-sm text-emerald-500 mb-4">
               <Users size={24} />
            </div>
-           <h3 className="text-lg md:text-xl font-black uppercase tracking-tight text-slate-900">GTL-1 Wearable Integration</h3>
+           <h3 className="text-lg md:text-xl font-black uppercase tracking-tight text-slate-900">Mehri fitness tracker Integration</h3>
            <p className="text-sm text-slate-500 leading-relaxed font-medium">
-              Seamlessly sync with our flagship hardware. The GTL-1 Smartwatch provides the high-fidelity sensor data that powers the entire MEHRI ecosystem.
+              Seamlessly sync with our flagship hardware. The Mehri fitness tracker provides the high-fidelity sensor data that powers the entire MEHRI ecosystem.
            </p>
         </div>
      </div>
@@ -329,24 +329,24 @@ const FAQSection = () => (
      </div>
      <div className="bg-white rounded-[30px] md:rounded-[40px] shadow-xl border border-slate-100 p-6 md:p-12">
         <FAQItem 
-           question="Does Mehri Fitness work without the GTL-1?" 
-           answer="Yes. You can use Mehri Fitness with just your smartphone to track workouts, log meals, and access Alma coaching. The GTL-1 is optional hardware for automated biometric data like continuous heart rate and sleep tracking." 
+           question="Does Mehri Fitness work without the Mehri fitness tracker?" 
+           answer="Yes. You can use Mehri Fitness with just your smartphone to track workouts, log meals, and access Alma coaching. The Mehri fitness tracker is optional hardware for automated biometric data like continuous heart rate and sleep tracking." 
         />
         <FAQItem 
-           question="Is the GTL-1 compatible with iOS and Android?" 
-           answer="Yes, the GTL-1 Smartwatch features universal compatibility. It syncs seamlessly via Bluetooth 5.3 to the Mehri app on both iOS and Android platforms." 
+           question="Is the Mehri fitness tracker compatible with iOS and Android?" 
+           answer="Yes, the Mehri fitness tracker features universal compatibility. It syncs seamlessly via Bluetooth 5.3 to the Mehri app on both iOS and Android platforms." 
         />
         <FAQItem 
            question="Is this a medical device?" 
-           answer="No. Mehri Fitness and the GTL-1 are wellness tools designed for recreational use, training, and performance tracking. They are not medical devices and should not be used to diagnose or treat medical conditions." 
+           answer="No. Mehri Fitness and the Mehri fitness tracker are wellness tools designed for recreational use, training, and performance tracking. They are not medical devices and should not be used to diagnose or treat medical conditions." 
         />
         <FAQItem 
            question="Is my biometric data secure?" 
            answer="Yes. We prioritize your privacy. Biometric data is encrypted locally on the device and during transmission to ensure your personal health information remains secure." 
         />
         <FAQItem 
-           question="What is the battery life of the GTL-1?" 
-           answer="The GTL-1 is engineered for endurance, boasting an intelligent 14-day battery life on a single charge under typical usage conditions." 
+           question="What is the battery life of the Mehri fitness tracker?" 
+           answer="The Mehri fitness tracker is engineered for endurance, boasting an intelligent 14-day battery life on a single charge under typical usage conditions." 
         />
      </div>
   </section>
@@ -451,7 +451,7 @@ const GoalsCTASection = ({ onAction }: { onAction: () => void }) => (
 
 // --- MAIN LANDING COMPONENT ---
 
-export const LandingSection = ({ onStart }: any) => {
+export const LandingSection = ({ onStart, onNavigate }: any) => {
   // Removed explicit type annotation from unused parameter to satisfy GoalsCTASection prop type
   const createRipple = () => {
     onStart(); 
@@ -461,7 +461,7 @@ export const LandingSection = ({ onStart }: any) => {
     <div className="space-y-0 pb-0 overflow-hidden bg-white">
       
       {/* 1. HERO SECTION */}
-      <section className="relative h-screen w-full flex items-center justify-center overflow-hidden isolate">
+      <section className="relative min-h-screen w-full flex flex-col justify-start items-center overflow-hidden isolate pt-32 pb-10">
         <motion.div 
            initial={{ scale: 1.1 }}
            animate={{ scale: 1 }}
@@ -471,8 +471,34 @@ export const LandingSection = ({ onStart }: any) => {
         />
         <div className="absolute inset-0 z-0 bg-black/50 backdrop-blur-[2px]" />
         
-        <div className="relative z-10 text-center px-6 md:px-8 text-white flex flex-col items-center">
-          <h1 className="font-black tracking-tighter uppercase mb-6 md:mb-10 leading-none text-5xl md:text-9xl drop-shadow-2xl flex flex-col items-center gap-y-2">
+        {/* Main Text Content */}
+        <div className="relative z-10 text-center px-6 md:px-8 text-white flex flex-col items-center w-full">
+          
+          {/* NEW WATCH BANNER SECTION - Moved to top */}
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.2, duration: 0.8 }}
+            className="relative w-full max-w-xl h-32 md:h-48 rounded-[30px] overflow-hidden shadow-2xl mb-6 border border-white/20 group mx-4"
+          >
+            <img 
+              src="https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?q=80&w=1200&auto=format&fit=crop" 
+              alt="Wearable Tech"
+              className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:scale-105 transition-transform duration-700"
+            />
+            <div className="absolute inset-0 bg-black/30 group-hover:bg-black/20 transition-colors" />
+            
+            <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-4">
+               <p className="text-[9px] md:text-xs font-black uppercase tracking-[0.3em] text-white/90 mb-2 drop-shadow-md">
+                  MEHRI GROUP OF COMPANIES
+               </p>
+               <h2 className="text-xl md:text-3xl font-serif text-white leading-tight drop-shadow-lg">
+                  Wearable technology for <br/> everyday life
+               </h2>
+            </div>
+          </motion.div>
+
+          <h1 className="font-black tracking-tighter uppercase mb-4 leading-none text-4xl md:text-7xl drop-shadow-2xl flex flex-col items-center gap-y-2">
             <StaggeredText text="REACH YOUR" delayStart={0} />
             <StaggeredText text="BEST." delayStart={0.8} className="text-emerald-400" withUnderline={true} />
           </h1>
@@ -482,19 +508,40 @@ export const LandingSection = ({ onStart }: any) => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.5, duration: 0.8 }}
           >
-            <p className="text-lg md:text-3xl font-medium max-w-3xl mx-auto mb-12 md:mb-20 leading-relaxed tracking-tight drop-shadow-md text-white/90 px-4">
+            <p className="text-sm md:text-xl font-medium max-w-2xl mx-auto mb-8 leading-relaxed tracking-tight drop-shadow-md text-white/90 px-4">
               An integrated fitness platform for training, recovery, and performance.
             </p>
             <motion.button 
               onClick={createRipple} 
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="px-12 md:px-20 py-6 md:py-10 bg-emerald-400 text-slate-900 font-black uppercase tracking-[0.3em] md:tracking-[0.5em] text-[10px] rounded-full shadow-2xl relative overflow-hidden"
+              className="px-10 md:px-16 py-5 md:py-8 bg-emerald-400 text-slate-900 font-black uppercase tracking-[0.3em] md:tracking-[0.5em] text-[10px] rounded-full shadow-2xl relative overflow-hidden"
             >
               Get Started
             </motion.button>
           </motion.div>
         </div>
+
+        {/* Watch Pill Section */}
+        <motion.div 
+           initial={{ y: 50, opacity: 0 }}
+           animate={{ y: 0, opacity: 1 }}
+           transition={{ delay: 1.2, duration: 0.8 }}
+           className="relative z-10 mt-auto mb-8 mx-4"
+        >
+           <div className="bg-slate-900/80 backdrop-blur-xl border border-white/20 rounded-full p-2 pr-8 flex items-center gap-6 shadow-2xl hover:bg-slate-900/90 transition-all cursor-pointer group">
+              <div className="w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden border-2 border-emerald-500/50 relative bg-white/5 group-hover:scale-105 transition-transform">
+                 <img src="https://i.ibb.co/0y594tgq/watch-black.jpg" className="w-full h-full object-cover" alt="Mehri Watch" />
+              </div>
+              <div className="text-left">
+                 <p className="text-white font-bold text-sm md:text-lg leading-tight">Advanced Metrics<br/> on your wrist.</p>
+                 <p className="text-emerald-400 text-[9px] md:text-[10px] font-black uppercase tracking-widest mt-1">Mehri fitness tracker</p>
+              </div>
+              <div className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center group-hover:bg-emerald-500 group-hover:text-slate-900 text-white transition-all ml-2">
+                 <ArrowRight size={16} />
+              </div>
+           </div>
+        </motion.div>
       </section>
 
       {/* 2. WHAT WE DO (NEW) */}
@@ -509,7 +556,7 @@ export const LandingSection = ({ onStart }: any) => {
             <div className="flex-1 space-y-8 md:space-y-12 z-10 text-center lg:text-left">
               <div className="space-y-6">
                 <div className="flex flex-col md:flex-row items-center gap-4 justify-center lg:justify-start">
-                   <span className="bg-emerald-400 text-slate-900 px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-[0.3em] shadow-[0_0_20px_rgba(52,211,153,0.4)]">GTL1 Series</span>
+                   <span className="bg-emerald-400 text-slate-900 px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-[0.3em] shadow-[0_0_20px_rgba(52,211,153,0.4)]">Mehri Series</span>
                    <span className="text-slate-500 text-[10px] font-bold uppercase tracking-widest flex items-center gap-2"><span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"/> In Stock</span>
                 </div>
                 <h2 className="text-4xl md:text-7xl font-black text-white uppercase tracking-tighter leading-[0.9]">
@@ -519,7 +566,7 @@ export const LandingSection = ({ onStart }: any) => {
               
               <div className="space-y-8">
                 <p className="text-slate-400 text-base md:text-xl font-medium leading-relaxed max-w-xl mx-auto lg:mx-0">
-                  The GTL-1 is a precision instrument for your wrist. Milled from aerospace-grade titanium, it provides continuous physiological tracking to inform your training decisions. While optional, it unlocks the full depth of Mehri's biometric analysis.
+                  The Mehri fitness tracker is a precision instrument for your wrist. Milled from aerospace-grade titanium, it provides continuous physiological tracking to inform your training decisions. While optional, it unlocks the full depth of Mehri's biometric analysis.
                 </p>
                 
                 <ul className="space-y-3 inline-block text-left">
@@ -558,7 +605,7 @@ export const LandingSection = ({ onStart }: any) => {
                <div className="relative z-10 grid grid-cols-2 gap-4 md:gap-6 w-full max-w-lg">
                   <motion.div whileHover={{ y: -10 }} className="space-y-6 pt-12">
                      <div className="aspect-[3/4] rounded-[30px] md:rounded-[40px] overflow-hidden shadow-2xl border-4 border-slate-800 relative group/img">
-                         <img src="https://images2.imgbox.com/56/17/7wy6uJHG_o.jpeg" onError={(e) => e.currentTarget.src='https://images.unsplash.com/photo-1579586337278-3befd40fd17a?q=80&w=800'} className="w-full h-full object-cover transition-all duration-700" alt="GTL1 Watch Face" />
+                         <img src="https://images2.imgbox.com/56/17/7wy6uJHG_o.jpeg" onError={(e) => e.currentTarget.src='https://images.unsplash.com/photo-1579586337278-3befd40fd17a?q=80&w=800'} className="w-full h-full object-cover transition-all duration-700" alt="Mehri Watch Face" />
                          <div className="absolute bottom-0 left-0 w-full p-4 md:p-6 bg-gradient-to-t from-black/80 to-transparent">
                             <p className="text-white font-black text-sm md:text-lg">Focus Mode</p>
                          </div>
@@ -566,7 +613,7 @@ export const LandingSection = ({ onStart }: any) => {
                   </motion.div>
                   <motion.div whileHover={{ y: -10 }} className="space-y-6 pb-12">
                      <div className="aspect-[3/4] rounded-[30px] md:rounded-[40px] overflow-hidden shadow-2xl border-4 border-slate-800 relative group/img">
-                         <img src="https://images2.imgbox.com/3b/e6/QhMzpqDY_o.jpeg" onError={(e) => e.currentTarget.src='https://images.unsplash.com/photo-1551816230-ef5deaed4a26?q=80&w=800'} className="w-full h-full object-cover transition-all duration-700" alt="GTL1 Side Profile" />
+                         <img src="https://images2.imgbox.com/3b/e6/QhMzpqDY_o.jpeg" onError={(e) => e.currentTarget.src='https://images.unsplash.com/photo-1551816230-ef5deaed4a26?q=80&w=800'} className="w-full h-full object-cover transition-all duration-700" alt="Mehri Side Profile" />
                          <div className="absolute bottom-0 left-0 w-full p-4 md:p-6 bg-gradient-to-t from-black/80 to-transparent">
                             <p className="text-white font-black text-sm md:text-lg">Titanium</p>
                          </div>
@@ -577,7 +624,7 @@ export const LandingSection = ({ onStart }: any) => {
         </div>
       </ScrollReveal>
 
-      {/* 4. ALMA AI SECTION (Live Demo Updated) */}
+      {/* 4. ALMA AI SECTION (Reordered) */}
       <ScrollReveal className="max-w-7xl mx-auto px-6 md:px-8 py-20">
         <div className="bg-slate-900 rounded-[40px] md:rounded-[80px] p-8 md:p-24 flex flex-col-reverse lg:flex-row items-center gap-12 md:gap-20 relative overflow-hidden shadow-2xl">
            <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-slate-800 via-slate-900 to-slate-900 pointer-events-none" />
@@ -657,7 +704,7 @@ export const LandingSection = ({ onStart }: any) => {
       <FAQSection />
 
       {/* 10. FOOTER */}
-      <Footer />
+      <Footer onNavigate={onNavigate} />
     </div>
   );
 };
