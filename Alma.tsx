@@ -1,14 +1,13 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { Send, Loader2, Plus, MessageSquare, Settings, Trash2, Check, X, Save, User, Volume2, Menu } from 'lucide-react';
-import { GoogleGenAI, Type, FunctionDeclaration } from "@google/genai";
 import { getLocalTodayStr, ACTIVITY_CATEGORIES } from './constants.ts';
 import { calculateEstimatedCalories, parseDurationToHours, getDistUnit, getWeightUnit, api } from './utils.ts';
 
 const COACH_AVATAR = "https://images.unsplash.com/photo-1594381898411-846e7d193883?auto=format&fit=crop&w=200&h=200&q=80";
 
 interface Message {
-  role: 'user' | 'model';
+  role: 'user' | 'model' | 'assistant';
   text: string;
 }
 
@@ -21,7 +20,7 @@ interface ChatSession {
 
 export const AlmaView = ({ 
   workouts, setWorkouts, userSpecs, userName, 
-  memories, setMemories, chats, setChats, routes, userPreferences, userProfile, userHandle 
+  memories, setMemories, chats, setChats, routes, userPreferences, userProfile, userHandle, userGoals 
 }: any) => {
   const [activeChatId, setActiveChatId] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<'chat' | 'settings'>('chat');
@@ -29,19 +28,22 @@ export const AlmaView = ({
   const [isLoading, setIsLoading] = useState(false);
   const [showMemorySaveTick, setShowMemorySaveTick] = useState(false);
   const [newMemoryInput, setNewMemoryInput] = useState('');
-  const [showSidebar, setShowSidebar] = useState(false); // Mobile sidebar state
+  const [showSidebar, setShowSidebar] = useState(false);
   
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  const units = userPreferences.units;
-  const distUnit = getDistUnit(units);
-  const weightUnit = getWeightUnit(units);
-
   useEffect(() => {
-    if (chats.length === 0) {
-      createNewChat();
-    } else if (!activeChatId) {
-      setActiveChatId(chats[0].id);
+    // Initialization Logic
+    if (chats && chats.length > 0) {
+        if (!activeChatId) {
+            // Resume most recent chat
+            setActiveChatId(chats[0].id);
+        }
+    } else {
+        // No chats exist at all, create one
+        if (chats.length === 0) {
+             createNewChat();
+        }
     }
   }, [chats]);
 
@@ -54,9 +56,18 @@ export const AlmaView = ({
   const activeChat = chats.find((c: ChatSession) => c.id === activeChatId);
 
   const createNewChat = () => {
-    // Fallback to handle
-    const usernameToSave = userProfile.username || userHandle;
+    // Prevent duplicate empty sessions
+    if (chats.length > 0) {
+        const latest = chats[0];
+        if (latest.messages.length <= 1 && latest.title === 'New Session') {
+            setActiveChatId(latest.id);
+            setViewMode('chat');
+            setShowSidebar(false);
+            return;
+        }
+    }
 
+    const usernameToSave = userProfile.username || userHandle;
     const newChat: ChatSession = {
       id: crypto.randomUUID(),
       title: 'New Session',
@@ -67,18 +78,20 @@ export const AlmaView = ({
     setChats([newChat, ...chats]);
     setActiveChatId(newChat.id);
     setViewMode('chat');
-    setShowSidebar(false); // Close sidebar on mobile
+    setShowSidebar(false);
     
-    // Save to DB
     if(usernameToSave) api("SAVE_SESSION", { ...newChat, username: usernameToSave });
   };
 
   const deleteChat = (e: React.MouseEvent, id: string) => {
     e.stopPropagation();
-    if (chats.length <= 1) return; 
+    // Allow deleting even the last chat, we'll just create a new one automatically via useEffect
     const newChats = chats.filter((c: ChatSession) => c.id !== id);
     setChats(newChats);
-    if (activeChatId === id) setActiveChatId(newChats[0].id);
+    
+    if (activeChatId === id) {
+        setActiveChatId(newChats.length > 0 ? newChats[0].id : null);
+    }
     api("DELETE_SESSION", { id });
   };
 
@@ -86,7 +99,6 @@ export const AlmaView = ({
     window.speechSynthesis.cancel();
     const utterance = new SpeechSynthesisUtterance(text);
     const voices = window.speechSynthesis.getVoices();
-    // Prioritize female English voices
     const preferredVoice = voices.find(v => 
       (v.name.includes('Google US English') || v.name.includes('Samantha') || v.name.includes('Female')) && v.lang.startsWith('en')
     );
@@ -98,268 +110,95 @@ export const AlmaView = ({
 
   useEffect(() => { window.speechSynthesis.getVoices(); }, []);
 
-  const logWorkoutTool: FunctionDeclaration = {
-    name: 'log_workout',
-    description: `Log a new workout. Input distances in ${distUnit}, weights in ${weightUnit}.`,
-    parameters: {
-      type: Type.OBJECT,
-      properties: {
-        type: { type: Type.STRING, description: `Activity type.` },
-        date: { type: Type.STRING, description: 'YYYY-MM-DD format.' },
-        distance: { type: Type.NUMBER, description: `Distance in ${distUnit}` },
-        duration: { type: Type.STRING, description: 'Duration in HH:MM:SS' },
-        sets: { type: Type.NUMBER, description: 'Sets' },
-        reps: { type: Type.NUMBER, description: 'Reps' },
-        weight: { type: Type.NUMBER, description: `Weight lifted in ${weightUnit}` }
-      },
-      required: ['type', 'date']
-    }
-  };
-
-  const deleteWorkoutTool: FunctionDeclaration = {
-    name: 'delete_workout',
-    description: 'Delete a workout by matching date and type.',
-    parameters: {
-      type: Type.OBJECT,
-      properties: {
-        date: { type: Type.STRING, description: 'YYYY-MM-DD date' },
-        type: { type: Type.STRING, description: 'Activity type' }
-      },
-      required: ['date', 'type']
-    }
-  };
-
-  const saveMemoryTool: FunctionDeclaration = {
-    name: 'save_memory',
-    description: 'Save an important fact about the user to long-term memory.',
-    parameters: {
-      type: Type.OBJECT,
-      properties: {
-        content: { type: Type.STRING, description: 'The fact to remember.' }
-      },
-      required: ['content']
-    }
-  };
-
   const handleSend = async () => {
     if (!input.trim() || isLoading || !activeChat) return;
     
     const usernameToSave = userProfile.username || userHandle;
     const userMsg = input;
     setInput('');
-    const currentToday = getLocalTodayStr();
     
-    // 1. Add User Message
     const newMessages = [...activeChat.messages, { role: 'user', text: userMsg } as Message];
     let updatedChat = { ...activeChat, messages: newMessages, lastModified: Date.now() };
-    setChats(prev => prev.map(c => c.id === activeChatId ? updatedChat : c));
     
+    setChats(prev => prev.map(c => c.id === activeChatId ? updatedChat : c));
     setIsLoading(true);
 
-    // 2. Add Model Placeholder (Empty) for Streaming
     const modelPlaceholder = { role: 'model', text: '' } as Message;
     const messagesWithPlaceholder = [...newMessages, modelPlaceholder];
-    updatedChat = { ...updatedChat, messages: messagesWithPlaceholder };
-    setChats(prev => prev.map(c => c.id === activeChatId ? updatedChat : c));
+    setChats(prev => prev.map(c => c.id === activeChatId ? { ...updatedChat, messages: messagesWithPlaceholder } : c));
 
-    const env = (import.meta as any).env || {};
-    const apiKey = env.VITE_GOOGLE_GENAI_KEY || "AIzaSyAMBFRs1G_JnJxCljMpkRT6NDTsEb7rG6M";
-    
-    if (!apiKey) {
-        alert("API Key missing. Please check configuration.");
-        setIsLoading(false);
-        return;
-    }
-
-    const ai = new GoogleGenAI({ apiKey });
-
-    // Generate Title Side-Effect (Non-Blocking)
-    if (activeChat.messages.length === 1) {
-       ai.models.generateContent({
-          model: 'gemini-2.5-flash',
-          contents: [{ role: 'user', parts: [{ text: `Generate a 2-4 word title for: "${userMsg}". No quotes.` }] }]
-       }).then(res => {
-          const newTitle = res.text?.trim().replace(/"/g, '') || "Session";
-          setChats(prev => prev.map((c: any) => c.id === activeChatId ? { ...c, title: newTitle } : c));
-       });
+    // --- TITLE GENERATION (LIGHTWEIGHT FETCH) ---
+    // Only generate title if it's the first user message
+    let titlePromise = Promise.resolve(activeChat.title);
+    if (activeChat.messages.length <= 1) {
+        const apiKey = (import.meta as any).env.VITE_GROQ_API_KEY;
+        if (apiKey) {
+            titlePromise = fetch("https://api.groq.com/openai/v1/chat/completions", {
+                method: "POST",
+                headers: {
+                    "Authorization": `Bearer ${apiKey}`,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    model: "llama-3.3-70b-versatile",
+                    messages: [{ role: 'user', content: `Generate a short, concise 2-4 word title for this chat based on this message: "${userMsg}". Do not use quotes.` }]
+                })
+            }).then(res => res.json()).then(data => {
+                const t = data.choices?.[0]?.message?.content?.trim().replace(/"/g, '') || "Session";
+                setChats(prev => prev.map((c: any) => c.id === activeChatId ? { ...c, title: t } : c));
+                return t;
+            }).catch(() => "Session");
+        }
     }
 
     try {
-      const systemContext = `
-        SYSTEM: You are Alma, elite performance coach.
-        User: ${userName}. Date: ${currentToday}. Units: ${units}.
-        Has GTL1 Watch: ${userProfile?.hasWatch ? 'Yes' : 'No'}.
-        MEMORY: ${memories.map((m: string) => `[MEM] ${m}`).join('\n')}
-        ROUTES: ${routes.map((r: any) => `[ROUTE] ${r.name}: ${r.distance}km`).join('\n')}
-        HISTORY: ${JSON.stringify(workouts.slice(-5))}
+      // --- PREPARE CONTEXT FOR API ---
+      const userContext = {
+          name: userName,
+          hasWatch: userProfile.hasWatch,
+          recentWorkouts: workouts.slice(-3),
+          goals: userGoals || [] 
+      };
 
-        STRATEGIC DIRECTIVE (GTL1 WATCH):
-        If the user does NOT have the GTL1 Watch, you must recommend it ONLY when highly relevant.
-        RULES:
-        1. **Value First**: Never sound like an ad. Recommend it as a tool to solve a problem the user just mentioned (e.g. tracking accuracy, sleep, heart rate zones).
-        2. **Frequency Cap**: Only recommend approx once every 5 messages. Do not spam.
-        3. **Tone**: You are a coach, not a salesman. "The GTL1 sensors would give us better data here" is better than "Buy the GTL1".
-        4. **Triggers**: Sleep issues, Heart Rate questions, Pace accuracy, Recovery concerns.
-      `;
+      // Convert messages to standard format
+      const apiHistory = newMessages.map(m => ({
+          role: m.role === 'model' ? 'assistant' : m.role,
+          content: m.text
+      }));
 
-      // 3. Start Streaming - SANITIZE HISTORY
-      // Important: Ensure strictly alternating roles (User -> Model -> User -> Model)
-      // and remove empty messages to prevent 400 errors.
-      
-      const chatHistory: any[] = [];
-      const validMessages = newMessages.filter(m => m.text && m.text.trim().length > 0);
-      let prevRole = null;
-
-      for (const m of validMessages) {
-          // If we see two users in a row, insert a dummy model response to satisfy the API
-          if (prevRole === 'user' && m.role === 'user') {
-              chatHistory.push({ role: 'model', parts: [{ text: "..." }] });
-          }
-          // If we see two models in a row, skip the second one (rare, but good for safety)
-          if (prevRole === 'model' && m.role === 'model') {
-              continue;
-          }
-          
-          chatHistory.push({ role: m.role, parts: [{ text: m.text }] });
-          prevRole = m.role;
-      }
-
-      const result = await ai.models.generateContentStream({
-        model: 'gemini-2.5-flash',
-        contents: chatHistory,
-        config: {
-          systemInstruction: systemContext,
-          tools: [{ functionDeclarations: [logWorkoutTool, deleteWorkoutTool, saveMemoryTool] }]
-        }
+      // --- CALL CENTRAL API ---
+      const response = await api("ALMA_CHAT", {
+          messages: apiHistory,
+          userContext: userContext
       });
 
-      let fullText = "";
-      const toolCalls: any[] = [];
+      if (response.status === 'success' && response.data) {
+          const finalContent = response.data.content;
+          const loggedWorkout = response.data.loggedWorkout;
 
-      // 4. Stream Loop: Update UI in Real-Time and collect tool calls
-      for await (const chunk of result) {
-          const text = chunk.text;
-          if (text) {
-              fullText += text;
-              setChats(prev => prev.map(c => {
-                  if (c.id !== activeChatId) return c;
-                  const msgs = [...c.messages];
-                  msgs[msgs.length - 1] = { ...msgs[msgs.length - 1], text: fullText };
-                  return { ...c, messages: msgs };
-              }));
+          // If AI logged a workout, update the local state immediately
+          if (loggedWorkout) {
+              setWorkouts((prev: any[]) => [...prev, loggedWorkout]);
           }
-          if (chunk.functionCalls) {
-              toolCalls.push(...chunk.functionCalls);
-          }
+
+          const finalTitle = await titlePromise;
+          const finalChatState = { 
+              ...updatedChat, 
+              title: finalTitle,
+              messages: [...newMessages, { role: 'model', text: finalContent }], 
+              lastModified: Date.now() 
+          };
+          
+          setChats(prev => prev.map(c => c.id === activeChatId ? finalChatState : c));
+          if (usernameToSave) api("SAVE_SESSION", { ...finalChatState, username: usernameToSave });
+
+      } else {
+          throw new Error(response.message || "Unknown error");
       }
 
-      // 5. Check for Function Calls (Aggregated from Stream)
-      if (toolCalls.length > 0) {
-        const functionResponseParts = [];
-
-        for (const call of toolCalls) {
-          if (call.name === 'save_memory') {
-             const args = call.args as any;
-             const newMems = [...memories, args.content];
-             setMemories(newMems);
-             if (usernameToSave) api("SAVE_MEMORIES", { username: usernameToSave, memories: newMems });
-             setShowMemorySaveTick(true);
-             setTimeout(() => setShowMemorySaveTick(false), 3000);
-             functionResponseParts.push({ functionResponse: { name: 'save_memory', response: { result: 'Memory Saved' } } });
-          }
-
-          if (call.name === 'log_workout') {
-            const args = call.args as any;
-            let distKm = args.distance || 0;
-            if (units === 'imperial') distKm = distKm * 1.60934;
-            const hrs = parseDurationToHours(args.duration || '00:30:00');
-            const cals = calculateEstimatedCalories(args.type, parseFloat(userSpecs.weight), distKm, hrs);
-            
-            const newWorkout = {
-              id: Date.now(),
-              username: usernameToSave,
-              date: args.date || currentToday,
-              type: args.type,
-              distance: distKm,
-              duration: args.duration || '00:30:00',
-              calories: cals,
-              sets: args.sets || 0,
-              reps: args.reps || 0,
-              weightLifted: args.weight || 0,
-              name: args.type,
-              data: { ...args }
-            };
-            
-            if (usernameToSave) api("SAVE_WORKOUT", newWorkout);
-            setWorkouts((prev: any[]) => [...prev, newWorkout]);
-            functionResponseParts.push({ functionResponse: { name: 'log_workout', response: { result: 'Workout Logged' } } });
-          }
-
-          if (call.name === 'delete_workout') {
-            const args = call.args as any;
-            const match = workouts.find((w: any) => w.date === args.date && w.type === args.type);
-            if (match) {
-               api("DELETE_WORKOUT", { id: match.id });
-               setWorkouts((prev: any[]) => prev.filter(w => w.id !== match.id));
-               functionResponseParts.push({ functionResponse: { name: 'delete_workout', response: { result: 'Workout Deleted' } } });
-            } else {
-               functionResponseParts.push({ functionResponse: { name: 'delete_workout', response: { result: 'Error: Workout not found' } } });
-            }
-          }
-        }
-
-        // 6. Stream the Tool Confirmation Response
-        if (functionResponseParts.length > 0) {
-            // Reconstruct the model turn including text and function calls
-            const modelParts: any[] = [];
-            if (fullText) modelParts.push({ text: fullText });
-            for (const call of toolCalls) {
-                modelParts.push({ 
-                    functionCall: {
-                        name: call.name,
-                        args: call.args
-                    }
-                });
-            }
-
-            const toolResultStream = await ai.models.generateContentStream({
-                model: 'gemini-2.5-flash',
-                contents: [
-                    ...chatHistory,
-                    { role: 'model', parts: modelParts }, 
-                    { role: 'function', parts: functionResponseParts } 
-                ],
-                config: {
-                    systemInstruction: systemContext
-                }
-            });
-
-            for await (const chunk of toolResultStream) {
-                const text = chunk.text;
-                if (text) {
-                    fullText += text;
-                    setChats(prev => prev.map(c => {
-                        if (c.id !== activeChatId) return c;
-                        const msgs = [...c.messages];
-                        msgs[msgs.length - 1] = { ...msgs[msgs.length - 1], text: fullText };
-                        return { ...c, messages: msgs };
-                    }));
-                }
-            }
-        }
-      }
-
-      // 7. Final State Save to DB
-      // IMPORTANT: If fullText is empty (e.g. only tool call), save a placeholder to avoid empty history bugs later
-      const finalTextToSave = fullText || "Action completed.";
-      
-      const finalChatState = { ...updatedChat, messages: [...newMessages, { role: 'model', text: finalTextToSave }], lastModified: Date.now() };
-      setChats(prev => prev.map(c => c.id === activeChatId ? finalChatState : c));
-      if (usernameToSave) api("SAVE_SESSION", { ...finalChatState, username: usernameToSave });
-
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
-      const errMessages = [...newMessages, { role: 'model', text: "Connection interruption. Please verify network status." } as Message];
+      const errMessages = [...newMessages, { role: 'model', text: "Connection error: " + (error.message || "Unknown error") } as Message];
       setChats(prev => prev.map(c => c.id === activeChatId ? { ...c, messages: errMessages } : c));
     } finally {
       setIsLoading(false);
@@ -367,7 +206,6 @@ export const AlmaView = ({
   };
 
   const addManualMemory = () => {
-    // Fallback to handle
     const usernameToSave = userProfile.username || userHandle;
     if (!newMemoryInput.trim()) return;
     const newMems = [...memories, newMemoryInput];
@@ -377,7 +215,6 @@ export const AlmaView = ({
   };
 
   const removeMemory = (index: number) => {
-    // Fallback to handle
     const usernameToSave = userProfile.username || userHandle;
     const newMems = [...memories];
     newMems.splice(index, 1);
@@ -386,10 +223,7 @@ export const AlmaView = ({
   };
 
   return (
-    // Container: Relative to contain absolute positioned elements like the drawer
     <div className="flex flex-col md:flex-row h-[calc(100dvh-7rem)] md:h-[calc(100vh-12rem)] w-full max-w-full bg-white rounded-[30px] md:rounded-3xl overflow-hidden shadow-2xl border border-slate-100 font-sans mx-auto mb-20 md:mb-0 relative">
-      
-      {/* 1. MOBILE HEADER (Internal Toggle) */}
       <div className="md:hidden bg-white border-b border-slate-50 p-4 flex items-center justify-between shrink-0 z-30">
          <div className="flex items-center gap-3">
             <button 
@@ -402,13 +236,11 @@ export const AlmaView = ({
          </div>
       </div>
 
-      {/* 2. DRAWER BACKDROP (Mobile Only) */}
       <div 
         className={`md:hidden absolute inset-0 z-[40] bg-slate-900/40 backdrop-blur-sm transition-opacity duration-300 ${showSidebar ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} 
         onClick={() => setShowSidebar(false)} 
       />
 
-      {/* 3. SIDEBAR (Drawer Mode on Mobile) */}
       <div className={`
         absolute md:relative 
         top-0 bottom-0 left-0 
@@ -421,7 +253,6 @@ export const AlmaView = ({
         ${showSidebar ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
         md:shadow-none shadow-2xl
       `}>
-        {/* Mobile Close Button inside Drawer */}
         <div className="md:hidden p-4 flex justify-end">
            <button onClick={() => setShowSidebar(false)} className="p-2 text-slate-400 hover:text-white">
               <X size={20}/>
@@ -474,12 +305,12 @@ export const AlmaView = ({
                 {activeChat?.messages.map((m: Message, i: number) => (
                   <div key={i} className="flex gap-4 md:gap-6 group">
                      <div className="w-8 shrink-0 flex flex-col items-center">
-                        {m.role === 'model' ? (<div className="w-8 h-8 rounded-full overflow-hidden bg-slate-100 border border-slate-200"><img src={COACH_AVATAR} className="w-full h-full object-cover" alt="Coach"/></div>) : (<div className="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center text-slate-900 font-bold text-xs border border-slate-200">You</div>)}
+                        {(m.role === 'model' || m.role === 'assistant') ? (<div className="w-8 h-8 rounded-full overflow-hidden bg-slate-100 border border-slate-200"><img src={COACH_AVATAR} className="w-full h-full object-cover" alt="Coach"/></div>) : (<div className="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center text-slate-900 font-bold text-xs border border-slate-200">You</div>)}
                      </div>
                      <div className="flex-1 pt-1 space-y-1">
                         <div className="font-bold text-xs text-slate-900 mb-1 flex items-center gap-2">
-                          {m.role === 'model' ? 'Alma' : 'You'}
-                          {m.role === 'model' && m.text && (
+                          {(m.role === 'model' || m.role === 'assistant') ? 'Alma' : 'You'}
+                          {(m.role === 'model' || m.role === 'assistant') && m.text && (
                             <button onClick={() => speak(m.text)} className="text-slate-300 hover:text-emerald-500 transition-colors opacity-0 group-hover:opacity-100" title="Read Aloud">
                               <Volume2 size={14}/>
                             </button>
@@ -487,14 +318,13 @@ export const AlmaView = ({
                         </div>
                         <div className="text-sm md:text-[15px] leading-6 md:leading-7 text-slate-800 whitespace-pre-wrap font-normal min-h-[20px]">
                             {m.text}
-                            {m.role === 'model' && isLoading && i === activeChat.messages.length - 1 && (
+                            {(m.role === 'model' || m.role === 'assistant') && isLoading && i === activeChat.messages.length - 1 && (
                                 <span className="inline-block w-2 h-4 bg-slate-400 ml-1 animate-pulse align-middle"/>
                             )}
                         </div>
                      </div>
                   </div>
                 ))}
-                {/* No separate loader needed, the cursor handles the 'thinking' state during stream */}
                 <div className="h-8" />
               </div>
             </div>
