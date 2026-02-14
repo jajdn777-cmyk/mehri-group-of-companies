@@ -86,12 +86,6 @@ export const Header = ({ currentView, onNavigate, onSignOut, onShop, userProfile
     </button>
   );
 
-  // Dynamic Logo Sizing
-  // Both dashboard and landing page now share the same larger dimension: h-40 md:h-64
-  const logoClasses = (isDashboard || scrolled)
-    ? "h-40 md:h-64 -mt-8 md:-mt-16 -ml-3 md:-ml-8" // Dashboard: Same size as Landing
-    : "h-40 md:h-64 -mt-8 md:-mt-16 -ml-3 md:-ml-8"; // Landing: Original large size
-
   return (
     <>
       {/* HEADER BAR - Adjusted alignment (items-start) and trimmed height to reduce dead space */}
@@ -109,7 +103,7 @@ export const Header = ({ currentView, onNavigate, onSignOut, onShop, userProfile
 
             {/* LOGO (LEFT ALIGNED) - Pulled up with negative margin */}
             <div 
-              className="flex items-center cursor-pointer hover:scale-[1.02] active:scale-95 transition-all z-50 shrink-0" 
+              className="flex items-center cursor-pointer hover:scale-[1.02] active:scale-95 transition-all z-50" 
               onClick={() => {
                 if (userProfile?.username) {
                   onNavigate('dashboard');
@@ -118,11 +112,11 @@ export const Header = ({ currentView, onNavigate, onSignOut, onShop, userProfile
                 }
               }}
             >
-              {/* Direct IMG for precise size control - Conditional classes applied here */}
+              {/* Direct IMG for precise size control - Fixed dimensions, pulled up via negative margin */}
               <img 
-                 src="https://i.ibb.co/8D5MPnyX/logo1-pixian-ai.png" 
-                 alt="MEHRI Logo" 
-                 className={`w-auto object-contain drop-shadow-sm transition-all duration-500 ${logoClasses}`}
+                 src="https://i.ibb.co.com/xqxm5rCT/logo-mehri-no-bg.png" 
+                 alt="Mehri Group of Companies Logo" 
+                 className="w-auto object-contain drop-shadow-sm h-32 md:h-52 -mt-7 md:-mt-12 -ml-2 md:-ml-6"
               />
             </div>
         </div>
