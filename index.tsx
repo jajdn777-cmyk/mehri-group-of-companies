@@ -65,8 +65,8 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundarySta
       console.error("Stack:", errorInfo.componentStack);
       console.groupEnd();
     } else {
-      // In production, you might send this to a service like Sentry here
-      // console.error = () => {}; // Optionally silence console
+      // In production, we suppress the stack trace to the user.
+      // Optionally, send this to a logging service here.
     }
   }
 
