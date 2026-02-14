@@ -103,7 +103,7 @@ export const Header = ({ currentView, onNavigate, onSignOut, onShop, userProfile
 
             {/* LOGO (LEFT ALIGNED) - Pulled up with negative margin */}
             <div 
-              className="flex items-center cursor-pointer hover:scale-[1.02] active:scale-95 transition-all z-50" 
+              className="relative flex items-center cursor-pointer hover:scale-[1.02] active:scale-95 transition-all z-50" 
               onClick={() => {
                 if (userProfile?.username) {
                   onNavigate('dashboard');
@@ -112,11 +112,14 @@ export const Header = ({ currentView, onNavigate, onSignOut, onShop, userProfile
                 }
               }}
             >
+              {/* Backlight Glow */}
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-white/30 blur-[50px] rounded-full pointer-events-none -mt-8 md:-mt-12" />
+
               {/* Direct IMG for precise size control - Fixed dimensions, pulled up via negative margin */}
               <img 
-                 src="https://i.ibb.co.com/xqxm5rCT/logo-mehri-no-bg.png" 
+                 src="https://i.ibb.co/xqxm5rCT/logo-mehri-no-bg.png" 
                  alt="Mehri Group of Companies Logo" 
-                 className="w-auto object-contain drop-shadow-sm h-32 md:h-52 -mt-7 md:-mt-12 -ml-2 md:-ml-6"
+                 className="relative z-10 w-auto object-contain drop-shadow-sm h-40 md:h-64 -mt-10 md:-mt-20 -ml-2 md:-ml-6"
               />
             </div>
         </div>
