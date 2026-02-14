@@ -23,7 +23,7 @@ export const MehriLogo: React.FC<LogoProps> = ({ className = "", size = "md" }) 
   return (
     <div className={`flex items-center justify-center select-none ${className}`}>
        <img 
-         src="https://i.ibb.co/8D5MPnyX/logo1-pixian-ai.png" 
+         src="https://i.ibb.co.com/xqxm5rCT/logo-mehri-no-bg.png" 
          alt="MEHRI Logo" 
          className={`${sizeMap[size]} w-auto object-contain drop-shadow-sm`}
        />
