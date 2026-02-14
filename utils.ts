@@ -211,9 +211,10 @@ export const api = async (action: string, payload: any) => {
         const { messages, userContext } = payload;
         // Fix: Cast import.meta to any to avoid TS error 'Property env does not exist on type ImportMeta'
         const env = (import.meta as any).env || {};
-        const apiKey = env.VITE_GROQ_API_KEY ||
+        // SECURITY UPDATE: Removed hardcoded API key fallback.
+        const apiKey = env.VITE_GROQ_API_KEY;
 
-        if (!apiKey) return { status: 'error', message: 'Groq API Key missing' };
+        if (!apiKey) return { status: 'error', message: 'Alma Intelligence Offline (System Configuration Error)' };
 
         // 1. Construct System Prompt (The Brain)
         const systemPrompt = `
