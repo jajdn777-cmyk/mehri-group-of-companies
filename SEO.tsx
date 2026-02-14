@@ -49,9 +49,11 @@ export const SEO: React.FC<SEOProps> = ({
       tag.setAttribute(attr, content);
     };
 
+    const imageToUse = article?.image || "https://i.ibb.co.com/xqxm5rCT/logo-mehri-no-bg.png";
+
     updateTag('meta[property="og:title"]', 'content', finalTitle);
     updateTag('meta[property="og:description"]', 'content', description);
-    updateTag('meta[property="og:image"]', 'content', article?.image || "https://i.ibb.co/8D5MPnyX/logo1-pixian-ai.png");
+    updateTag('meta[property="og:image"]', 'content', imageToUse);
     updateTag('meta[name="twitter:title"]', 'content', finalTitle);
     updateTag('meta[name="twitter:description"]', 'content', description);
 
@@ -67,7 +69,7 @@ export const SEO: React.FC<SEOProps> = ({
           "@id": "https://mehrigroupofcompanies.com/#organization",
           "name": "Mehri Group of Companies",
           "url": "https://mehrigroupofcompanies.com/",
-          "logo": "https://i.ibb.co/8D5MPnyX/logo1-pixian-ai.png",
+          "logo": "https://i.ibb.co.com/xqxm5rCT/logo-mehri-no-bg.png",
           "contactPoint": {
             "@type": "ContactPoint",
             "email": "jajdn777@gmail.com",
