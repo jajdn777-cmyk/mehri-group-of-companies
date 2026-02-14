@@ -12,8 +12,40 @@ const BlogReaderModal = ({ post, onClose }: any) => {
     return () => { document.body.style.overflow = 'unset'; };
   }, []);
 
-  // Sanitize content before rendering
-  const sanitizedContent = useMemo(() => DOMPurify.sanitize(post.content), [post.content]);
+  // Sanitize content before rendering with strict XSS protection
+  const sanitizedContent = useMemo(() => {
+    // 1. Define Safe Configuration
+    const config = {
+      // Allow only content/formatting tags, block scripts/objects
+      ALLOWED_TAGS: [
+        'p', 'b', 'i', 'em', 'strong', 'a', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+        'ul', 'ol', 'li', 'blockquote', 'img', 'figure', 'figcaption', 'div', 'span', 'br', 'hr',
+        'iframe' // Allow YouTube embeds
+      ],
+      // Allow only safe attributes
+      ALLOWED_ATTR: [
+        'href', 'src', 'alt', 'title', 'class', 'style', 'target', 'rel', 
+        'width', 'height', 'allowfullscreen', 'frameborder'
+      ],
+      // Explicitly forbid dangerous tags just in case
+      FORBID_TAGS: ['script', 'style', 'iframe', 'object', 'embed', 'form', 'input'],
+      // Keep SVG but neutralize it (optional, usually handled by default)
+      ADD_TAGS: ['iframe'], // Re-add iframe specifically if FORBID_TAGS removed it
+    };
+
+    // 2. Add Hook to Enforce Link Security (noopener noreferrer)
+    DOMPurify.addHook('afterSanitizeAttributes', (node) => {
+      // If it's an anchor tag
+      if ('target' in node) {
+        node.setAttribute('target', '_blank');
+        // Prevent tab-nabbing attacks
+        node.setAttribute('rel', 'noopener noreferrer');
+      }
+    });
+
+    // 3. Run Sanitizer
+    return DOMPurify.sanitize(post.content, config);
+  }, [post.content]);
 
   return createPortal(
     <div className="fixed inset-0 z-[9999] bg-white overflow-y-auto animate-fade-in font-sans text-slate-900">
