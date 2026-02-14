@@ -36,46 +36,79 @@ const ScrollToTop = ({ view, dashView }: { view: string, dashView?: string }) =>
   return null;
 };
 
-// --- ERROR BOUNDARY ---
+// --- GLOBAL ERROR BOUNDARY ---
 interface ErrorBoundaryProps {
   children?: React.ReactNode;
 }
 
 interface ErrorBoundaryState {
   hasError: boolean;
-  error: any;
 }
 
 class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
-  public state: ErrorBoundaryState;
-  public props: ErrorBoundaryProps;
-
   constructor(props: ErrorBoundaryProps) {
     super(props);
-    this.props = props;
-    this.state = { hasError: false, error: null };
+    this.state = { hasError: false };
   }
 
   static getDerivedStateFromError(error: any) {
-    return { hasError: true, error };
+    return { hasError: true };
   }
 
   componentDidCatch(error: any, errorInfo: any) {
-    console.error("Critical Application Error:", error, errorInfo);
+    // SECURITY: Only log technical details in development environment
+    const isDev = (import.meta as any).env.DEV;
+    
+    if (isDev) {
+      console.group("🔥 CRITICAL ERROR BOUNDARY CAUGHT:");
+      console.error("Error:", error);
+      console.error("Stack:", errorInfo.componentStack);
+      console.groupEnd();
+    } else {
+      // In production, you might send this to a service like Sentry here
+      // console.error = () => {}; // Optionally silence console
+    }
   }
+
+  handleReset = () => {
+    // Hard reset: Clear all local storage and reload app from root
+    localStorage.clear();
+    sessionStorage.clear();
+    window.location.href = '/';
+  };
 
   render() {
     if (this.state.hasError) {
       return (
-        <div className="min-h-screen bg-slate-900 text-white flex flex-col items-center justify-center p-8 text-center">
-           <h1 className="text-4xl font-black uppercase tracking-widest text-red-500 mb-4">System Failure</h1>
-           <p className="text-slate-400 max-w-md mb-8">The application encountered a critical error.</p>
-           <button onClick={() => { localStorage.clear(); window.location.href = '/'; }} className="bg-white text-slate-900 px-8 py-3 rounded-full font-bold uppercase tracking-widest hover:bg-emerald-400">
-              Hard Reset
+        <div className="min-h-screen bg-slate-900 text-white flex flex-col items-center justify-center p-6 text-center font-sans selection:bg-red-500/30">
+           <div className="mb-8 relative">
+              <div className="w-20 h-20 bg-slate-800 rounded-[20px] flex items-center justify-center border border-slate-700 shadow-2xl relative z-10">
+                 <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#EF4444" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M18.364 18.364A9 9 0 0 0 5.636 5.636m12.728 12.728A9 9 0 0 1 5.636 5.636m12.728 12.728L5.636 5.636" />
+                 </svg>
+              </div>
+              <div className="absolute -top-4 -right-4 w-28 h-28 bg-red-500/10 rounded-full blur-[40px] pointer-events-none" />
+           </div>
+
+           <h1 className="text-4xl md:text-5xl font-black uppercase tracking-tighter text-white mb-4 leading-none">
+              Workout<br/><span className="text-red-500">Interrupted</span>
+           </h1>
+           
+           <p className="text-slate-400 font-medium text-sm md:text-base max-w-md mb-10 leading-relaxed tracking-wide">
+              We're fixing a glitch in the system. <br/>
+              Your session data is safe, but we need to reboot the interface.
+           </p>
+           
+           <button 
+             onClick={this.handleReset} 
+             className="bg-white text-slate-900 px-10 py-4 rounded-full font-black uppercase text-xs tracking-[0.2em] hover:bg-emerald-400 hover:text-slate-900 transition-all shadow-[0_0_30px_rgba(255,255,255,0.1)] active:scale-95"
+           >
+              Reset App
            </button>
-           <pre className="mt-8 text-xs text-slate-600 bg-slate-800 p-4 rounded max-w-lg overflow-auto text-left">
-              {this.state.error?.toString()}
-           </pre>
+
+           <div className="mt-12 text-[10px] font-bold text-slate-600 uppercase tracking-widest">
+              Error Code: SYSTEM_HALT
+           </div>
         </div>
       );
     }
@@ -208,12 +241,12 @@ const App = () => {
   // If the loader (auth check or app loading) gets stuck, force it off.
   useEffect(() => {
     if (isLoading || isCheckingAuth) {
-      // Reduced timeout to 5s to be more responsive to "forever loading" complaints
+      // Reduced timeout to 4s to be very responsive to "forever loading" complaints
       const timer = setTimeout(() => {
         console.warn("Loader timed out. Forcing UI reveal.");
         setIsLoading(false);
         setIsCheckingAuth(false);
-      }, 5000);
+      }, 4000);
       return () => clearTimeout(timer);
     }
   }, [isLoading, isCheckingAuth]);
@@ -226,13 +259,19 @@ const App = () => {
 
       // Prevent redundant loading logic if we've already loaded the session
       // This fixes the issue where switching tabs causes the loader to reappear
-      if (event === 'SIGNED_IN' && hasLoadedSession.current) {
-         return;
+      if (hasLoadedSession.current) {
+         if (event === 'SIGNED_IN') {
+             console.log("Re-auth detected, skipping reload.");
+             return;
+         }
       }
 
       // 1. Session Detected (Login, Signup, or Initial Load)
       if ((event === 'SIGNED_IN' || event === 'INITIAL_SESSION') && session?.user) {
-        setIsCheckingAuth(true); // Raise shield strictly for loading
+        // Double check shield - don't raise it if we already have data visible
+        if (!hasLoadedSession.current) {
+            setIsCheckingAuth(true); 
+        }
         
         try {
             const user = session.user;
@@ -280,7 +319,9 @@ const App = () => {
                } 
                // CASE C: Complete Profile (Returning User) -> Dashboard
                else {
-                  await loadUserData(profile.username); // Pre-load data behind shield
+                  if (!hasLoadedSession.current) {
+                      await loadUserData(profile.username); // Pre-load data behind shield
+                  }
                   handleTransition('main', 'dashboard', undefined, true);
                }
             }
