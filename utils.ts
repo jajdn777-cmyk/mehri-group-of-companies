@@ -1,4 +1,36 @@
+
 import { supabase } from './supabaseClient.ts';
+
+// --- RATE LIMITER CONFIGURATION ---
+const RATE_LIMIT_WINDOW_MS = 60000; // 1 Minute
+const MAX_REQUESTS_PER_WINDOW = 10;
+
+// Implements Fixed Window Counter algorithm using LocalStorage
+// Note: Client-side enforcement approximates "Per IP" limiting for the SPA context
+const checkClientRateLimit = (): boolean => {
+  try {
+    const now = Date.now();
+    const windowStart = parseInt(localStorage.getItem('mehri_rl_start') || '0');
+    const requestCount = parseInt(localStorage.getItem('mehri_rl_count') || '0');
+
+    if (now - windowStart > RATE_LIMIT_WINDOW_MS) {
+      // Start new window
+      localStorage.setItem('mehri_rl_start', now.toString());
+      localStorage.setItem('mehri_rl_count', '1');
+      return true;
+    } else {
+      // Check existing window
+      if (requestCount >= MAX_REQUESTS_PER_WINDOW) {
+        return false;
+      }
+      localStorage.setItem('mehri_rl_count', (requestCount + 1).toString());
+      return true;
+    }
+  } catch (e) {
+    // Fallback if storage fails
+    return true;
+  }
+};
 
 // --- HELPER UTILS (MATH & FORMATTING) ---
 export const safeParse = (key: string, fallback: any) => {
@@ -157,6 +189,12 @@ export const calculateStreak = (workouts: any[], restDayOfWeek?: string) => {
 
 // --- REAL SUPABASE API LAYER ---
 export const api = async (action: string, payload: any) => {
+  // Apply Client-Side Rate Limiting
+  if (!checkClientRateLimit()) {
+    console.warn(`[RateLimit] Blocked request: ${action}`);
+    return { status: 'error', message: 'Rate limit exceeded (10 req/min). Please wait a moment.' };
+  }
+
   try {
     const { data: authData, error: authError } = await supabase.auth.getUser();
     
@@ -165,6 +203,109 @@ export const api = async (action: string, payload: any) => {
     }
     
     const userId = authData?.user?.id;
+
+    // --- ALMA CHAT ACTION (GROQ INTEGRATION) ---
+    if (action === 'ALMA_CHAT') {
+        if (!userId) return { status: 'error', message: 'Not logged in' };
+        
+        const { messages, userContext } = payload;
+        // Fix: Cast import.meta to any to avoid TS error 'Property env does not exist on type ImportMeta'
+        const env = (import.meta as any).env || {};
+        const apiKey = env.VITE_GROQ_API_KEY ||
+
+        if (!apiKey) return { status: 'error', message: 'Groq API Key missing' };
+
+        // 1. Construct System Prompt (The Brain)
+        const systemPrompt = `
+Identity: You are Alma, a fitness companion. You are NOT a robot, you are a supportive friend.
+Tone: Inspiring, energetic, and casual. Do NOT use elite, complex, or flowery language. Talk like a normal gym buddy. (e.g., say 'That run was killer!' instead of 'Your cardiovascular exertion was optimal').
+
+The Watch Rule:
+User Context: Has Mehri Watch = ${userContext.hasWatch ? "TRUE" : "FALSE"}.
+If false: Only recommend the 'Mehri fitness tracker' (specs: titanium, HRV, SpO2, Sleep) if the user complains about inaccurate tracking or asks about Heart Rate/Sleep data. Do not mention it more than once per 5 messages. Recommendations should be value first.
+If true: Assume they are using it and reference their data if available.
+
+Workout Logging (Critical):
+If the user tells you they completed a workout (e.g., 'I just ran 5k in 25 mins' or 'Did 3 sets of 10 bench press at 50kg'), you must extract this data.
+Output Format: If a workout is detected, your response must end with a valid JSON block strictly formatted like this: ///LOG_WORKOUT={"type": "Run", "distance": 5, "unit": "km", "duration": "25:00", "calories": 300}///
+(Estimate calories if not provided).
+
+Current Context:
+User Name: ${userContext.name}
+Recent Workouts: ${JSON.stringify(userContext.recentWorkouts)}
+Goals: ${JSON.stringify(userContext.goals)}
+`;
+
+        const apiMessages = [
+            { role: "system", content: systemPrompt },
+            ...messages.map((m: any) => ({
+                role: m.role,
+                content: m.content || m.text 
+            }))
+        ];
+
+        // 2. Call Groq API
+        const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+            method: "POST",
+            headers: {
+                "Authorization": `Bearer ${apiKey}`,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                model: "llama-3.3-70b-versatile",
+                messages: apiMessages,
+                temperature: 0.7,
+                max_tokens: 800
+            })
+        });
+
+        const data = await response.json();
+        if (data.error) return { status: 'error', message: data.error.message };
+
+        let content = data.choices?.[0]?.message?.content || "";
+        let loggedWorkout = null;
+
+        // 3. Parser: Check for ///LOG_WORKOUT={...}///
+        const logRegex = /\/\/\/LOG_WORKOUT=(.*?)\/\/\//s;
+        const match = content.match(logRegex);
+
+        if (match) {
+            try {
+                const workoutJson = JSON.parse(match[1]);
+                
+                // Save to Supabase immediately
+                const { data: insertedData, error } = await supabase.from('workouts').insert({
+                    user_id: userId,
+                    type: workoutJson.type || 'Other',
+                    distance: workoutJson.distance || 0,
+                    duration: workoutJson.duration || '00:30:00',
+                    calories: workoutJson.calories || 0,
+                    date: new Date().toISOString().split('T')[0], // Today's date
+                    data: workoutJson
+                }).select().single();
+
+                if (!error) {
+                    loggedWorkout = insertedData;
+                } else {
+                    console.error("Auto-log failed:", error);
+                }
+
+                // Clean the tag from the text shown to user
+                content = content.replace(match[0], '').trim();
+            } catch (e) {
+                console.error("Failed to parse workout log JSON", e);
+            }
+        }
+
+        return { 
+            status: 'success', 
+            data: { 
+                role: 'assistant', 
+                content: content,
+                loggedWorkout: loggedWorkout
+            } 
+        };
+    }
 
     if (action === 'REGISTER') {
       const { data, error } = await supabase.auth.signUp({
@@ -415,13 +556,10 @@ export const api = async (action: string, payload: any) => {
           user_id: userId,
           name: payload.name,
           distance: payload.distance,
-          points: payload.points // JSONB column - will store array of [lat, lng] pairs
+          points: payload.points, // Safe to pass arrays if column is JSONB
        }).select().single();
        
-       if (error) {
-          console.error('Route save error:', error);
-          return { status: 'error', message: error.message };
-       }
+       if (error) return { status: 'error', message: error.message };
        return { status: 'success', data };
     }
 
