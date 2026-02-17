@@ -138,6 +138,8 @@ const VALID_ROUTES: Record<string, { view: string, dashView?: string }> = {
   '/write': { view: 'main', dashView: 'write' }, 
 };
 
+const PUBLIC_ROUTES = ['/', '/auth', '/privacy', '/terms', '/terms-of-service', '/contact'];
+
 const App = () => {
   // --- INITIAL ROUTING LOGIC ---
   const getInitialState = () => {
@@ -257,6 +259,9 @@ const App = () => {
       // IGNORE NON-CRITICAL EVENTS TO PREVENT UI FLASHING
       if (event === 'TOKEN_REFRESHED' || event === 'USER_UPDATED') return;
 
+      const currentPath = window.location.pathname.replace(/\/$/, "") || "/";
+      const isPublic = PUBLIC_ROUTES.includes(currentPath);
+
       // Prevent redundant loading logic if we've already loaded the session
       // This fixes the issue where switching tabs causes the loader to reappear
       if (hasLoadedSession.current) {
@@ -322,7 +327,12 @@ const App = () => {
                   if (!hasLoadedSession.current) {
                       await loadUserData(profile.username); // Pre-load data behind shield
                   }
-                  handleTransition('main', 'dashboard', undefined, true);
+
+                  // If they just signed in, take them to dashboard.
+                  // If it's an initial session, they stay on their current route (handled by initialState).
+                  if (event === 'SIGNED_IN') {
+                     handleTransition('main', 'dashboard', undefined, true);
+                  }
                }
             }
         } catch (error) {
@@ -336,17 +346,20 @@ const App = () => {
             setIsCheckingAuth(false);
         }
 
-      } else if (event === 'SIGNED_OUT' || event === 'USER_DELETED') {
-         // Handle Logout
-         localStorage.clear();
-         setWorkouts([]);
-         setUserName('');
-         setView('landing');
-         hasLoadedSession.current = false;
-         setIsCheckingAuth(false);
-      } else if (event === 'INITIAL_SESSION' && !session) {
-         // No session found on startup -> show landing
-         hasLoadedSession.current = true; // Mark as checked even if no session
+      } else if (event === 'SIGNED_OUT' || event === 'USER_DELETED' || (event === 'INITIAL_SESSION' && !session)) {
+         // Handle No Session / Logout
+         if (!isPublic) {
+            handleTransition('landing', undefined, undefined, true);
+         }
+
+         if (event === 'SIGNED_OUT' || event === 'USER_DELETED') {
+            localStorage.clear();
+            setWorkouts([]);
+            setUserName('');
+            hasLoadedSession.current = false;
+         } else {
+            hasLoadedSession.current = true;
+         }
          setIsCheckingAuth(false);
       }
     });
