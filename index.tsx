@@ -262,15 +262,6 @@ const App = () => {
       const currentPath = window.location.pathname.replace(/\/$/, "") || "/";
       const isPublic = PUBLIC_ROUTES.includes(currentPath);
 
-      // Prevent redundant loading logic if we've already loaded the session
-      // This fixes the issue where switching tabs causes the loader to reappear
-      if (hasLoadedSession.current) {
-         if (event === 'SIGNED_IN') {
-             console.log("Re-auth detected, skipping reload.");
-             return;
-         }
-      }
-
       // 1. Session Detected (Login, Signup, or Initial Load)
       if ((event === 'SIGNED_IN' || event === 'INITIAL_SESSION') && session?.user) {
         // Double check shield - don't raise it if we already have data visible
@@ -328,9 +319,9 @@ const App = () => {
                       await loadUserData(profile.username); // Pre-load data behind shield
                   }
 
-                  // If they just signed in, take them to dashboard.
-                  // If it's an initial session, they stay on their current route (handled by initialState).
-                  if (event === 'SIGNED_IN') {
+                  // If they just signed in (and aren't already in the app), take them to dashboard.
+                  // If it's an initial session, they stay on their current route.
+                  if (event === 'SIGNED_IN' && viewRef.current !== 'main') {
                      handleTransition('main', 'dashboard', undefined, true);
                   }
                }
@@ -346,13 +337,13 @@ const App = () => {
             setIsCheckingAuth(false);
         }
 
-      } else if (event === 'SIGNED_OUT' || event === 'USER_DELETED' || (event === 'INITIAL_SESSION' && !session)) {
+      } else if (event === 'SIGNED_OUT' || (event as string) === 'USER_DELETED' || (event === 'INITIAL_SESSION' && !session)) {
          // Handle No Session / Logout
          if (!isPublic) {
             handleTransition('landing', undefined, undefined, true);
          }
 
-         if (event === 'SIGNED_OUT' || event === 'USER_DELETED') {
+         if (event === 'SIGNED_OUT' || (event as string) === 'USER_DELETED') {
             localStorage.clear();
             setWorkouts([]);
             setUserName('');
