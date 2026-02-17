@@ -22,3 +22,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+# Security: Hide all environment files
+.env
+.env.*
+!.env.example
