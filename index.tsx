@@ -138,7 +138,7 @@ const VALID_ROUTES: Record<string, { view: string, dashView?: string }> = {
   '/write': { view: 'main', dashView: 'write' }, 
 };
 
-const PUBLIC_ROUTES = ['/', '/auth', '/privacy', '/terms', '/terms-of-service', '/contact'];
+const PUBLIC_ROUTES = ['/', '/auth', '/privacy', '/terms', '/terms-of-service', '/contact', '/blogs'];
 
 const App = () => {
   // --- INITIAL ROUTING LOGIC ---
@@ -499,7 +499,7 @@ const App = () => {
   // --- BLOG HANDLERS ---
   const handlePublishBlog = async (data: any) => {
     const tempId = Date.now();
-    const newPost = { id: tempId, author: userName || 'Admin', username: userHandle, category: 'Insight', likes: 0, ...data };
+    const newPost = { id: tempId, author: userName || 'Admin', username: userHandle, category: 'Insight', likes_count: 0, ...data };
     setBlogs([newPost, ...blogs]);
     setDashView('blogs');
     try { await api("PUBLISH_BLOG", { ...newPost, username: userHandle }); } catch(e) { console.error(e); }

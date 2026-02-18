@@ -1,67 +1,37 @@
-
-import React, { useState, useMemo, useEffect } from 'react';
-import { Search, ArrowRight, Calendar, Clock, Plus, Trash2 } from 'lucide-react';
-import { supabase } from './supabaseClient.ts';
+import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
+import { Search, Plus, Trash2, Calendar, Clock, Loader2, TrendingUp } from 'lucide-react';
+import { supabase } from './supabaseClient';
 import { createPortal } from 'react-dom';
 import DOMPurify from 'dompurify';
-import { ADMIN_EMAIL } from './constants.ts';
 
-const BlogReaderModal = ({ post, onClose }: any) => {
-  useEffect(() => {
-    document.body.style.overflow = 'hidden';
-    return () => { document.body.style.overflow = 'unset'; };
-  }, []);
+const ADMIN_EMAIL = 'jajdn777@gmail.com';
 
-  // Sanitize content before rendering with strict XSS protection
-  const sanitizedContent = useMemo(() => {
-    // 1. Define Safe Configuration
-    const config = {
-      // Allow only content/formatting tags, block scripts/objects
-      ALLOWED_TAGS: [
-        'p', 'b', 'i', 'em', 'strong', 'a', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
-        'ul', 'ol', 'li', 'blockquote', 'img', 'figure', 'figcaption', 'div', 'span', 'br', 'hr',
-        'iframe' // Allow YouTube embeds
-      ],
-      // Allow only safe attributes
-      ALLOWED_ATTR: [
-        'href', 'src', 'alt', 'title', 'class', 'style', 'target', 'rel', 
-        'width', 'height', 'allowfullscreen', 'frameborder'
-      ],
-      // Explicitly forbid dangerous tags just in case
-      FORBID_TAGS: ['script', 'style', 'iframe', 'object', 'embed', 'form', 'input'],
-      // Keep SVG but neutralize it (optional, usually handled by default)
-      ADD_TAGS: ['iframe'], // Re-add iframe specifically if FORBID_TAGS removed it
-    };
-
-    // 2. Add Hook to Enforce Link Security (noopener noreferrer)
-    DOMPurify.addHook('afterSanitizeAttributes', (node) => {
-      // If it's an anchor tag
-      if ('target' in node) {
-        node.setAttribute('target', '_blank');
-        // Prevent tab-nabbing attacks
-        node.setAttribute('rel', 'noopener noreferrer');
-      }
-    });
-
-    // 3. Run Sanitizer
-    return DOMPurify.sanitize(post.content, config);
-  }, [post.content]);
+const BlogReaderModal = ({ post, onClose }: { post: any, onClose: () => void }) => {
+  const sanitizedContent = useMemo(() => DOMPurify.sanitize(post.content), [post.content]);
 
   return createPortal(
-    <div className="fixed inset-0 z-[9999] bg-white overflow-y-auto animate-fade-in font-sans text-slate-900">
-       <div className="max-w-[740px] mx-auto bg-white min-h-screen relative pb-40">
-          <button onClick={onClose} className="fixed top-6 right-6 md:right-12 z-50 p-3 bg-white/80 backdrop-blur hover:bg-slate-50 rounded-full transition-colors text-slate-400 hover:text-slate-900 border border-slate-100 shadow-sm">
-             <ArrowRight size={24} className="rotate-180 md:rotate-0" />
+    <div className="fixed inset-0 z-[100] bg-white overflow-y-auto animate-in fade-in slide-in-from-bottom-4 duration-300">
+       <div className="max-w-4xl mx-auto px-6 py-12 md:py-20">
+          <button
+            onClick={onClose}
+            className="fixed top-6 right-6 p-3 bg-slate-50 hover:bg-slate-100 rounded-full transition-colors z-50"
+          >
+             <Plus className="rotate-45" size={24} />
           </button>
 
-          <div className="px-6 md:px-0 pt-32 pb-20">
-             <div className="mb-12">
-                <h1 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight leading-[1.1] mb-6 font-serif">
+          <div className="space-y-8">
+             <div className="space-y-6">
+                <div className="flex items-center gap-3">
+                   <span className="bg-emerald-500 text-white px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest">
+                      {post.category || 'Article'}
+                   </span>
+                </div>
+                <h1 className="text-4xl md:text-6xl font-black uppercase tracking-tighter text-slate-900 leading-[0.9]">
                    {post.title}
                 </h1>
                 
-                <div className="flex items-center gap-4 border-l-4 border-emerald-500 pl-4">
-                   <div className="w-10 h-10 rounded-full bg-slate-900 text-white flex items-center justify-center font-bold text-sm">
+                <div className="flex items-center gap-4 pt-4 border-t border-slate-100">
+                   <div className="w-12 h-12 bg-slate-100 rounded-full flex items-center justify-center font-bold text-slate-400 overflow-hidden">
                       {post.author_name?.charAt(0)}
                    </div>
                    <div>
@@ -119,43 +89,75 @@ export const BlogList = ({ userProfile, onNavigate, onDelete }: any) => {
   const [search, setSearch] = useState('');
   const [activePost, setActivePost] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [page, setPage] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
 
-  useEffect(() => {
-    fetchBlogs();
-  }, []);
+  const PAGE_SIZE = 9;
+  const observer = useRef<IntersectionObserver | null>(null);
 
-  const fetchBlogs = async () => {
+  const lastBlogElementRef = useCallback((node: HTMLElement) => {
+    if (loading || loadingMore) return;
+    if (observer.current) observer.current.disconnect();
+
+    observer.current = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting && hasMore) {
+        setPage(prevPage => prevPage + 1);
+      }
+    });
+
+    if (node) observer.current.observe(node);
+  }, [loading, loadingMore, hasMore]);
+
+  const fetchBlogs = async (pageToFetch: number, searchTerm: string) => {
     try {
-      setLoading(true);
-      const { data, error } = await supabase
+      if (pageToFetch === 0) setLoading(true);
+      else setLoadingMore(true);
+
+      const start = pageToFetch * PAGE_SIZE;
+      const end = start + PAGE_SIZE - 1;
+
+      let query = supabase
         .from('blogs')
-        .select('*')
+        .select('*');
+
+      if (searchTerm) {
+        query = query.or(`title.ilike.%${searchTerm}%,author_name.ilike.%${searchTerm}%`);
+      }
+
+      const { data, error } = await query
+        .order('likes_count', { ascending: false })
         .order('created_at', { ascending: false })
-        .limit(10);
+        .range(start, end);
 
       if (error) throw error;
 
-      // Process blogs to add readTime
       const processed = (data || []).map((blog: any) => {
         const wordCount = blog.content ? blog.content.replace(/<[^>]+>/g, '').split(/\s+/).length : 0;
         const readTime = `${Math.ceil(wordCount / 200)} MIN READ`;
         return { ...blog, readTime };
       });
 
-      setBlogs(processed);
+      setBlogs(prev => pageToFetch === 0 ? processed : [...prev, ...processed]);
+      setHasMore(processed.length === PAGE_SIZE);
     } catch (e) {
       console.error("Error fetching blogs:", e);
     } finally {
       setLoading(false);
+      setLoadingMore(false);
     }
   };
 
-  const filtered = useMemo(() => {
-    return blogs.filter((b: any) => 
-       b.title?.toLowerCase().includes(search.toLowerCase()) || 
-       b.author_name?.toLowerCase().includes(search.toLowerCase())
-    );
-  }, [blogs, search]);
+  useEffect(() => {
+    setPage(0);
+    fetchBlogs(0, search);
+  }, [search]);
+
+  useEffect(() => {
+    if (page > 0) {
+      fetchBlogs(page, search);
+    }
+  }, [page]);
 
   const extractThumbnail = (html: string) => {
     const match = html.match(/<img[^>]+src="([^">]+)"/);
@@ -167,14 +169,13 @@ export const BlogList = ({ userProfile, onNavigate, onDelete }: any) => {
     temp.innerHTML = html;
     const captions = temp.querySelectorAll('figcaption');
     captions.forEach(c => c.remove());
-    return temp.textContent?.substring(0, 140) + '...' || '';
+    return temp.textContent?.substring(0, 160) + '...' || '';
   };
 
   const handleDelete = async (e: React.MouseEvent, id: number) => {
     e.stopPropagation();
     if (!window.confirm("Are you sure you want to permanently delete this story?")) return;
     
-    // Delegate to parent handler if provided (allows centralized logic in index.tsx)
     if (onDelete) {
         await onDelete(id);
         setBlogs(prev => prev.filter(b => b.id !== id));
@@ -188,7 +189,10 @@ export const BlogList = ({ userProfile, onNavigate, onDelete }: any) => {
        <div className="flex flex-col md:flex-row justify-between items-end gap-8 mb-12 border-b border-slate-100 pb-8 px-4 md:px-0 sticky top-24 md:static bg-white/95 z-40 md:bg-transparent">
           <div className="space-y-2">
              <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tighter text-slate-900">The Insights</h2>
-             <p className="text-slate-400 font-bold uppercase tracking-widest text-xs">Knowledge for the elite</p>
+             <p className="text-slate-400 font-bold uppercase tracking-widest text-xs flex items-center gap-2">
+                <TrendingUp size={14} className="text-emerald-500" />
+                Algorithmic Feed for the elite
+             </p>
           </div>
           
           <div className="flex items-center gap-4 w-full md:w-auto">
@@ -209,60 +213,80 @@ export const BlogList = ({ userProfile, onNavigate, onDelete }: any) => {
           </div>
        </div>
 
-       {loading ? (
-         <div className="text-center py-20 text-slate-400 font-bold uppercase text-xs tracking-widest">
-            Loading Feed...
+       {loading && blogs.length === 0 ? (
+         <div className="flex flex-col items-center justify-center py-32 space-y-4">
+            <Loader2 className="w-8 h-8 text-emerald-500 animate-spin" />
+            <p className="text-slate-400 font-bold uppercase text-xs tracking-widest">Generating Feed...</p>
          </div>
        ) : (
-         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 px-4 md:px-0">
-            {filtered.map((post: any) => {
-               // Prioritize database column 'cover_image' if it exists (schema varying), else extract
+         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-16 px-4 md:px-0">
+            {blogs.map((post: any, index: number) => {
                const thumbnail = post.cover_image || extractThumbnail(post.content);
                const snippet = extractSnippet(post.content);
                const dateStr = new Date(post.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
                
+               const isLastElement = index === blogs.length - 1;
+               const isFeatured = index === 0 && page === 0 && !search;
+
                return (
-                  <article key={post.id} onClick={() => setActivePost(post)} className="group cursor-pointer flex flex-col gap-4">
-                     <div className="aspect-[16/9] bg-slate-100 rounded-[20px] overflow-hidden relative shadow-sm border border-slate-100 group-hover:shadow-xl transition-all duration-500 group-hover:-translate-y-1">
+                  <article
+                    key={post.id}
+                    ref={isLastElement ? lastBlogElementRef : null}
+                    onClick={() => setActivePost(post)}
+                    className={`group cursor-pointer flex flex-col gap-4 animate-in fade-in slide-in-from-bottom-4 duration-700 fill-mode-both ${isFeatured ? "md:col-span-2 lg:col-span-2" : ""}`}
+                    style={{ animationDelay: `${(index % 9) * 100}ms` }}
+                  >
+                     <div className={`${isFeatured ? "aspect-[21/9]" : "aspect-[16/9]"} bg-slate-100 rounded-[24px] md:rounded-[32px] overflow-hidden relative shadow-sm border border-slate-100 group-hover:shadow-2xl transition-all duration-700 group-hover:-translate-y-1`}>
                         {thumbnail ? (
-                           <img src={thumbnail} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy" />
+                           <img src={thumbnail} className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" loading="lazy" />
                         ) : (
                            <div className="w-full h-full flex items-center justify-center bg-slate-50 text-slate-200">
                               <span className="text-4xl font-black uppercase tracking-tighter opacity-20">MEHRI</span>
                            </div>
                         )}
                         
-                        <div className="absolute top-4 left-4">
-                           <span className="bg-white/90 backdrop-blur px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest text-slate-900 border border-slate-100 shadow-sm">
+                        <div className="absolute top-6 left-6 flex gap-2">
+                           <span className="bg-white/90 backdrop-blur px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest text-slate-900 border border-slate-100 shadow-sm">
                               {post.category || 'Article'}
                            </span>
+                           {isFeatured && (
+                             <span className="bg-emerald-500 text-white px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest shadow-lg animate-pulse">
+                                Featured
+                             </span>
+                           )}
                         </div>
 
                         {userProfile?.email === ADMIN_EMAIL && (
-                           <button onClick={(e) => handleDelete(e, post.id)} className="absolute top-4 right-4 p-2 bg-white/90 rounded-full text-slate-400 hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100">
+                           <button onClick={(e) => handleDelete(e, post.id)} className="absolute top-6 right-6 p-2 bg-white/90 rounded-full text-slate-400 hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100">
                               <Trash2 size={16}/>
                            </button>
                         )}
                      </div>
 
-                     <div className="space-y-3 px-1">
-                        <div className="flex items-center gap-3 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                           <span className="flex items-center gap-1"><Calendar size={12}/> {dateStr}</span>
-                           <span className="w-1 h-1 bg-slate-300 rounded-full"/>
-                           <span className="flex items-center gap-1"><Clock size={12}/> {post.readTime}</span>
+                     <div className="space-y-4 px-2">
+                        <div className="flex items-center gap-3 text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">
+                           <span className="flex items-center gap-1.5"><Calendar size={12}/> {dateStr}</span>
+                           <span className="w-1 h-1 bg-slate-200 rounded-full"/>
+                           <span className="flex items-center gap-1.5"><Clock size={12}/> {post.readTime}</span>
+                           {post.likes_count > 0 && (
+                             <>
+                               <span className="w-1 h-1 bg-slate-200 rounded-full"/>
+                               <span className="flex items-center gap-1.5 text-emerald-500"><TrendingUp size={12}/> {post.likes_count} LIKES</span>
+                             </>
+                           )}
                         </div>
                         
-                        <h3 className="text-xl md:text-2xl font-black uppercase tracking-tight text-slate-900 leading-[1.1] group-hover:text-emerald-600 transition-colors line-clamp-2">
+                        <h3 className={`font-black uppercase tracking-tight text-slate-900 leading-[1.1] group-hover:text-emerald-600 transition-colors line-clamp-2 ${isFeatured ? "text-3xl md:text-5xl" : "text-xl md:text-2xl"}`}>
                            {post.title}
                         </h3>
                         
-                        <p className="text-sm text-slate-500 font-serif leading-relaxed line-clamp-2">
+                        <p className={`text-slate-500 font-serif leading-relaxed line-clamp-2 ${isFeatured ? "text-lg md:text-xl" : "text-sm md:text-base"}`}>
                            {snippet}
                         </p>
                         
                         <div className="pt-2">
-                           <span className="text-[10px] font-black uppercase tracking-widest text-slate-900 border-b-2 border-emerald-400 pb-0.5 group-hover:border-slate-900 transition-all">
-                              Read Story
+                           <span className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-900 border-b-2 border-emerald-400 pb-1 group-hover:border-slate-900 transition-all">
+                              Deep Dive
                            </span>
                         </div>
                      </div>
@@ -270,6 +294,23 @@ export const BlogList = ({ userProfile, onNavigate, onDelete }: any) => {
                );
             })}
          </div>
+       )}
+
+       {loadingMore && (
+         <div className="flex flex-col items-center justify-center py-20 space-y-4">
+            <Loader2 className="w-8 h-8 text-emerald-500 animate-spin" />
+            <p className="text-slate-400 font-bold uppercase text-[10px] tracking-widest">Curating more insights...</p>
+         </div>
+       )}
+
+       {!hasMore && blogs.length > 0 && (
+          <div className="text-center py-32 border-t border-slate-50 mt-20">
+             <div className="inline-block p-4 rounded-full bg-slate-50 mb-4">
+                <TrendingUp size={24} className="text-slate-200" />
+             </div>
+             <p className="text-slate-400 font-black uppercase text-[11px] tracking-[0.4em]">You are fully briefed</p>
+             <p className="text-slate-300 text-xs mt-2">Return later for fresh transmissions</p>
+          </div>
        )}
     </div>
   );
