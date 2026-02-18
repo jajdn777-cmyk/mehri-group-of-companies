@@ -166,10 +166,10 @@ export const LogModal = ({ date, routes, userSpecs, userProfile, userPreferences
   };
 
   return (
-    <div className="fixed inset-0 z-[6000] flex items-center justify-center bg-slate-900/90 backdrop-blur-md p-4">
-      <div className="bg-white w-full max-w-5xl rounded-[40px] md:rounded-[50px] shadow-2xl overflow-y-auto max-h-[90vh] relative animate-scale-in flex flex-col">
+    <div className="fixed inset-0 z-[6000] flex items-center justify-center bg-slate-900/90 backdrop-blur-md md:p-4">
+      <div className="bg-white w-full h-full md:h-auto md:max-w-5xl rounded-none md:rounded-[50px] shadow-2xl overflow-y-auto md:max-h-[90vh] relative animate-scale-in flex flex-col">
         
-        <div className="sticky top-0 left-0 right-0 bg-white z-20 px-6 py-6 md:p-10 border-b border-slate-100 flex justify-between items-start">
+        <div className="sticky top-0 left-0 right-0 bg-white z-20 px-6 py-8 md:p-10 border-b border-slate-100 flex justify-between items-start">
            <div>
               <h3 className="text-2xl md:text-3xl font-black uppercase text-slate-900 tracking-tighter">Add Workout</h3>
               <p className="text-xs md:text-[10px] font-black uppercase text-slate-400 tracking-[0.2em] mt-1">Target Date: {date}</p>

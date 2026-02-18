@@ -35,8 +35,8 @@ const LifetimeStatsModal = ({ workouts, userPreferences, onClose }: any) => {
   }, [workouts]);
 
   return (
-    <div className="fixed inset-0 z-[7000] flex items-center justify-center p-4 md:p-6 bg-slate-900/95 backdrop-blur-3xl animate-fade-in overflow-y-auto">
-      <div className="bg-white rounded-[30px] md:rounded-[60px] w-full max-w-6xl flex flex-col shadow-2xl overflow-hidden relative my-8 md:my-0 h-auto md:h-[85vh] min-h-[50vh]">
+    <div className="fixed inset-0 z-[7000] flex items-center justify-center md:p-6 bg-slate-900/95 backdrop-blur-3xl animate-fade-in overflow-y-auto">
+      <div className="bg-white rounded-none md:rounded-[60px] w-full h-full md:max-w-6xl flex flex-col shadow-2xl overflow-hidden relative md:h-[85vh] min-h-[50vh]">
         <button onClick={onClose} className="absolute top-6 right-6 md:top-10 md:right-10 text-slate-300 hover:text-slate-900 transition-colors z-20"><X size={28} md-size={32}/></button>
         
         <div className="p-8 md:p-12 border-b border-slate-100 bg-slate-50">

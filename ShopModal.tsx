@@ -34,8 +34,8 @@ export const ShopModal = ({ onClose, onBuy }: any) => {
   };
 
   return (
-    <div className="fixed inset-0 z-[6000] flex items-end md:items-center justify-center bg-slate-900/90 backdrop-blur-md animate-fade-in overflow-hidden">
-       <div className="bg-white md:rounded-[40px] rounded-t-[40px] w-full max-w-6xl shadow-2xl relative overflow-hidden flex flex-col lg:flex-row h-[95dvh] lg:h-[800px] md:my-10 animate-slide-up md:animate-scale-in">
+    <div className="fixed inset-0 z-[6000] flex items-center justify-center bg-slate-900/90 backdrop-blur-md animate-fade-in overflow-hidden">
+       <div className="bg-white md:rounded-[40px] rounded-none w-full max-w-6xl shadow-2xl relative overflow-hidden flex flex-col lg:flex-row h-full lg:h-[800px] md:my-10 animate-slide-up md:animate-scale-in">
           
           <button 
             onClick={onClose}

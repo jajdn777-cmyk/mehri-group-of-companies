@@ -45,8 +45,8 @@ const AlmaScanner = ({ isScanning }: { isScanning: boolean }) => (
 
 // New Confirmation Modal
 const ConfirmationModal = ({ data, onConfirm, onCancel }: any) => (
-  <div className="fixed inset-0 z-[8000] flex items-center justify-center p-4 bg-slate-900/80 backdrop-blur-sm animate-fade-in">
-     <div className="bg-white rounded-[30px] p-8 max-w-sm w-full text-center space-y-6">
+  <div className="fixed inset-0 z-[8000] flex items-center justify-center md:p-4 bg-slate-900/80 backdrop-blur-sm animate-fade-in">
+     <div className="bg-white rounded-none md:rounded-[30px] p-8 md:max-w-sm w-full h-full md:h-auto flex flex-col justify-center text-center space-y-6">
         <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto text-orange-500">
            <AlertTriangle size={32}/>
         </div>
