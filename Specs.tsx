@@ -57,10 +57,10 @@ export const SpecsSection = ({ specs, onComplete, userPreferences }: any) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-gradient-to-br from-white to-[#A7F3D0] z-[6000] flex items-center justify-center animate-fade-in font-sans">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-white rounded-full blur-[150px] opacity-60 pointer-events-none" />
+    <div className="fixed inset-0 bg-gradient-to-br from-white to-[#A7F3D0] z-[6000] flex items-center justify-center animate-fade-in font-sans overflow-y-auto">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-white rounded-full blur-[150px] opacity-60 pointer-events-none hidden md:block" />
         
-        <div className="bg-white/60 backdrop-blur-xl border border-white/60 rounded-[40px] p-8 md:p-16 shadow-2xl w-full max-w-3xl text-center space-y-12 relative z-10 m-4">
+        <div className="bg-white/60 backdrop-blur-xl border border-white/60 rounded-none md:rounded-[40px] p-8 md:p-16 shadow-2xl w-full h-full md:h-auto md:max-w-3xl flex flex-col justify-center text-center space-y-12 relative z-10">
             <div className="space-y-4">
                 <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tighter text-slate-900">Your Specs</h2>
                 <p className="text-slate-500 text-xs font-black uppercase tracking-[0.2em]">Calibrate your bio-metrics</p>

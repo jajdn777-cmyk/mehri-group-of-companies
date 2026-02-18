@@ -191,9 +191,9 @@ export const AuthSection = ({ onComplete, initialView = 'login', onNavigate }: a
       <Loader isVisible={isLoading} text={loadingText} />
       {toast && <Toast message={toast.msg} type={toast.type} onClose={() => setToast(null)} />}
 
-      <div className="fixed inset-0 bg-white z-[6000] flex flex-col items-center justify-center p-6 animate-fade-in font-sans h-[100dvh]">
-          <div className={`w-full max-w-md relative ${shake ? 'animate-shake' : ''} max-h-full overflow-y-auto custom-scrollbar`}>
-            <div className="bg-white border border-slate-100 rounded-[30px] p-8 md:p-10 shadow-2xl relative z-10 flex flex-col gap-6">
+      <div className="fixed inset-0 bg-white z-[6000] flex flex-col items-center justify-center md:p-6 animate-fade-in font-sans h-[100dvh]">
+          <div className={`w-full h-full md:h-auto md:max-w-md relative ${shake ? 'animate-shake' : ''} md:max-h-full overflow-y-auto custom-scrollbar`}>
+            <div className="bg-white border-none md:border md:border-slate-100 rounded-none md:rounded-[30px] p-8 md:p-10 md:shadow-2xl relative z-10 flex flex-col justify-center min-h-full md:min-h-0 gap-6">
               <div className="text-center space-y-2">
                 <h2 className="text-3xl font-black uppercase tracking-tighter text-slate-900 font-serif">{isLogin ? "Welcome Back" : "Join MEHRI"}</h2>
               </div>

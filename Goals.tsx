@@ -67,8 +67,8 @@ const CreateGoalModal = ({ onClose, onSubmit, userPreferences }: any) => {
   };
 
   return (
-    <div className="fixed inset-0 z-[6000] flex items-center justify-center p-4 bg-slate-900/90 backdrop-blur-md overflow-y-auto">
-      <div className="bg-white p-6 md:p-10 rounded-[30px] md:rounded-[50px] shadow-2xl w-full max-w-4xl relative overflow-visible animate-scale-in my-8">
+    <div className="fixed inset-0 z-[6000] flex items-center justify-center md:p-4 bg-slate-900/90 backdrop-blur-md overflow-y-auto">
+      <div className="bg-white p-8 md:p-10 rounded-none md:rounded-[50px] shadow-2xl w-full h-full md:h-auto md:max-w-4xl relative overflow-visible animate-scale-in flex flex-col md:block">
         <button onClick={onClose} className="absolute top-6 right-6 md:top-8 md:right-8 text-slate-300 hover:text-emerald-500 transition-colors"><X size={28}/></button>
         <h3 className="text-3xl md:text-4xl font-black uppercase text-slate-900 tracking-tighter mb-8">Create A Goal</h3>
         
