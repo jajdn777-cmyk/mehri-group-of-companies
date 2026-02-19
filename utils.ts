@@ -3,7 +3,7 @@ import { supabase } from './supabaseClient.ts';
 
 // --- RATE LIMITER CONFIGURATION ---
 const RATE_LIMIT_WINDOW_MS = 60000; // 1 Minute
-const MAX_REQUESTS_PER_WINDOW = 10;
+const MAX_REQUESTS_PER_WINDOW = 60;
 
 // Implements Fixed Window Counter algorithm using LocalStorage
 // Note: Client-side enforcement approximates "Per IP" limiting for the SPA context
@@ -244,20 +244,46 @@ export const calculateStreak = (workouts: any[], restDayOfWeek?: string) => {
 
 // --- REAL SUPABASE API LAYER ---
 export const api = async (action: string, payload: any) => {
-  // Apply Client-Side Rate Limiting
-  if (!checkClientRateLimit()) {
-    console.warn(`[RateLimit] Blocked request: ${action}`);
-    return { status: 'error', message: 'Rate limit exceeded (10 req/min). Please wait a moment.' };
+  // 1. Immediate Bypass for Logout (No rate limit, no auth check)
+  if (action === 'LOGOUT') {
+    try {
+      await supabase.auth.signOut();
+    } catch (e) {
+      console.warn("SignOut failed but proceeding:", e);
+    }
+    return { status: 'success' };
   }
 
+  // 2. Apply Client-Side Rate Limiting
+  if (!checkClientRateLimit()) {
+    console.warn(`[RateLimit] Blocked request: ${action}`);
+    return { status: 'error', message: 'Rate limit exceeded. Please wait a moment.' };
+  }
+
+  // 3. Define a timeout for API calls to prevent "forever hanging"
+  const withTimeout = (promise: any, ms = 15000) => {
+    return Promise.race([
+      promise,
+      new Promise((_, reject) => setTimeout(() => reject(new Error('Request Timeout')), ms))
+    ]);
+  };
+
   try {
-    const { data: authData, error: authError } = await supabase.auth.getUser();
-    
-    if (authError && action !== 'LOGIN' && action !== 'REGISTER') {
+    // 4. Identification Step (Optimized: check session first as it is faster)
+    let user;
+    const { data: sessionData } = await supabase.auth.getSession();
+    user = sessionData.session?.user;
+
+    // Only call getUser() if session is missing but we're not logging in/registering
+    if (!user && action !== 'LOGIN' && action !== 'REGISTER') {
+      const { data: authData, error: authError } = await withTimeout(supabase.auth.getUser());
+      if (authError) {
         return { status: 'error', message: 'Authentication failed. Please login again.' };
+      }
+      user = authData?.user;
     }
     
-    const userId = authData?.user?.id;
+    const userId = user?.id;
 
     // --- ALMA CHAT ACTION (GROQ INTEGRATION) ---
     if (action === 'ALMA_CHAT') {
@@ -300,8 +326,8 @@ Goals: ${JSON.stringify(userContext.goals)}
             }))
         ];
 
-        // 2. Call Groq API
-        const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+        // 2. Call Groq API (with timeout)
+        const response: any = await withTimeout(fetch("https://api.groq.com/openai/v1/chat/completions", {
             method: "POST",
             headers: {
                 "Authorization": `Bearer ${apiKey}`,
@@ -313,7 +339,7 @@ Goals: ${JSON.stringify(userContext.goals)}
                 temperature: 0.7,
                 max_tokens: 800
             })
-        });
+        }));
 
         const data = await response.json();
         if (data.error) return { status: 'error', message: data.error.message };
@@ -448,7 +474,7 @@ Goals: ${JSON.stringify(userContext.goals)}
 
     if (action === 'SYNC_USER') {
       if(!userId) return { status: 'error', message: 'Not logged in' };
-      const [p, w, g, r, m, b, c, am, ac] = await Promise.all([
+      const [p, w, g, r, m, b, c, am, ac]: any = await withTimeout(Promise.all([
          supabase.from('profiles').select('*').eq('id', userId).single(),
          supabase.from('workouts').select('*').eq('user_id', userId),
          supabase.from('goals').select('*').eq('user_id', userId),
@@ -458,7 +484,7 @@ Goals: ${JSON.stringify(userContext.goals)}
          supabase.from('user_challenges').select('*').eq('user_id', userId),
          supabase.from('alma_memories').select('memory_text').eq('user_id', userId),
          supabase.from('alma_chats').select('*').eq('user_id', userId)
-      ]);
+      ]));
       const profile = p.data || {};
       
       const formattedBlogs = (b.data || []).map((blog: any) => ({
@@ -500,7 +526,7 @@ Goals: ${JSON.stringify(userContext.goals)}
 
     if (action === 'SAVE_WORKOUT') {
        if(!userId) return { status: 'error', message: 'Not logged in' };
-       const { data, error } = await supabase.from('workouts').insert({
+       const { data, error } = await withTimeout(supabase.from('workouts').insert({
           user_id: userId, 
           type: payload.type, 
           date: payload.date, 
@@ -511,7 +537,7 @@ Goals: ${JSON.stringify(userContext.goals)}
           reps: payload.reps, 
           weight_lifted: payload.weightLifted, 
           data: payload.data
-       }).select().single();
+       }).select().single());
        
        if (error) return { status: 'error', message: error.message };
        return { status: 'success', data };
@@ -521,7 +547,7 @@ Goals: ${JSON.stringify(userContext.goals)}
     
     if (action === 'SAVE_GOAL') { 
         if(!userId) return { status: 'error', message: 'Not logged in' };
-        const { data, error } = await supabase.from('goals').insert({ 
+        const { data, error } = await withTimeout(supabase.from('goals').insert({
             user_id: userId, 
             title: payload.title, 
             activity_type: payload.activity, 
@@ -529,14 +555,14 @@ Goals: ${JSON.stringify(userContext.goals)}
             target_value: payload.target, 
             start_date: payload.startDate, 
             status: payload.status 
-        }).select().single(); 
+        }).select().single());
         
         if (error) return { status: 'error', message: error.message };
         return { status: 'success', data }; 
     }
     
-    if (action === 'UPDATE_GOAL_STATUS') { await supabase.from('goals').update({ status: payload.status }).eq('id', payload.id); return { status: 'success' }; }
-    if (action === 'DELETE_GOAL') { await supabase.from('goals').delete().eq('id', payload.id); return { status: 'success' }; }
+    if (action === 'UPDATE_GOAL_STATUS') { await withTimeout(supabase.from('goals').update({ status: payload.status }).eq('id', payload.id)); return { status: 'success' }; }
+    if (action === 'DELETE_GOAL') { await withTimeout(supabase.from('goals').delete().eq('id', payload.id)); return { status: 'success' }; }
     
     if (action === 'UPDATE_PROFILE') {
        if(!userId) return { status: 'error', message: 'Not logged in' };
@@ -565,7 +591,7 @@ Goals: ${JSON.stringify(userContext.goals)}
            return { status: 'error', message: 'Unauthorized: Admin privileges required.' };
        }
 
-       const { data, error } = await supabase.from('blogs').insert({
+       const { data, error } = await withTimeout(supabase.from('blogs').insert({
           user_id: userId,
           title: payload.title,
           content: payload.content,
@@ -575,7 +601,7 @@ Goals: ${JSON.stringify(userContext.goals)}
           category: payload.category || 'General',
           likes: 0,
           created_at: new Date().toISOString()
-       }).select().single();
+       }).select().single());
        
        if (error) return { status: 'error', message: error.message };
        
@@ -608,12 +634,12 @@ Goals: ${JSON.stringify(userContext.goals)}
     if (action === 'SAVE_ROUTE') {
        if(!userId) return { status: 'error', message: 'Not logged in' };
        
-       const { data, error } = await supabase.from('routes').insert({
+       const { data, error } = await withTimeout(supabase.from('routes').insert({
           user_id: userId,
           name: payload.name,
           distance: payload.distance,
           points: payload.points, // Safe to pass arrays if column is JSONB
-       }).select().single();
+       }).select().single());
        
        if (error) return { status: 'error', message: error.message };
        return { status: 'success', data };
@@ -667,25 +693,25 @@ Goals: ${JSON.stringify(userContext.goals)}
 
     if (action === 'SAVE_MEAL') {
        if(!userId) return { status: 'error', message: 'Not logged in' };
-       const { error } = await supabase.from('meals').insert({
+       const { error } = await withTimeout(supabase.from('meals').insert({
           user_id: userId,
           date: payload.date,
           name: payload.name,
           data: payload.data
-       });
+       }));
        if (error) return { status: 'error', message: error.message };
        return { status: 'success' };
     }
 
     if (action === 'JOIN_CHALLENGE') {
        if(!userId) return { status: 'error', message: 'Not logged in' };
-       const { error } = await supabase.from('user_challenges').insert({
+       const { error } = await withTimeout(supabase.from('user_challenges').insert({
           user_id: userId,
           challenge_id: payload.challenge_id,
           title: payload.title,
           status: 'Active',
           joined_date: new Date().toISOString()
-       });
+       }));
        if (error) return { status: 'error', message: error.message };
        return { status: 'success' };
     }
@@ -705,7 +731,7 @@ Goals: ${JSON.stringify(userContext.goals)}
        return { status: 'error', message: 'Google Auth requires backend configuration' };
     }
 
-    if (action === 'LOGOUT') { await supabase.auth.signOut(); return { status: 'success' }; }
+    if (action === 'LOGOUT') { /* Handled at top */ return { status: 'success' }; }
 
     // --- ADMIN HANDLERS ---
     if (action === 'ADMIN_GET_ALL') {

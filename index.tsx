@@ -481,13 +481,18 @@ const App = () => {
   };
 
   const handleSignOut = async (remoteLogout = true) => {
-    if (remoteLogout) {
+    try {
         setIsLoading(true);
         setLoadingText("Securely Logging Out...");
-        // 1. Clear session server-side
-        await api("LOGOUT", {});
         
-        // 2. Force Hard Reset Client-Side
+        if (remoteLogout) {
+            // 1. Clear session server-side (Best effort)
+            await api("LOGOUT", {});
+        }
+    } catch (error) {
+        console.error("Logout error:", error);
+    } finally {
+        // 2. Force Hard Reset Client-Side ALWAYS
         localStorage.clear();
         sessionStorage.clear();
         
