@@ -4,8 +4,7 @@ import { Footer } from './Footer.tsx';
 import { motion, useScroll, useTransform, useInView, AnimatePresence } from 'framer-motion';
 
 // --- PREMIUM ANIMATION COMPONENTS ---
-
-const StaggeredText = ({ text, className = "", delayStart = 0, withUnderline = false }: { text: string, className?: string, delayStart?: number, withUnderline?: boolean }) => {
+const StaggeredText = ({ text, className = "", delayStart = 0, withUnderline = false, justify = "center" }: { text: string, justify?: string, className?: string, delayStart?: number, withUnderline?: boolean }) => {
   const words = text.split(" ");
   
   const container = {
@@ -39,7 +38,7 @@ const StaggeredText = ({ text, className = "", delayStart = 0, withUnderline = f
 
   return (
     <motion.div
-      style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "0.2em" }}
+      style={{ display: "flex", flexWrap: "wrap", justifyContent: justify, gap: "0.2em" }}
       variants={container}
       initial="hidden"
       animate="visible"
@@ -498,53 +497,36 @@ export const LandingSection = ({ onStart, onNavigate }: any) => {
     <div className="space-y-0 pb-0 overflow-hidden bg-white">
       
       {/* 1. HERO SECTION */}
-      <section className="relative min-h-screen w-full flex flex-col justify-start items-center overflow-hidden isolate pt-32 pb-10">
-        <motion.div 
-           initial={{ scale: 1.1 }}
-           animate={{ scale: 1 }}
-           transition={{ duration: 10, ease: "easeOut" }}
-           className="absolute inset-0 z-0 bg-cover bg-center" 
-           style={{ backgroundImage: 'url("https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=1920&auto=format&fit=crop")' }} 
-        />
-        <div className="absolute inset-0 z-0 bg-black/50 backdrop-blur-[2px]" />
-        
-        <div className="relative z-10 text-center px-6 md:px-8 text-white flex flex-col items-center w-full">
-          
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.2, duration: 0.8 }}
-            className="relative w-full max-w-xl h-32 md:h-48 rounded-[30px] overflow-hidden shadow-2xl mb-6 border border-white/20 group mx-4"
+      <section className="relative min-h-screen w-full flex flex-col justify-center items-start overflow-hidden isolate pt-32 pb-10">
+        <div className="absolute inset-0 z-0">
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
+            className="w-full h-full object-cover"
+            poster="/watch-black.jpg"
           >
-            <img 
-              src="https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?q=80&w=1200&auto=format&fit=crop" 
-              alt="Wearable Tech"
-              className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:scale-105 transition-transform duration-700"
-            />
-            <div className="absolute inset-0 bg-black/30 group-hover:bg-black/20 transition-colors" />
-            
-            <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-4">
-               <p className="text-[9px] md:text-xs font-black uppercase tracking-[0.3em] text-white/90 mb-2 drop-shadow-md">
-                  MEHRI GROUP OF COMPANIES
-               </p>
-               <h2 className="text-xl md:text-3xl font-serif text-white leading-tight drop-shadow-lg">
-                  Wearable technology for <br/> everyday life
-               </h2>
-            </div>
-          </motion.div>
-
-          <h1 className="font-black tracking-tighter uppercase mb-4 leading-none text-4xl md:text-7xl drop-shadow-2xl flex flex-col items-center gap-y-2">
-            <StaggeredText text="REACH YOUR" delayStart={0} />
-            <StaggeredText text="BEST." delayStart={0.8} className="text-emerald-400" withUnderline={true} />
+            <source src="/landingpagevid.webm" type="video/webm" />
+          </video>
+          <div className="absolute inset-0 bg-black/40 backdrop-blur-[1px]" />
+        </div>
+        
+        <div className="relative z-10 px-6 md:px-16 text-white flex flex-col items-start w-full max-w-7xl mx-auto">
+          
+          <h1 className="font-black tracking-tighter uppercase mb-4 leading-none text-4xl md:text-8xl drop-shadow-2xl flex flex-wrap gap-x-4 justify-start text-left">
+            <StaggeredText text="REACH YOUR" delayStart={0} justify="flex-start" />
+            <StaggeredText text="BEST." delayStart={0.8} className="text-emerald-400" withUnderline={true} justify="flex-start" />
           </h1>
           
           <motion.div 
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.5, duration: 0.8 }}
+            className="text-left"
           >
-            <p className="text-sm md:text-xl font-medium max-w-2xl mx-auto mb-8 leading-relaxed tracking-tight drop-shadow-md text-white/90 px-4">
-              An integrated fitness platform for training, recovery, and performance.
+            <p className="text-lg md:text-2xl font-medium mb-8 leading-relaxed tracking-tight drop-shadow-md text-white/90">
+              Train smarter with Mehri
             </p>
             <motion.button 
               onClick={createRipple} 
@@ -556,28 +538,7 @@ export const LandingSection = ({ onStart, onNavigate }: any) => {
             </motion.button>
           </motion.div>
         </div>
-
-        <motion.div 
-           initial={{ y: 50, opacity: 0 }}
-           animate={{ y: 0, opacity: 1 }}
-           transition={{ delay: 1.2, duration: 0.8 }}
-           className="relative z-10 mt-auto mb-8 mx-4"
-        >
-           <div className="bg-slate-900/80 backdrop-blur-xl border border-white/20 rounded-full p-2 pr-8 flex items-center gap-6 shadow-2xl hover:bg-slate-900/90 transition-all cursor-pointer group">
-              <div className="w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden border-2 border-emerald-500/50 relative bg-white/5 group-hover:scale-105 transition-transform">
-                 <img src="https://i.ibb.co/0y594tgq/watch-black.jpg" className="w-full h-full object-cover" alt="Mehri Watch" />
-              </div>
-              <div className="text-left">
-                 <p className="text-white font-bold text-sm md:text-lg leading-tight">Advanced Metrics<br/> on your wrist.</p>
-                 <p className="text-emerald-400 text-[9px] md:text-[10px] font-black uppercase tracking-widest mt-1">Mehri fitness tracker</p>
-              </div>
-              <div className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center group-hover:bg-emerald-500 group-hover:text-slate-900 text-white transition-all ml-2">
-                 <ArrowRight size={16} />
-              </div>
-           </div>
-        </motion.div>
       </section>
-
       {/* 2. WHAT WE DO (Answers Q1 & Q3) */}
       <WhatWeDoSection />
 
