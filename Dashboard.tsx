@@ -1,7 +1,7 @@
 
 import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
-import { Plus, ArrowRight, Zap, Trash2, Search, ChevronDown, MapPin, Calculator as CalcIcon, X, Dumbbell, Target, Footprints, Timer, Flame, Activity, ToggleLeft, ToggleRight, Info, Calendar, RefreshCw, CheckCircle2, Lock, Heart, Moon, Waves, Mountain, Weight, ChevronLeft, ChevronRight, BarChart } from 'lucide-react';
+import { Plus, ArrowRight, Brain, Zap, Trash2, Search, ChevronDown, MapPin, Calculator as CalcIcon, X, Dumbbell, Target, Footprints, Timer, Flame, Activity, ToggleLeft, ToggleRight, Info, Calendar, RefreshCw, CheckCircle2, Lock, Heart, Moon, Waves, Mountain, Weight, ChevronLeft, ChevronRight, BarChart } from 'lucide-react';
 import { getLocalTodayStr, ROUTE_APPLICABLE_TYPES, ACTIVITY_CATEGORIES } from './constants.ts';
 import { formatDuration, parseDurationToHours, isStrengthActivity, calculateEstimatedCalories, calculateBMR, calculateAge, convertDist, convertWeight, getDistUnit, getWeightUnit, getDistVal, calculateStreak, api } from './utils.ts';
 import { StatsView } from './Stats.tsx';
@@ -331,12 +331,106 @@ export const LogModal = ({ date, routes, userSpecs, userProfile, userPreferences
   );
 };
 
-export const DashboardView = ({ workouts, setWorkouts, userGoals, setUserGoals, routes, userSpecs, userProfile, userPreferences, userHandle, onForceSync }: any) => {
+export const DashboardView = ({ workouts, setWorkouts, userGoals, setUserGoals, routes, userSpecs, userProfile, userPreferences, userHandle, onForceSync, userMeals = [], almaChats = [], setAlmaChats, setAlmaNotification, onNavigate }: any) => {
   const [tab, setTab] = useState<'monthly' | 'stats'>('monthly');
   const [precisionMode, setPrecisionMode] = useState(false);
   const [showStreakCelebration, setShowStreakCelebration] = useState(false);
   const [celebratingGoal, setCelebratingGoal] = useState<any>(null);
   const [isSyncing, setIsSyncing] = useState(false);
+  const [almaMessage, setAlmaMessage] = useState<any>(null);
+  const [progress, setProgress] = useState(100);
+
+  useEffect(() => {
+    // 1. Morning Brief Logic
+    const today = getLocalTodayStr();
+    const lastBrief = localStorage.getItem('lastAlmaBrief');
+
+    if (lastBrief !== today) {
+        const yesterday = new Date();
+        yesterday.setDate(yesterday.getDate() - 1);
+        const yesterdayStr = yesterday.toISOString().split('T')[0];
+
+        const yesterdayWorkouts = workouts.filter((w: any) => w.date === yesterdayStr);
+        const yesterdayCalories = yesterdayWorkouts.reduce((sum: number, w: any) => sum + (parseFloat(w.calories) || 0), 0);
+
+        const yesterdayMeals = userMeals.filter((m: any) => m.date === yesterdayStr);
+        const yesterdayIntake = yesterdayMeals.reduce((sum: number, m: any) => sum + (m.data?.calories || 0), 0);
+
+        let message = `Good morning, ${userProfile?.firstName || 'Champ'}! `;
+        if (yesterdayCalories > 0) {
+            message += `You burned ${yesterdayCalories}kcal yesterday. `;
+        } else {
+            message += `Yesterday was a rest day. `;
+        }
+
+        if (yesterdayIntake > 0) {
+            const weight = parseFloat(userSpecs?.weight || '70');
+            const height = parseFloat(userSpecs?.height || '175');
+            const age = calculateAge(userProfile?.birthdate);
+            const bmr = calculateBMR(weight, height, age, userProfile?.gender || 'Male');
+            const net = yesterdayIntake - (bmr + yesterdayCalories);
+            message += `Your net energy was ${net > 0 ? '+' : ''}${net.toFixed(0)}kcal. `;
+        }
+
+        message += `I recommend ${yesterdayCalories > 500 ? 'a recovery session' : 'pushing your limits'} today.`;
+
+        setAlmaMessage({ type: 'morning', text: message });
+        if (setAlmaNotification) setAlmaNotification(true);
+        localStorage.setItem('lastAlmaBrief', today);
+    }
+  }, []);
+
+  const prevWorkoutCount = useRef(workouts.length);
+  useEffect(() => {
+    if (workouts.length > prevWorkoutCount.current) {
+        const lastWorkout = workouts[0];
+        const message = `Post-Workout Insight: Great ${lastWorkout.type} session! You burned ${lastWorkout.calories}kcal. That effort is moving you closer to your goals!`;
+        setAlmaMessage({ type: 'workout', text: message });
+        if (setAlmaNotification) setAlmaNotification(true);
+    }
+    prevWorkoutCount.current = workouts.length;
+  }, [workouts]);
+
+  useEffect(() => {
+    if (almaMessage) {
+        setProgress(100);
+        const duration = 10000;
+        const interval = 100;
+        const step = (interval / duration) * 100;
+
+        const timer = setInterval(() => {
+            setProgress(prev => {
+                if (prev <= 0) {
+                    clearInterval(timer);
+                    setAlmaMessage(null);
+                    return 0;
+                }
+                return prev - step;
+            });
+        }, interval);
+
+        return () => clearInterval(timer);
+    }
+  }, [almaMessage]);
+
+  const handleMessageClick = () => {
+    if (!almaMessage) return;
+    const newMessage = { role: 'model', text: almaMessage.text, timestamp: new Date().toISOString() };
+
+    let activeChat = almaChats[0];
+    if (!activeChat) {
+        activeChat = { id: Date.now(), title: 'Alma Coach', messages: [newMessage] };
+        if (setAlmaChats) setAlmaChats([activeChat, ...almaChats]);
+    } else {
+        const updatedChat = { ...activeChat, messages: [...activeChat.messages, newMessage] };
+        if (setAlmaChats) setAlmaChats([updatedChat, ...almaChats.filter((c: any) => c.id !== activeChat.id)]);
+    }
+
+    if (onNavigate) onNavigate('alma');
+    setAlmaMessage(null);
+    if (setAlmaNotification) setAlmaNotification(false);
+  };
+
   
   const [now, setNow] = useState(new Date());
   useEffect(() => {
@@ -588,6 +682,27 @@ export const DashboardView = ({ workouts, setWorkouts, userGoals, setUserGoals, 
 
   return (
     <div className="space-y-6 md:space-y-12 animate-fade-in pb-32 max-w-7xl mx-auto font-sans">
+      {almaMessage && (
+        <div
+          onClick={handleMessageClick}
+          className="fixed top-32 left-1/2 -translate-x-1/2 z-[6000] w-[90%] max-w-xl bg-slate-900 text-white p-6 rounded-[30px] shadow-2xl cursor-pointer hover:scale-[1.02] transition-all group overflow-hidden border border-white/10"
+        >
+            <div className="flex items-start gap-4">
+                <div className="w-10 h-10 bg-[#A7F3D0] rounded-full flex items-center justify-center text-slate-900 shrink-0">
+                    <Brain size={20} />
+                </div>
+                <div className="flex-1 space-y-1">
+                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#A7F3D0]">Alma Intelligence</p>
+                    <p className="text-sm font-bold leading-relaxed">{almaMessage.text}</p>
+                </div>
+                <div className="text-white/20 group-hover:text-white transition-colors">
+                    <ArrowRight size={20} />
+                </div>
+            </div>
+            <div className="absolute bottom-0 left-0 h-1 bg-[#A7F3D0] transition-all duration-100 linear" style={{ width: `${progress}%` }} />
+        </div>
+      )}
+
       {showStreakCelebration && (
         <StreakOverlay streak={currentStreak} userName={userProfile?.firstName || "Athlete"} onClose={() => setShowStreakCelebration(false)} />
       )}

@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { ChevronDown, ChevronRight, Brain, ShoppingBag, X, Newspaper, User, Settings, LogOut, MessageSquare, Utensils, Zap, Flame, Menu, Map as MapIcon, Trophy, Target, BarChart2, LayoutDashboard } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-export const Header = ({ currentView, onNavigate, onSignOut, onShop, userProfile, userName, streak = 0 }: any) => {
+export const Header = ({ currentView, onNavigate, onSignOut, onShop, userProfile, userName, streak = 0, hasAlmaNotification }: any) => {
   const [scrolled, setScrolled] = useState(false);
   const [workoutsHover, setWorkoutsHover] = useState(false);
   const [almaHover, setAlmaHover] = useState(false);
@@ -67,13 +67,16 @@ export const Header = ({ currentView, onNavigate, onSignOut, onShop, userProfile
     </div>
   );
 
-  const MobileSubLink = ({ onClick, label, icon: Icon }: any) => (
+  const MobileSubLink = ({ onClick, label, icon: Icon, badge }: any) => (
     <button 
       onClick={() => { onClick(); setMobileMenuOpen(false); }} 
       className="w-full flex items-center gap-3 pl-10 pr-6 py-3 text-left text-xs font-bold uppercase tracking-wider text-slate-500 hover:text-emerald-600 hover:bg-emerald-50/50 transition-colors"
     >
       {Icon && <Icon size={14} className="text-slate-400" />}
       {label}
+      {badge && (
+        <span className="ml-auto w-4 h-4 bg-red-500 text-white text-[8px] flex items-center justify-center rounded-full animate-pulse">1</span>
+      )}
     </button>
   );
 
@@ -170,8 +173,11 @@ export const Header = ({ currentView, onNavigate, onSignOut, onShop, userProfile
                   
                   {/* ALMA HOVER MENU */}
                   <div className="relative py-4" onMouseEnter={() => setAlmaHover(true)} onMouseLeave={() => setAlmaHover(false)}>
-                     <button onClick={() => onNavigate('alma')} className={`text-sm font-black uppercase tracking-[0.2em] flex items-center gap-1 transition-colors whitespace-nowrap ${almaHover ? 'text-emerald-500' : 'text-slate-900'}`}>
+                     <button onClick={() => onNavigate('alma')} className={`text-sm font-black uppercase tracking-[0.2em] flex items-center gap-1 transition-colors whitespace-nowrap relative ${almaHover ? 'text-emerald-500' : 'text-slate-900'}`}>
                         <Brain size={12}/> Alma
+                        {hasAlmaNotification && (
+                           <span className="absolute -top-1 -right-2 w-4 h-4 bg-red-500 text-white text-[8px] flex items-center justify-center rounded-full animate-pulse shadow-sm border border-white">1</span>
+                        )}
                      </button>
                      <AnimatePresence>
                      {almaHover && (
@@ -333,7 +339,7 @@ export const Header = ({ currentView, onNavigate, onSignOut, onShop, userProfile
                        isOpen={expandedSections['alma']} 
                        onToggle={() => toggleSection('alma')}
                     >
-                       <MobileSubLink onClick={() => onNavigate('alma')} label="Ask Alma" icon={Brain} />
+                       <MobileSubLink onClick={() => onNavigate('alma')} label="Ask Alma" icon={Brain} badge={hasAlmaNotification} />
                        <MobileSubLink onClick={() => onNavigate('alma-meals')} label="Meal Tracker" icon={Utensils} />
                     </MobileMenuSection>
 
