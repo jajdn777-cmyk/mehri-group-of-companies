@@ -57,25 +57,62 @@ export const parseDurationToHours = (durationStr: string) => {
 
 export const getMETValue = (activity: string, speedKmH?: number) => {
   const activityLower = activity.toLowerCase();
-  if (activityLower.includes('run') || activityLower.includes('jog') || activityLower.includes('sprinting')) {
-      if (speedKmH && speedKmH > 0) return Number((speedKmH * 0.95).toFixed(1));
-      if (activityLower.includes('sprinting')) return 23.0;
-      if (activityLower.includes('trail')) return 11.8;
-      if (activityLower.includes('jog')) return 7.0;
+
+  if (activityLower.includes("run") || activityLower.includes("jog") || activityLower.includes("sprinting")) {
+      if (speedKmH && speedKmH > 0) {
+          if (speedKmH <= 6.4) return 6.0;
+          if (speedKmH <= 8.0) return 8.3;
+          if (speedKmH <= 9.7) return 9.8;
+          if (speedKmH <= 11.3) return 11.0;
+          if (speedKmH <= 12.9) return 11.8;
+          if (speedKmH <= 14.5) return 12.8;
+          if (speedKmH <= 16.1) return 14.5;
+          return 16.0;
+      }
+      if (activityLower.includes("sprinting")) return 23.0;
+      if (activityLower.includes("trail")) return 11.8;
+      if (activityLower.includes("jog")) return 7.0;
       return 9.8;
   }
-  if (activityLower.includes('cycling') || activityLower.includes('bike')) return 8.0;
-  if (activityLower.includes('swim')) return 8.3;
-  if (activityLower.includes('walk')) return 3.8;
-  if (activityLower.includes('weight') || activityLower.includes('strength')) return 3.5;
-  if (activityLower.includes('yoga')) return 2.5;
-  if (activityLower.includes('boxing')) return 12.8;
+
+  if (activityLower.includes("walk")) {
+      if (speedKmH && speedKmH > 0) {
+          if (speedKmH < 3.2) return 2.0;
+          if (speedKmH < 4.8) return 2.8;
+          if (speedKmH < 5.6) return 3.5;
+          if (speedKmH < 6.4) return 4.3;
+          if (speedKmH < 7.2) return 5.0;
+          return 7.0;
+      }
+      return 3.5;
+  }
+
+  if (activityLower.includes("cycling") || activityLower.includes("bike")) {
+      if (speedKmH && speedKmH > 0) {
+          if (speedKmH < 16) return 4.0;
+          if (speedKmH < 19) return 6.8;
+          if (speedKmH < 22) return 8.0;
+          if (speedKmH < 26) return 10.0;
+          if (speedKmH < 31) return 12.0;
+          return 15.0;
+      }
+      return 8.0;
+  }
+
+  if (activityLower.includes("swim")) return 8.3;
+  if (activityLower.includes("weight") || activityLower.includes("strength") || isStrengthActivity(activity)) return 5.0;
+  if (activityLower.includes("yoga")) return 2.5;
+  if (activityLower.includes("boxing")) return 12.8;
+  if (activityLower.includes("basketball")) return 8.0;
+  if (activityLower.includes("soccer")) return 10.0;
+  if (activityLower.includes("tennis")) return 7.3;
+
   return 6.0;
 };
 
 export const isStrengthActivity = (type: string) => {
   const lower = type.toLowerCase();
-  return (lower.includes('press') || lower.includes('squat') || lower.includes('deadlift') || lower.includes('curl') || lower.includes('extension') || lower.includes('row') || lower.includes('pull') || lower.includes('push up') || lower.includes('sit up') || lower.includes('crunch') || lower.includes('plank') || lower.includes('lunge'));
+  return (lower.includes("press") || lower.includes("squat") || lower.includes("deadlift") || lower.includes("curl") || lower.includes("extension") || lower.includes("row") || lower.includes("pull") || lower.includes("push up") || lower.includes("sit up") || lower.includes("crunch") || lower.includes("plank") || lower.includes("lunge") || lower.includes("weight") || lower.includes("strength") || lower.includes("bench") || lower.includes("dip") || lower.includes("raise") || lower.includes("fly"));
 };
 
 export const calculateAge = (birthdate: string) => {
@@ -96,11 +133,29 @@ export const calculateBMR = (weightKg: number, heightCm: number, age: number, ge
 export const calculateEstimatedCalories = (type: string, weightKg: number, distanceKm: number, durationHours: number, profile?: any, modifiers?: any) => {
   const durationMin = durationHours * 60;
   const speedKmH = (distanceKm && durationHours > 0) ? distanceKm / durationHours : 0;
-  const met = getMETValue(type, speedKmH);
+  let met = getMETValue(type, speedKmH);
+
   let multiplier = 1.0;
-  if (modifiers?.surface === 'Sand') multiplier = 1.25;
+  if (modifiers?.surface === "Sand") multiplier = 1.25;
+
+  let baseCalories = met * 3.5 * weightKg / 200 * durationMin;
+
+  // Strength training specific logic
+  if (isStrengthActivity(type) || type.toLowerCase().includes("weight")) {
+    const sets = parseInt(modifiers?.sets || "0");
+    const reps = parseInt(modifiers?.reps || "0");
+    const weightLiftedKg = parseFloat(modifiers?.weightLiftedKg || "0");
+
+    if (sets > 0 && reps > 0) {
+        // Estimate work done: Calories = (sets * reps * weightLiftedKg * 0.05) + (base calories for duration)
+        const workCalories = (sets * reps * weightLiftedKg) * 0.05;
+        baseCalories += workCalories;
+    }
+  }
+
   if (modifiers?.loadKg) multiplier *= (weightKg + modifiers.loadKg) / weightKg;
-  return Math.round(met * multiplier * 3.5 * weightKg / 200 * durationMin);
+
+  return Math.round(baseCalories * multiplier);
 };
 
 export const detectSystemUnits = (): 'imperial' | 'metric' => {
