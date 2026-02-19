@@ -1,6 +1,5 @@
-
 import React, { useEffect, useRef, useState } from 'react';
-import { Target, Users, Brain, Eraser, LineChart, MessageSquare, ArrowRight, HelpCircle, ChevronDown, Trophy, Activity, Check } from 'lucide-react';
+import { Target, Users, Brain, Eraser, LineChart, MessageSquare, ArrowRight, HelpCircle, ChevronDown, Trophy, Activity, Check, Shield, Zap, TrendingUp } from 'lucide-react';
 import { Footer } from './Footer.tsx';
 import { motion, useScroll, useTransform, useInView, AnimatePresence } from 'framer-motion';
 
@@ -29,7 +28,7 @@ const StaggeredText = ({ text, className = "", delayStart = 0, withUnderline = f
     },
     hidden: {
       opacity: 0,
-      y: 50, // Start slightly lower
+      y: 50,
       transition: {
         type: "spring" as const,
         damping: 20,
@@ -129,7 +128,7 @@ const TypewriterText = ({ text, onComplete }: { text: string, onComplete?: () =>
         clearInterval(timer);
         onComplete?.();
       }
-    }, 25); // Speed of typing
+    }, 25);
     return () => clearInterval(timer);
   }, [text]);
 
@@ -140,11 +139,6 @@ const AlmaLiveDemo = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-20% 0px -20% 0px" });
   const [step, setStep] = useState(0); 
-  // 0: Hidden
-  // 1: Typing 1
-  // 2: Msg 1
-  // 3: Typing 2
-  // 4: Msg 2
 
   useEffect(() => {
     if (isInView && step === 0) {
@@ -155,11 +149,11 @@ const AlmaLiveDemo = () => {
 
   useEffect(() => {
     if (step === 1) {
-      const t = setTimeout(() => setStep(2), 1200); // Thinking delay
+      const t = setTimeout(() => setStep(2), 1200);
       return () => clearTimeout(t);
     }
     if (step === 3) {
-      const t = setTimeout(() => setStep(4), 1000); // Thinking delay 2
+      const t = setTimeout(() => setStep(4), 1000);
       return () => clearTimeout(t);
     }
   }, [step]);
@@ -231,13 +225,12 @@ const AlmaLiveDemo = () => {
           </AnimatePresence>
        </div>
        
-       {/* Decorative Elements */}
        <div className="absolute -top-4 -right-4 w-20 h-20 bg-emerald-500 rounded-full blur-[40px] opacity-10 animate-pulse pointer-events-none" />
     </div>
   );
 };
 
-// --- SECTION COMPONENTS ---
+// --- NEW SECTION COMPONENTS ---
 
 const WhatWeDoSection = () => (
   <section className="max-w-4xl mx-auto px-6 md:px-8 py-24 text-center bg-white">
@@ -249,47 +242,92 @@ const WhatWeDoSection = () => (
      >
        <span className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 mb-6 block">What We Do</span>
        <h2 className="text-2xl md:text-4xl font-medium text-slate-900 leading-relaxed font-serif">
-          Mehri Fitness helps people track workouts, recovery, and health trends across devices. Users can train using just their phone or pair the Mehri fitness tracker for deeper biometric insights, all supported by Alma AI coaching.
+          Mehri Fitness builds the bridge between raw biometric data and actionable human performance. We provide the hardware, the AI, and the ecosystem to help you track workouts, recovery, and health trends across all your devices.
        </h2>
+       <p className="mt-8 text-slate-500 text-lg font-medium max-w-2xl mx-auto">
+          Whether you use just your phone or pair it with our flagship Mehri fitness tracker, you get a personalized roadmap to your physical potential.
+       </p>
      </motion.div>
   </section>
 );
 
-const KeyFeaturesSection = () => (
-  <section className="max-w-7xl mx-auto px-6 md:px-8 py-12 md:py-20 bg-slate-50 rounded-[40px] md:rounded-[60px] my-12 md:my-20 border border-slate-100 shadow-sm">
-     <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 text-center">
-        <div className="space-y-4 px-4">
-           <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center mx-auto shadow-sm text-emerald-500 mb-4">
-              <Activity size={24} />
-           </div>
-           <h3 className="text-lg md:text-xl font-black uppercase tracking-tight text-slate-900">Personalized Biometric Analytics</h3>
-           <p className="text-sm text-slate-500 leading-relaxed font-medium">
-              We decode your physiological signals. From HRV to SpO2, every data point is analyzed to tailor your recovery and performance strategy.
-           </p>
-        </div>
-        <div className="space-y-4 px-4 border-l-0 md:border-l border-slate-200">
-           <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center mx-auto shadow-sm text-emerald-500 mb-4">
-              <Brain size={24} />
-           </div>
-           <h3 className="text-lg md:text-xl font-black uppercase tracking-tight text-slate-900">AI-Powered Health Insights</h3>
-           <p className="text-sm text-slate-500 leading-relaxed font-medium">
-              Alma isn't just a chatbot. It's a neural engine that turns complex health data into simple, actionable advice for longevity and peak condition.
-           </p>
-        </div>
-        <div className="space-y-4 px-4 border-l-0 md:border-l border-slate-200">
-           <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center mx-auto shadow-sm text-emerald-500 mb-4">
-              <Users size={24} />
-           </div>
-           <h3 className="text-lg md:text-xl font-black uppercase tracking-tight text-slate-900">Mehri fitness tracker Integration</h3>
-           <p className="text-sm text-slate-500 leading-relaxed font-medium">
-              Seamlessly sync with our flagship hardware. The Mehri fitness tracker provides the high-fidelity sensor data that powers the entire MEHRI ecosystem.
-           </p>
-        </div>
+const WhoItIsForSection = () => (
+  <section className="max-w-7xl mx-auto px-6 md:px-8 py-20 bg-slate-50 rounded-[40px] md:rounded-[60px] my-12 border border-slate-100">
+     <div className="text-center mb-16">
+        <span className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 mb-4 block">Who It Is For</span>
+        <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tighter text-slate-900">Built for the <span className="text-emerald-500">Relentless</span></h2>
      </div>
-     <div className="mt-12 text-center border-t border-slate-200 pt-8 max-w-2xl mx-auto px-4">
-        <p className="text-xs text-slate-400 font-medium leading-relaxed">
-           Mehri Fitness analyzes heart rate, HRV, sleep, SpO₂, and activity data. Data availability depends on connected devices and usage patterns.
+     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {[
+           {
+             title: "The Executive",
+             desc: "High-performance individuals who need data-driven insights to manage stress, recovery, and peak cognitive function.",
+             img: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=800"
+           },
+           {
+             title: "The Athlete",
+             desc: "Serious competitors looking for every marginal gain in their biometric data and training efficiency.",
+             img: "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?q=80&w=800"
+           },
+           {
+             title: "The Visionary",
+             desc: "People who view health as an investment and want the most advanced tools to ensure longevity.",
+             img: "https://images.unsplash.com/photo-1507398941214-57f5162133bf?q=80&w=800"
+           }
+        ].map((item, i) => (
+           <motion.div
+             key={i}
+             initial={{ opacity: 0, y: 20 }}
+             whileInView={{ opacity: 1, y: 0 }}
+             viewport={{ once: true }}
+             transition={{ delay: i * 0.1 }}
+             className="group relative h-[450px] rounded-[40px] overflow-hidden shadow-2xl"
+           >
+              <img src={item.img} className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/40 to-transparent" />
+              <div className="absolute bottom-0 left-0 p-8 md:p-10">
+                 <h3 className="text-2xl md:text-3xl font-black text-white uppercase tracking-tight mb-3">{item.title}</h3>
+                 <p className="text-slate-300 text-sm md:text-base font-medium leading-relaxed">{item.desc}</p>
+              </div>
+           </motion.div>
+        ))}
+     </div>
+  </section>
+);
+
+const ServicesSection = () => (
+  <section className="max-w-7xl mx-auto px-6 md:px-8 py-20">
+     <div className="flex flex-col md:flex-row justify-between items-end gap-6 mb-16">
+        <div className="space-y-3">
+           <span className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 block">Our Services</span>
+           <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tighter text-slate-900">Ecosystem of <span className="text-emerald-500">Excellence</span></h2>
+        </div>
+        <p className="text-slate-500 font-medium max-w-sm text-right hidden md:block">
+           A comprehensive suite of tools designed to optimize every aspect of your physical and mental well-being.
         </p>
+     </div>
+     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {[
+           { icon: Activity, title: "Biometric Architecture", desc: "Advanced physiological tracking and analysis of your core vitals like HRV, SpO2, and resting heart rate." },
+           { icon: Brain, title: "Alma AI Coaching", desc: "Real-time, context-aware health and performance optimization through our proprietary neural engine." },
+           { icon: Target, title: "Precision Training", desc: "Custom-built workout protocols that adapt dynamically to your daily readiness and recovery scores." },
+           { icon: Trophy, title: "Global Challenges", desc: "Compete in community challenges to push your boundaries and stay motivated with like-minded achievers." }
+        ].map((service, i) => (
+           <motion.div
+             key={i}
+             initial={{ opacity: 0, scale: 0.95 }}
+             whileInView={{ opacity: 1, scale: 1 }}
+             viewport={{ once: true }}
+             transition={{ delay: i * 0.1 }}
+             className="bg-white border border-slate-100 p-8 rounded-[40px] shadow-sm hover:shadow-xl hover:border-emerald-100 transition-all group"
+           >
+              <div className="w-14 h-14 bg-slate-50 rounded-2xl flex items-center justify-center text-emerald-500 mb-8 group-hover:bg-emerald-500 group-hover:text-white transition-all duration-300 shadow-inner">
+                 <service.icon size={28} />
+              </div>
+              <h3 className="text-xl font-black uppercase tracking-tight text-slate-900 mb-4">{service.title}</h3>
+              <p className="text-sm text-slate-500 leading-relaxed font-medium">{service.desc}</p>
+           </motion.div>
+        ))}
      </div>
   </section>
 );
@@ -370,7 +408,7 @@ const StrongCommunitySection = () => (
            </div>
            <h2 className="text-5xl md:text-8xl font-black uppercase tracking-tighter text-white leading-none">Strong <br/><span className="text-[#A7F3D0]">Community</span></h2>
            <p className="text-lg md:text-2xl text-slate-300 font-medium max-w-2xl mx-auto leading-relaxed">
-              We are more than an app. We are a family of achievers. Together, we push boundaries, break records, and leave no one behind.
+              Why does it matter? Because health is not a solo journey. We are a family of achievers pushing boundaries together.
            </p>
         </div>
         
@@ -435,14 +473,14 @@ const GoalsCTASection = ({ onAction }: { onAction: () => void }) => (
            <Target size={40} />
         </div>
         <h2 className="text-5xl md:text-8xl font-black uppercase tracking-tighter text-white leading-none drop-shadow-xl">
-           Reach Your <br/> Goals
+           What's Next?
         </h2>
         <p className="text-lg md:text-2xl text-slate-200 font-medium max-w-2xl mx-auto leading-relaxed drop-shadow-md">
-           Define your own path. Whether it's distance, duration, or consistency, Mehri Group of Companies adapts to your personal targets.
+           Take the first step towards your physical peak. Define your path, track your progress, and join the elite Mehri community today.
         </p>
         <div className="pt-8">
            <button onClick={onAction} className="bg-[#A7F3D0] text-slate-900 px-12 py-6 rounded-full font-black uppercase text-xs md:text-sm tracking-[0.3em] hover:bg-white transition-all shadow-[0_0_40px_rgba(167,243,208,0.4)] hover:scale-105 active:scale-95">
-              Define Your Path
+              Get Started Now
            </button>
         </div>
      </div>
@@ -452,7 +490,6 @@ const GoalsCTASection = ({ onAction }: { onAction: () => void }) => (
 // --- MAIN LANDING COMPONENT ---
 
 export const LandingSection = ({ onStart, onNavigate }: any) => {
-  // Removed explicit type annotation from unused parameter to satisfy GoalsCTASection prop type
   const createRipple = () => {
     onStart(); 
   };
@@ -471,10 +508,8 @@ export const LandingSection = ({ onStart, onNavigate }: any) => {
         />
         <div className="absolute inset-0 z-0 bg-black/50 backdrop-blur-[2px]" />
         
-        {/* Main Text Content */}
         <div className="relative z-10 text-center px-6 md:px-8 text-white flex flex-col items-center w-full">
           
-          {/* NEW WATCH BANNER SECTION - Moved to top */}
           <motion.div 
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -522,7 +557,6 @@ export const LandingSection = ({ onStart, onNavigate }: any) => {
           </motion.div>
         </div>
 
-        {/* Watch Pill Section */}
         <motion.div 
            initial={{ y: 50, opacity: 0 }}
            animate={{ y: 0, opacity: 1 }}
@@ -544,10 +578,16 @@ export const LandingSection = ({ onStart, onNavigate }: any) => {
         </motion.div>
       </section>
 
-      {/* 2. WHAT WE DO (NEW) */}
+      {/* 2. WHAT WE DO (Answers Q1 & Q3) */}
       <WhatWeDoSection />
 
-      {/* 3. WATCH FEATURE (Reordered) */}
+      {/* 3. WHO IT IS FOR (Answers Q2) */}
+      <WhoItIsForSection />
+
+      {/* 4. OUR SERVICES (Answers Q4) */}
+      <ServicesSection />
+
+      {/* 5. WATCH FEATURE (Hardware Detail) */}
       <ScrollReveal className="max-w-7xl mx-auto px-6 md:px-8 py-20">
         <div className="bg-slate-900 rounded-[40px] md:rounded-[80px] p-8 md:p-24 flex flex-col lg:flex-row items-center gap-12 md:gap-20 relative overflow-hidden shadow-2xl group">
             <div className="absolute top-0 right-0 w-full h-full bg-gradient-to-br from-emerald-500/5 to-transparent pointer-events-none" />
@@ -566,7 +606,7 @@ export const LandingSection = ({ onStart, onNavigate }: any) => {
               
               <div className="space-y-8">
                 <p className="text-slate-400 text-base md:text-xl font-medium leading-relaxed max-w-xl mx-auto lg:mx-0">
-                  The Mehri fitness tracker is a precision instrument for your wrist. Milled from aerospace-grade titanium, it provides continuous physiological tracking to inform your training decisions. While optional, it unlocks the full depth of Mehri's biometric analysis.
+                  The Mehri fitness tracker is a precision instrument for your wrist. Milled from aerospace-grade titanium, it provides continuous physiological tracking to inform your training decisions.
                 </p>
                 
                 <ul className="space-y-3 inline-block text-left">
@@ -599,24 +639,15 @@ export const LandingSection = ({ onStart, onNavigate }: any) => {
             </div>
 
             <div className="flex-1 relative w-full flex justify-center lg:justify-end mt-8 lg:mt-0">
-               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[140%] h-[140%] border border-slate-800 rounded-full animate-[spin_60s_linear_infinite]" />
-               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[110%] h-[110%] border border-dashed border-emerald-500/10 rounded-full animate-[spin_40s_linear_infinite_reverse]" />
-
                <div className="relative z-10 grid grid-cols-2 gap-4 md:gap-6 w-full max-w-lg">
                   <motion.div whileHover={{ y: -10 }} className="space-y-6 pt-12">
                      <div className="aspect-[3/4] rounded-[30px] md:rounded-[40px] overflow-hidden shadow-2xl border-4 border-slate-800 relative group/img">
-                         <img src="https://images2.imgbox.com/56/17/7wy6uJHG_o.jpeg" onError={(e) => e.currentTarget.src='https://images.unsplash.com/photo-1579586337278-3befd40fd17a?q=80&w=800'} className="w-full h-full object-cover transition-all duration-700" alt="Mehri Watch Face" />
-                         <div className="absolute bottom-0 left-0 w-full p-4 md:p-6 bg-gradient-to-t from-black/80 to-transparent">
-                            <p className="text-white font-black text-sm md:text-lg">Focus Mode</p>
-                         </div>
+                         <img src="https://images2.imgbox.com/56/17/7wy6uJHG_o.jpeg" className="w-full h-full object-cover" alt="Mehri Watch Face" />
                      </div>
                   </motion.div>
                   <motion.div whileHover={{ y: -10 }} className="space-y-6 pb-12">
                      <div className="aspect-[3/4] rounded-[30px] md:rounded-[40px] overflow-hidden shadow-2xl border-4 border-slate-800 relative group/img">
-                         <img src="https://images2.imgbox.com/3b/e6/QhMzpqDY_o.jpeg" onError={(e) => e.currentTarget.src='https://images.unsplash.com/photo-1551816230-ef5deaed4a26?q=80&w=800'} className="w-full h-full object-cover transition-all duration-700" alt="Mehri Side Profile" />
-                         <div className="absolute bottom-0 left-0 w-full p-4 md:p-6 bg-gradient-to-t from-black/80 to-transparent">
-                            <p className="text-white font-black text-sm md:text-lg">Titanium</p>
-                         </div>
+                         <img src="https://images2.imgbox.com/3b/e6/QhMzpqDY_o.jpeg" className="w-full h-full object-cover" alt="Mehri Side Profile" />
                      </div>
                   </motion.div>
                </div>
@@ -624,11 +655,10 @@ export const LandingSection = ({ onStart, onNavigate }: any) => {
         </div>
       </ScrollReveal>
 
-      {/* 4. ALMA AI SECTION (Reordered) */}
+      {/* 6. ALMA AI SECTION (Software Detail) */}
       <ScrollReveal className="max-w-7xl mx-auto px-6 md:px-8 py-20">
         <div className="bg-slate-900 rounded-[40px] md:rounded-[80px] p-8 md:p-24 flex flex-col-reverse lg:flex-row items-center gap-12 md:gap-20 relative overflow-hidden shadow-2xl">
            <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-slate-800 via-slate-900 to-slate-900 pointer-events-none" />
-           <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-emerald-500/10 rounded-full blur-[100px] pointer-events-none" />
            
            <div className="flex-1 space-y-8 md:space-y-10 z-10 relative text-center lg:text-left">
               <div className="flex items-center gap-3 justify-center lg:justify-start">
@@ -643,14 +673,9 @@ export const LandingSection = ({ onStart, onNavigate }: any) => {
                  <span className="text-emerald-400">WITH ALMA</span>
               </h2>
               
-              <div className="space-y-4">
-                <p className="text-slate-400 text-base md:text-xl font-medium leading-relaxed max-w-xl mx-auto lg:mx-0">
-                   Your personal AI coach that does the work for you. Command Alma to log new sessions, remove accidental entries, or analyze your historical workouts through a simple interface.
-                </p>
-                <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wide">
-                   * Alma provides non-medical fitness insights based on historical data trends.
-                </p>
-              </div>
+              <p className="text-slate-400 text-base md:text-xl font-medium leading-relaxed max-w-xl mx-auto lg:mx-0">
+                 Your personal AI coach that does the work for you. Command Alma to log new sessions, analyze trends, or optimize your recovery through a simple conversational interface.
+              </p>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 md:gap-8 pt-4">
                  {[
@@ -688,22 +713,19 @@ export const LandingSection = ({ onStart, onNavigate }: any) => {
         </div>
       </ScrollReveal>
 
-      {/* 5. STRONG COMMUNITY (Styling Updated) */}
+      {/* 7. STRONG COMMUNITY (Answers Why it matters) */}
       <StrongCommunitySection />
 
-      {/* 6. ONGOING CHALLENGES */}
+      {/* 8. ONGOING CHALLENGES */}
       <ChallengesSection />
 
-      {/* 7. REACH GOALS CTA (Styling Updated) */}
+      {/* 9. REACH GOALS CTA (Answers Q5) */}
       <GoalsCTASection onAction={createRipple} />
 
-      {/* 8. KEY FEATURES (Moved Here) */}
-      <KeyFeaturesSection />
-
-      {/* 9. FAQ */}
+      {/* 10. FAQ */}
       <FAQSection />
 
-      {/* 10. FOOTER */}
+      {/* 11. FOOTER */}
       <Footer onNavigate={onNavigate} />
     </div>
   );
