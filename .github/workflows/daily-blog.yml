@@ -1,0 +1,34 @@
+name: Daily Blog Upload
+
+on:
+  schedule:
+    - cron: '0 10 * * *' # 10:00 AM UTC daily
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  upload:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run Supabase Upload
+        env:
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: npm run supabase-upload
+
+      - name: Commit and push changes
+        run: |
+          git config --global user.name "GitHub Action"
+          git config --global user.email "action@github.com"
+          git add content/published content/queue
+          git diff --quiet && git diff --staged --quiet || (git commit -m "Auto-publish blogs [$(date +'%Y-%m-%d')]" && git push)
