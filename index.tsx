@@ -186,6 +186,7 @@ const App = () => {
   // Alma State
   const [almaMemories, setAlmaMemories] = useState<string[]>([]);
   const [almaChats, setAlmaChats] = useState<any[]>([]);
+  const [almaNotification, setAlmaNotification] = useState<boolean>(false);
 
   // Profile State
   const [userSpecs, setUserSpecs] = useState({ weight: '70', height: '175' });
@@ -447,6 +448,7 @@ const App = () => {
   const navigateTo = (v: string) => {
     if (v === 'auth-login') { setAuthMode('login'); handleTransition('auth'); return; }
     if (v === 'auth-signup') { setAuthMode('signup'); handleTransition('auth'); return; }
+    if (v === 'alma') setAlmaNotification(false);
     if (['dashboard', 'stats', 'goals', 'routes', 'challenges', 'alma', 'alma-meals', 'blogs', 'write'].includes(v)) {
       handleTransition('main', v as any);
     } else { 
@@ -559,6 +561,7 @@ const App = () => {
           userProfile={userProfile}
           userName={userName}
           streak={currentStreak}
+          hasAlmaNotification={almaNotification}
         />
       )}
       
@@ -599,8 +602,31 @@ const App = () => {
 
                 {view === 'main' && (
                   <div className={`${dashView === 'write' ? '' : 'max-w-7xl mx-auto'}`}>
-                    {dashView === 'dashboard' && <DashboardView workouts={workouts} setWorkouts={setWorkouts} userGoals={userGoals} setUserGoals={setUserGoals} routes={routes} userSpecs={userSpecs} userProfile={userProfile} userPreferences={userPreferences} userHandle={userHandle} onForceSync={() => loadUserData(userHandle)} />}
-                    {dashView === 'stats' && <div className="px-4 md:px-0"><StatsView workouts={workouts} userPreferences={userPreferences} /></div>}
+                    {dashView === 'dashboard' && (
+                      <DashboardView
+                        workouts={workouts} setWorkouts={setWorkouts}
+                        userGoals={userGoals} setUserGoals={setUserGoals}
+                        routes={routes} userSpecs={userSpecs} userProfile={userProfile}
+                        userPreferences={userPreferences} userHandle={userHandle}
+                        onForceSync={() => loadUserData(userHandle)}
+                        userMeals={userMeals}
+                        almaChats={almaChats}
+                        setAlmaChats={setAlmaChats}
+                        setAlmaNotification={setAlmaNotification}
+                        onNavigate={navigateTo}
+                      />
+                    )}
+                    {dashView === 'stats' && (
+                      <div className="px-4 md:px-0">
+                        <StatsView
+                          workouts={workouts}
+                          userPreferences={userPreferences}
+                          userMeals={userMeals}
+                          userSpecs={userSpecs}
+                          userProfile={userProfile}
+                        />
+                      </div>
+                    )}
                     {dashView === 'routes' && <RoutesView routes={routes} setRoutes={setRoutes} userPreferences={userPreferences} userProfile={userProfile} userHandle={userHandle} />}
                     {dashView === 'challenges' && <div className="px-4 md:px-0"><ChallengesView userChallenges={userChallenges} setUserChallenges={setUserChallenges} userHandle={userHandle} /></div>}
                     

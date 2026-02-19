@@ -2,7 +2,7 @@
 import React, { useState, useMemo } from 'react';
 import { Trophy, Calendar, Filter, ArrowRight, Activity, Zap, Timer, Flame, Dumbbell, X, Lock, Heart, Moon, Waves } from 'lucide-react';
 import { ACTIVITY_CATEGORIES, getLocalTodayStr } from './constants.ts';
-import { parseDurationToHours, formatDuration, getDistVal, getDistUnit, convertDist } from './utils.ts';
+import { parseDurationToHours, formatDuration, calculateAge, getDistVal, getDistUnit, convertDist } from './utils.ts';
 
 const LifetimeStatsModal = ({ workouts, userPreferences, onClose }: any) => {
   const units = userPreferences.units;
@@ -151,11 +151,84 @@ const BiometricsSection = () => (
   </div>
 );
 
-export const StatsView = ({ workouts, userPreferences }: any) => {
+
+const NetEnergyDial = ({ metrics }: any) => {
+    const isDeficit = metrics.net < 0;
+    const absNet = Math.abs(metrics.net);
+    const percentage = Math.min((absNet / 1000) * 100, 100);
+
+    return (
+        <div className="bg-slate-900 text-white p-8 md:p-10 rounded-[30px] md:rounded-[40px] shadow-2xl relative overflow-hidden">
+            <div className="absolute top-0 right-0 p-8 opacity-10"><Activity size={100}/></div>
+            <h3 className="text-xl md:text-2xl font-black uppercase tracking-tighter mb-8 relative z-10">Net Energy<br/>Balance</h3>
+
+            <div className="flex flex-col items-center justify-center py-4 relative z-10">
+                <div className="relative w-48 h-48 flex items-center justify-center">
+                    <svg className="w-full h-full -rotate-90">
+                        <circle cx="96" cy="96" r="80" stroke="currentColor" strokeWidth="12" fill="transparent" className="text-slate-800" />
+                        <circle
+                            cx="96" cy="96" r="80" stroke="currentColor" strokeWidth="12" fill="transparent"
+                            strokeDasharray={502.4}
+                            strokeDashoffset={502.4 - (502.4 * percentage) / 100}
+                            className={`${isDeficit ? 'text-emerald-400' : 'text-orange-400'} transition-all duration-1000 ease-out`}
+                            strokeLinecap="round"
+                        />
+                    </svg>
+                    <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
+                        <span className="text-4xl font-black">{absNet.toFixed(0)}</span>
+                        <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">{isDeficit ? 'Deficit' : 'Surplus'}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div className="grid grid-cols-3 gap-4 mt-8 relative z-10 border-t border-white/10 pt-8">
+                <div className="text-center">
+                    <p className="text-[8px] font-black uppercase text-slate-500 tracking-widest mb-1">Intake</p>
+                    <p className="text-sm font-bold">{metrics.intake} <span className="text-[8px] text-slate-500">kcal</span></p>
+                </div>
+                <div className="text-center border-x border-white/10">
+                    <p className="text-[8px] font-black uppercase text-slate-500 tracking-widest mb-1">Active</p>
+                    <p className="text-sm font-bold">{metrics.activeBurn} <span className="text-[8px] text-slate-500">kcal</span></p>
+                </div>
+                <div className="text-center">
+                    <p className="text-[8px] font-black uppercase text-slate-500 tracking-widest mb-1">BMR</p>
+                    <p className="text-sm font-bold">{metrics.bmr.toFixed(0)} <span className="text-[8px] text-slate-500">kcal</span></p>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export const StatsView = ({ workouts, userPreferences, userMeals = [], userSpecs = {}, userProfile = {} }: any) => {
   const [range, setRange] = useState('Week');
   const [startDay, setStartDay] = useState('Sunday');
   const [typeFilter, setTypeFilter] = useState('All Activity');
   const [showLifetime, setShowLifetime] = useState(false);
+  const dailyMetrics = useMemo(() => {
+    const today = getLocalTodayStr();
+    const weight = parseFloat(userSpecs.weight) || 70;
+    const height = parseFloat(userSpecs.height) || 175;
+    const birthdate = userProfile.birthdate || '1990-01-01';
+    const gender = userProfile.gender || 'male';
+
+    const age = calculateAge(birthdate);
+    let bmr = (10 * weight) + (6.25 * height) - (5 * age);
+    if (gender.toLowerCase() === 'male') bmr += 5;
+    else bmr -= 161;
+
+    const todayWorkouts = workouts.filter((w: any) => w.date === today);
+    const activeBurn = todayWorkouts.reduce((sum: number, w: any) => sum + (parseFloat(w.calories) || 0), 0);
+
+    const todayMeals = userMeals.filter((m: any) => m.date === today);
+    const intake = todayMeals.reduce((sum: number, m: any) => sum + (m.data?.calories || 0), 0);
+
+    const totalOut = bmr + activeBurn;
+    const net = intake - totalOut;
+
+    return { bmr, activeBurn, intake, net, totalOut };
+  }, [workouts, userMeals, userSpecs, userProfile]);
+
+
 
   const units = userPreferences.units;
   const distUnit = getDistUnit(units);
@@ -324,6 +397,7 @@ export const StatsView = ({ workouts, userPreferences }: any) => {
          </div>
 
          <div className="space-y-8">
+            <NetEnergyDial metrics={dailyMetrics} />
             <div className="bg-slate-900 text-white p-8 md:p-10 rounded-[30px] md:rounded-[40px] shadow-2xl relative overflow-hidden">
                <div className="absolute top-0 right-0 p-8 opacity-10"><Trophy size={100}/></div>
                <h3 className="text-xl md:text-2xl font-black uppercase tracking-tighter mb-8 relative z-10">Top<br/>Performances</h3>
