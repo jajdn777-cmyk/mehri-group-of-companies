@@ -116,22 +116,31 @@ export const LogModal = ({ date, routes, userSpecs, userProfile, userPreferences
     let loadKg = parseFloat(form.loadAdded || "0");
     if (units === 'imperial') loadKg = loadKg * 0.453592;
 
+    let weightLiftedKg = parseFloat(form.weightLifted || "0");
+    if (units === "imperial") weightLiftedKg = weightLiftedKg * 0.453592;
+
     const burn = calculateEstimatedCalories(
       form.type, 
       weightKg, 
       distKm, 
       hours, 
       { age, gender },
-      { surface: form.surface, loadKg }
+      {
+        surface: form.surface,
+        loadKg,
+        sets: form.sets,
+        reps: form.reps,
+        weightLiftedKg
+      }
     );
     setForm({ ...form, calories: burn.toString() });
   };
 
   useEffect(() => {
-    if (form.distance && form.type && !isStrength) {
+    if (form.type && (form.distance || (form.sets && form.reps))) {
       calculateBurn();
     }
-  }, [form.distance, form.type, form.surface, form.loadAdded]);
+  }, [form.distance, form.type, form.surface, form.loadAdded, form.sets, form.reps, form.weightLifted, form.duration]);
 
   const handleRouteSelect = (route: any) => {
     const displayDist = getDistVal(route.distance, units, 2);
