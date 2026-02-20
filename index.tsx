@@ -569,7 +569,7 @@ const App = () => {
       <main className={`${view === 'landing' || view === 'privacy' || view === 'terms' || dashView === 'write' ? '' : 'pt-28 md:pt-52 px-0 md:px-12 pb-20'}`}>
         {!isCheckingAuth && (
             <>
-                {view === 'landing' && <LandingSection onStart={() => navigateTo('auth-signup')} onNavigate={navigateTo} />}
+                {view === 'landing' && <LandingSection onStart={() => navigateTo('auth-signup')} onNavigate={navigateTo} onShop={() => setShowShop(true)} />}
                 {view === 'auth' && <AuthSection onComplete={handleAuthComplete} initialView={authMode} onNavigate={navigateTo} />}
                 {view === 'privacy' && <PrivacyPolicy onNavigate={navigateTo} />}
                 {view === 'terms' && <TermsOfService onNavigate={navigateTo} />}
