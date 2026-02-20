@@ -91,7 +91,7 @@ export const AlmaMealsView = ({ onNavigate, userMeals, setUserMeals, userSpecs, 
 
     // Retrieve API Key safely from environment with fallback
     const env = (import.meta as any).env || {};
-    const apiKey = env.VITE_GOOGLE_GENAI_KEY || "AIzaSyAMBFRs1G_JnJxCljMpkRT6NDTsEb7rG6M";
+    const apiKey = env.VITE_GOOGLE_GENAI_KEY;
     
     if (!apiKey) {
         alert("API Key missing. Please check configuration.");

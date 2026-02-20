@@ -4,8 +4,8 @@ export const MEHRI_SLATE = "#1E293B";
 
 const env = (import.meta as any).env || {};
 
-export const ADMIN_EMAIL = env.VITE_ADMIN_EMAIL || 'jajdn777@gmail.com';
-export const GOOGLE_CLIENT_ID = env.VITE_GOOGLE_CLIENT_ID || "241496801920-tl10cd23573shtau5nouhh7o4mrfmvmo.apps.googleusercontent.com";
+export const ADMIN_EMAIL = env.VITE_ADMIN_EMAIL;
+export const GOOGLE_CLIENT_ID = env.VITE_GOOGLE_CLIENT_ID;
 
 export const CONFIG = {
   REDIRECT_URL: "https://mehrigroupofcompanies.com"

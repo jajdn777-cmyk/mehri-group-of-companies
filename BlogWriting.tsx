@@ -10,7 +10,7 @@ import { ADMIN_EMAIL } from './constants.ts';
 
 // Safely access env with fallback
 const env = (import.meta as any).env || {};
-const UNSPLASH_ACCESS_KEY = env.VITE_UNSPLASH_ACCESS_KEY || '1d9v_ms8MN4-yNNluvqVEu-xB679PBMYlkhPkv-6koU';
+const UNSPLASH_ACCESS_KEY = env.VITE_UNSPLASH_ACCESS_KEY;
 
 export const BlogWriting = ({ onClose, userName, userProfile }: any) => {
   const [title, setTitle] = useState('');
