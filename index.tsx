@@ -340,10 +340,10 @@ const App = () => {
 
       } else if (event === 'SIGNED_OUT' || (event as string) === 'USER_DELETED' || (event === 'INITIAL_SESSION' && !session)) {
          // Handle No Session / Logout
-         if (!isPublic) {
-            handleTransition('landing', undefined, undefined, true);
+         // Transition to landing if on a protected route OR if we are on the home page displaying the dashboard.
+         if (!isPublic || (currentPath === "/" && viewRef.current === "main")) {
+            handleTransition("landing", "dashboard", "/", true);
          }
-
          if (event === 'SIGNED_OUT' || (event as string) === 'USER_DELETED') {
             localStorage.clear();
             setWorkouts([]);
@@ -483,18 +483,18 @@ const App = () => {
   };
 
   const handleSignOut = async (remoteLogout = true) => {
-    if (remoteLogout) {
-        setIsLoading(true);
-        setLoadingText("Securely Logging Out...");
-        // 1. Clear session server-side
-        await api("LOGOUT", {});
-        
-        // 2. Force Hard Reset Client-Side
+    try {
+        if (remoteLogout) {
+            setIsLoading(true);
+            setLoadingText("Securely Logging Out...");
+            await api("LOGOUT", {});
+        }
+    } catch (e) {
+        console.error("Logout Error:", e);
+    } finally {
         localStorage.clear();
         sessionStorage.clear();
-        
-        // 3. Force page reload to clear memory state effectively
-        window.location.href = '/'; 
+        window.location.replace("/");
     }
   };
 

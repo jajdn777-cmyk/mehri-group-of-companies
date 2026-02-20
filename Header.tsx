@@ -247,7 +247,7 @@ export const Header = ({ currentView, onNavigate, onSignOut, onShop, userProfile
                             <Settings size={14}/> Settings
                          </button>
                          <div className="h-px bg-slate-800 my-1"/>
-                         <button onClick={onSignOut} className="w-full text-left px-4 py-3 rounded-xl hover:bg-red-500/10 text-red-400 hover:text-red-300 text-xs font-bold transition-colors flex items-center gap-3">
+                         <button onClick={() => { setShowProfileMenu(false); onSignOut(); }} className="w-full text-left px-4 py-3 rounded-xl hover:bg-red-500/10 text-red-400 hover:text-red-300 text-xs font-bold transition-colors flex items-center gap-3">
                             <LogOut size={14}/> Sign Out
                          </button>
                       </motion.div>
