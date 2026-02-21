@@ -7,7 +7,12 @@ import DOMPurify from 'dompurify';
 const ADMIN_EMAIL = 'jajdn777@gmail.com';
 
 const BlogReaderModal = ({ post, onClose }: { post: any, onClose: () => void }) => {
-  const sanitizedContent = useMemo(() => DOMPurify.sanitize(post.content), [post.content]);
+  const sanitizedContent = useMemo(() => DOMPurify.sanitize(post.content || ""), [post.content]);
+
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+    return () => { document.body.style.overflow = 'unset'; };
+  }, []);
 
   return createPortal(
     <div className="fixed inset-0 z-[100] bg-white overflow-y-auto animate-in fade-in slide-in-from-bottom-4 duration-300">
@@ -96,7 +101,7 @@ export const BlogList = ({ userProfile, onNavigate, onDelete }: any) => {
   const PAGE_SIZE = 9;
   const observer = useRef<IntersectionObserver | null>(null);
 
-  const lastBlogElementRef = useCallback((node: HTMLElement) => {
+  const lastBlogElementRef = useCallback((node: HTMLElement | null) => {
     if (loading || loadingMore) return;
     if (observer.current) observer.current.disconnect();
 
@@ -104,12 +109,15 @@ export const BlogList = ({ userProfile, onNavigate, onDelete }: any) => {
       if (entries[0].isIntersecting && hasMore) {
         setPage(prevPage => prevPage + 1);
       }
+    }, {
+      rootMargin: '200px', // Trigger slightly before it reaches the bottom
+      threshold: 0.1
     });
 
     if (node) observer.current.observe(node);
   }, [loading, loadingMore, hasMore]);
 
-  const fetchBlogs = async (pageToFetch: number, searchTerm: string) => {
+  const fetchBlogs = useCallback(async (pageToFetch: number, searchTerm: string) => {
     try {
       if (pageToFetch === 0) setLoading(true);
       else setLoadingMore(true);
@@ -133,7 +141,8 @@ export const BlogList = ({ userProfile, onNavigate, onDelete }: any) => {
       if (error) throw error;
 
       const processed = (data || []).map((blog: any) => {
-        const wordCount = blog.content ? blog.content.replace(/<[^>]+>/g, '').split(/\s+/).length : 0;
+        const content = blog.content || "";
+        const wordCount = content.replace(/<[^>]+>/g, '').split(/\s+/).filter(Boolean).length;
         const readTime = `${Math.ceil(wordCount / 200)} MIN READ`;
         return { ...blog, readTime };
       });
@@ -146,25 +155,27 @@ export const BlogList = ({ userProfile, onNavigate, onDelete }: any) => {
       setLoading(false);
       setLoadingMore(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     setPage(0);
     fetchBlogs(0, search);
-  }, [search]);
+  }, [search, fetchBlogs]);
 
   useEffect(() => {
     if (page > 0) {
       fetchBlogs(page, search);
     }
-  }, [page]);
+  }, [page, search, fetchBlogs]);
 
   const extractThumbnail = (html: string) => {
+    if (!html) return null;
     const match = html.match(/<img[^>]+src="([^">]+)"/);
     return match ? match[1] : null;
   };
 
   const extractSnippet = (html: string) => {
+    if (!html) return "";
     const temp = document.createElement('div');
     temp.innerHTML = html;
     const captions = temp.querySelectorAll('figcaption');
@@ -238,7 +249,7 @@ export const BlogList = ({ userProfile, onNavigate, onDelete }: any) => {
                   >
                      <div className={`${isFeatured ? "aspect-[21/9]" : "aspect-[16/9]"} bg-slate-100 rounded-[24px] md:rounded-[32px] overflow-hidden relative shadow-sm border border-slate-100 group-hover:shadow-2xl transition-all duration-700 group-hover:-translate-y-1`}>
                         {thumbnail ? (
-                           <img src={thumbnail} className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" loading="lazy" />
+                           <img src={thumbnail} className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" loading="lazy" alt={post.title} />
                         ) : (
                            <div className="w-full h-full flex items-center justify-center bg-slate-50 text-slate-200">
                               <span className="text-4xl font-black uppercase tracking-tighter opacity-20">MEHRI</span>
