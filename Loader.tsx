@@ -1,5 +1,6 @@
 
 import React, { useEffect, useState } from 'react';
+import { motion } from 'framer-motion';
 
 interface LoaderProps {
   isVisible: boolean;
@@ -108,71 +109,135 @@ export const Loader = ({ isVisible, text, onDismiss }: LoaderProps) => {
            100% { transform: translateX(200%); }
         }
 
-        .runner-frame {
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            opacity: 0;
-            animation: run-cycle 0.6s steps(1) infinite;
-        }
         
-        .frame-1 { animation-name: frame-1; }
-        .frame-2 { animation-name: frame-2; }
-        .frame-3 { animation-name: frame-3; }
-        .frame-4 { animation-name: frame-4; }
-
-        @keyframes frame-1 { 0% { opacity: 1; } 25% { opacity: 0; } }
-        @keyframes frame-2 { 0% { opacity: 0; } 25% { opacity: 1; } 50% { opacity: 0; } }
-        @keyframes frame-3 { 0% { opacity: 0; } 50% { opacity: 1; } 75% { opacity: 0; } }
-        @keyframes frame-4 { 0% { opacity: 0; } 75% { opacity: 1; } 100% { opacity: 0; } }
       `}</style>
     </div>
   );
 };
 
 /**
- * HIGH-FIDELITY ATHLETIC RUNNER
+ * HIGH-FIDELITY ATHLETIC RUNNER (SMOOTH INTERPOLATION)
  */
 const RunnerSprite = () => (
   <div className="w-8 h-8 relative">
-     {/* FRAME 1: EXTENSION */}
-     <svg viewBox="0 0 24 24" className="frame-1 runner-frame" fill="none" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="14" cy="5" r="2" fill="black" stroke="none" /> {/* Head Forward */}
-        <path d="M13 7 L12 12" /> {/* Torso */}
-        <path d="M12 12 L16 16 L18 15" /> {/* Right Leg Forward Extension */}
-        <path d="M12 12 L9 15 L6 13" /> {/* Left Leg Kick Back */}
-        <path d="M13 8 L9 10 L10 13" /> {/* Left Arm Forward */}
-        <path d="M13 8 L16 9 L15 12" /> {/* Right Arm Back */}
-     </svg>
+     <motion.svg
+        viewBox="0 0 24 24"
+        className="w-full h-full"
+        fill="none"
+        stroke="black"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        animate={{ y: [0, -1.5, 0] }}
+        transition={{
+            duration: 0.3,
+            repeat: Infinity,
+            ease: "easeInOut"
+        }}
+     >
+        {/* Head */}
+        <motion.circle
+            cx="14"
+            r="2"
+            fill="black"
+            stroke="none"
+            animate={{ cy: [5, 4, 5, 4, 5] }}
+            transition={{
+                duration: 0.6,
+                repeat: Infinity,
+                ease: "linear"
+            }}
+        />
 
-     {/* FRAME 2: MID-STANCE RIGHT */}
-     <svg viewBox="0 0 24 24" className="frame-2 runner-frame" fill="none" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="14" cy="4" r="2" fill="black" stroke="none" />
-        <path d="M13 6 L13 11" />
-        <path d="M13 11 L13 16 L12 20" /> {/* Right Leg Planted */}
-        <path d="M13 11 L10 13 L11 15" /> {/* Left Leg Swing Through */}
-        <path d="M13 7 L11 9 L12 11" />
-        <path d="M13 7 L15 9 L14 11" />
-     </svg>
+        {/* Torso */}
+        <motion.path
+            animate={{
+                d: [
+                    "M13 7 L12 12",
+                    "M13 6 L13 11",
+                    "M13 7 L12 12",
+                    "M13 6 L13 11",
+                    "M13 7 L12 12"
+                ]
+            }}
+            transition={{
+                duration: 0.6,
+                repeat: Infinity,
+                ease: "linear"
+            }}
+        />
 
-     {/* FRAME 3: EXTENSION LEFT */}
-     <svg viewBox="0 0 24 24" className="frame-3 runner-frame" fill="none" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="14" cy="5" r="2" fill="black" stroke="none" />
-        <path d="M13 7 L12 12" />
-        <path d="M12 12 L9 15 L6 14" /> {/* Left Leg Forward Extension */}
-        <path d="M12 12 L16 15 L18 13" /> {/* Right Leg Kick Back */}
-        <path d="M13 8 L16 10 L15 13" /> {/* Right Arm Forward */}
-        <path d="M13 8 L9 9 L10 12" /> {/* Left Arm Back */}
-     </svg>
+        {/* Right Leg */}
+        <motion.path
+            animate={{
+                d: [
+                    "M12 12 L16 16 L18 15", // Ext R
+                    "M13 11 L13 16 L12 20", // Mid R
+                    "M12 12 L16 15 L18 13", // Ext L (Kick back)
+                    "M13 11 L16 13 L15 15", // Mid L (Swing through)
+                    "M12 12 L16 16 L18 15"  // Ext R
+                ]
+            }}
+            transition={{
+                duration: 0.6,
+                repeat: Infinity,
+                ease: "linear"
+            }}
+        />
 
-     {/* FRAME 4: MID-STANCE LEFT */}
-     <svg viewBox="0 0 24 24" className="frame-4 runner-frame" fill="none" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="14" cy="4" r="2" fill="black" stroke="none" />
-        <path d="M13 6 L13 11" />
-        <path d="M13 11 L13 16 L14 20" /> {/* Left Leg Planted */}
-        <path d="M13 11 L16 13 L15 15" /> {/* Right Leg Swing Through */}
-        <path d="M13 7 L15 9 L14 11" />
-        <path d="M13 7 L11 9 L12 11" />
-     </svg>
+        {/* Left Leg */}
+        <motion.path
+            animate={{
+                d: [
+                    "M12 12 L9 15 L6 13",  // Ext R (Kick back)
+                    "M13 11 L10 13 L11 15", // Mid R (Swing through)
+                    "M12 12 L9 15 L6 14",  // Ext L
+                    "M13 11 L13 16 L14 20", // Mid L
+                    "M12 12 L9 15 L6 13"   // Ext R (Kick back)
+                ]
+            }}
+            transition={{
+                duration: 0.6,
+                repeat: Infinity,
+                ease: "linear"
+            }}
+        />
+
+        {/* Left Arm */}
+        <motion.path
+            animate={{
+                d: [
+                    "M13 8 L9 10 L10 13", // Ext R (Forward)
+                    "M13 7 L11 9 L12 11", // Mid R
+                    "M13 8 L9 9 L10 12",  // Ext L (Back)
+                    "M13 7 L11 9 L12 11", // Mid L
+                    "M13 8 L9 10 L10 13"  // Ext R (Forward)
+                ]
+            }}
+            transition={{
+                duration: 0.6,
+                repeat: Infinity,
+                ease: "linear"
+            }}
+        />
+
+        {/* Right Arm */}
+        <motion.path
+            animate={{
+                d: [
+                    "M13 8 L16 9 L15 12",  // Ext R (Back)
+                    "M13 7 L15 9 L14 11",  // Mid R
+                    "M13 8 L16 10 L15 13", // Ext L (Forward)
+                    "M13 7 L15 9 L14 11",  // Mid L
+                    "M13 8 L16 9 L15 12"   // Ext R (Back)
+                ]
+            }}
+            transition={{
+                duration: 0.6,
+                repeat: Infinity,
+                ease: "linear"
+            }}
+        />
+     </motion.svg>
   </div>
 );
