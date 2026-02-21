@@ -488,7 +488,7 @@ const GoalsCTASection = ({ onAction }: { onAction: () => void }) => (
 
 // --- MAIN LANDING COMPONENT ---
 
-export const LandingSection = ({ onStart, onNavigate }: any) => {
+export const LandingSection = ({ onStart, onNavigate, onShop }: any) => {
   const createRipple = () => {
     onStart(); 
   };
@@ -586,16 +586,14 @@ export const LandingSection = ({ onStart, onNavigate }: any) => {
               </div>
 
               <div className="flex flex-col sm:flex-row gap-6 pt-4 justify-center lg:justify-start">
-                <motion.a 
-                  href="https://a.co/d/f49Dhaq" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
+                <motion.button
+                  onClick={onShop}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   className="px-12 py-6 bg-white text-slate-900 rounded-full font-black uppercase text-xs tracking-[0.3em] shadow-[0_10px_30px_-10px_rgba(255,255,255,0.3)] hover:shadow-[0_10px_30px_-10px_rgba(52,211,153,0.5)] text-center flex items-center justify-center gap-3 group/btn"
                 >
-                  Get Yours Now <ArrowRight size={16} className="transition-transform group-hover/btn:translate-x-1"/>
-                </motion.a>
+                  Explore the Watch <ArrowRight size={16} className="transition-transform group-hover/btn:translate-x-1"/>
+                </motion.button>
               </div>
             </div>
 

@@ -257,7 +257,11 @@ export const Header = ({ currentView, onNavigate, onSignOut, onShop, userProfile
               </div>
             </>
           ) : (
-            <div className="ml-auto flex items-center gap-4">
+            <div className="ml-auto flex items-center gap-6">
+              <motion.button whileHover={{ scale: 1.05 }} onClick={onShop} className={`text-xs font-black uppercase tracking-[0.2em] transition-colors flex items-center gap-1 ${isTransparent ? 'text-white hover:text-emerald-400' : 'text-slate-900 hover:text-emerald-500'}`}>
+                <ShoppingBag size={14}/> Shop
+              </motion.button>
+              <div className={`w-px h-4 ${isTransparent ? 'bg-white/20' : 'bg-slate-200'}`} />
               <motion.button whileHover={{ scale: 1.05 }} onClick={() => onNavigate('auth-login')} className={`text-xs font-black uppercase tracking-[0.4em] transition-colors ${isTransparent ? 'text-white hover:text-emerald-400' : 'text-slate-900 hover:text-emerald-500'}`}>Sign In</motion.button>
               <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => onNavigate('auth-signup')} className="bg-slate-900 text-white px-10 py-5 rounded-full text-xs font-black uppercase tracking-[0.5em] shadow-2xl transition-all">Get Started</motion.button>
             </div>
@@ -350,8 +354,13 @@ export const Header = ({ currentView, onNavigate, onSignOut, onShop, userProfile
                ) : (
                  <div className="p-6 flex flex-col gap-4 mt-20">
                     <p className="text-center text-slate-400 text-xs font-bold uppercase tracking-widest mb-4">Join the ecosystem</p>
-                    <button onClick={() => { onNavigate('auth-login'); setMobileMenuOpen(false); }} className="w-full py-4 border-2 border-slate-900 text-slate-900 rounded-full font-black uppercase text-xs tracking-[0.2em] active:scale-95 transition-transform">Sign In</button>
-                    <button onClick={() => { onNavigate('auth-signup'); setMobileMenuOpen(false); }} className="w-full py-4 bg-slate-900 text-white rounded-full font-black uppercase text-xs tracking-[0.2em] active:scale-95 transition-transform">Get Started</button>
+                    <button onClick={() => { onShop(); setMobileMenuOpen(false); }} className="w-full py-4 bg-emerald-500 text-slate-900 rounded-full font-black uppercase text-xs tracking-[0.2em] active:scale-95 transition-transform flex items-center justify-center gap-2">
+                      <ShoppingBag size={14}/> Shop Gear
+                    </button>
+                    <div className="grid grid-cols-2 gap-3">
+                      <button onClick={() => { onNavigate('auth-login'); setMobileMenuOpen(false); }} className="w-full py-4 border-2 border-slate-900 text-slate-900 rounded-full font-black uppercase text-[10px] tracking-[0.1em] active:scale-95 transition-transform">Sign In</button>
+                      <button onClick={() => { onNavigate('auth-signup'); setMobileMenuOpen(false); }} className="w-full py-4 bg-slate-900 text-white rounded-full font-black uppercase text-[10px] tracking-[0.1em] active:scale-95 transition-transform">Start</button>
+                    </div>
                  </div>
                )}
             </div>

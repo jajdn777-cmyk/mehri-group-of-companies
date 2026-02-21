@@ -28,19 +28,19 @@ export const WatchPromo = ({ onClose }: { onClose: () => void }) => {
            {/* Content */}
            <div className="flex-1 flex flex-col justify-center space-y-3">
               <div>
-                <h4 className="text-lg font-black uppercase text-slate-900 tracking-tighter leading-none mb-1">Elevate Your Data.</h4>
+                <h4 className="text-lg font-black uppercase text-slate-900 tracking-tighter leading-none mb-1">Health Mastery.</h4>
                 <p className="text-[10px] font-medium text-slate-500 leading-relaxed">
-                   Track SpO2, Stress & Sleep in real-time.
+                   24/7 Biometric tracking for high-performance living.
                 </p>
               </div>
               
               <div className="flex items-baseline gap-2">
-                 <span className="text-xl font-black text-emerald-500">$43.99</span>
-                 <span className="text-[10px] font-bold text-slate-300 line-through">$89.99</span>
+                 <span className="text-xl font-black text-emerald-500">$34.99</span>
+                 <span className="text-[10px] font-bold text-slate-300 line-through">$48.48</span>
               </div>
 
               <a 
-                href="https://a.co/d/f49Dhaq" 
+                href="https://www.amazon.com/dp/B0FH4YTQ78?ref=cm_sw_r_cso_wa_apin_dp_9WM50155ESTE8FG1JDZG&ref_=cm_sw_r_cso_wa_apin_dp_9WM50155ESTE8FG1JDZG&social_share=cm_sw_r_cso_wa_apin_dp_9WM50155ESTE8FG1JDZG&titleSource=true&th=1"
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="w-full py-2.5 bg-slate-900 text-white rounded-xl font-black uppercase text-[9px] tracking-[0.2em] hover:bg-emerald-500 transition-all shadow-lg flex items-center justify-center gap-2 group/btn"

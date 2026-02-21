@@ -119,7 +119,7 @@ export const Footer = ({ onNavigate }: any) => {
                 <p className="text-slate-400 text-sm font-medium">Limited stock available for the 2026 release batch.</p>
              </div>
              <a 
-               href="https://a.co/d/f49Dhaq" 
+               href="https://www.amazon.com/dp/B0FH4YTQ78?ref=cm_sw_r_cso_wa_apin_dp_9WM50155ESTE8FG1JDZG&ref_=cm_sw_r_cso_wa_apin_dp_9WM50155ESTE8FG1JDZG&social_share=cm_sw_r_cso_wa_apin_dp_9WM50155ESTE8FG1JDZG&titleSource=true&th=1"
                target="_blank" 
                rel="noopener noreferrer"
                className="px-10 py-5 bg-white text-black rounded-full font-black uppercase text-xs tracking-[0.3em] hover:bg-emerald-400 transition-all flex items-center gap-3 shadow-[0_0_20px_rgba(255,255,255,0.1)] hover:shadow-[0_0_30px_rgba(52,211,153,0.4)]"
@@ -175,7 +175,7 @@ export const Footer = ({ onNavigate }: any) => {
              <div className="lg:col-span-3 space-y-8">
                 <h4 className="text-sm font-black uppercase tracking-widest text-slate-600">Product</h4>
                 <ul className="space-y-4">
-                   <li><a href="https://a.co/d/f49Dhaq" target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-emerald-400 text-sm font-medium transition-colors">Mehri fitness tracker</a></li>
+                   <li><a href="https://www.amazon.com/dp/B0FH4YTQ78?ref=cm_sw_r_cso_wa_apin_dp_9WM50155ESTE8FG1JDZG&ref_=cm_sw_r_cso_wa_apin_dp_9WM50155ESTE8FG1JDZG&social_share=cm_sw_r_cso_wa_apin_dp_9WM50155ESTE8FG1JDZG&titleSource=true&th=1" target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-emerald-400 text-sm font-medium transition-colors">Mehri fitness tracker</a></li>
                 </ul>
                 <h4 className="text-sm font-black uppercase tracking-widest text-slate-600 pt-4">Support</h4>
                 <ul className="space-y-4">

@@ -130,7 +130,7 @@ export const AdInterstitial = ({ isOpen, onClose }: AdInterstitialProps) => {
                    transition={{ delay: 0.9 }}
                    className="text-slate-400 font-medium text-sm md:text-lg leading-relaxed max-w-md mx-auto"
                 >
-                  Elevate your biological telemetry with the aerospace-grade Mehri fitness tracker. Now syncing with Alma 3.0.
+                  Master your health with the precision Mehri fitness tracker. Now syncing with Alma 3.0.
                 </motion.p>
               </div>
 
@@ -140,7 +140,7 @@ export const AdInterstitial = ({ isOpen, onClose }: AdInterstitialProps) => {
                  transition={{ delay: 1.2 }}
               >
                 <a 
-                  href="https://a.co/d/f49Dhaq" 
+                  href="https://www.amazon.com/dp/B0FH4YTQ78?ref=cm_sw_r_cso_wa_apin_dp_9WM50155ESTE8FG1JDZG&ref_=cm_sw_r_cso_wa_apin_dp_9WM50155ESTE8FG1JDZG&social_share=cm_sw_r_cso_wa_apin_dp_9WM50155ESTE8FG1JDZG&titleSource=true&th=1"
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="block w-full py-6 bg-[#1E3A8A] text-[#D4AF37] rounded-2xl font-black uppercase text-xs md:text-sm tracking-[0.4em] shadow-2xl hover:bg-[#162a63] transition-all flex items-center justify-center gap-4 group"

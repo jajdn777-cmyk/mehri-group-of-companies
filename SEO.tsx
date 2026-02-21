@@ -12,6 +12,15 @@ interface SEOProps {
     datePublished: string;
     url: string;
   };
+  product?: {
+    name: string;
+    description: string;
+    image: string;
+    price: string;
+    currency: string;
+    availability: string;
+    url: string;
+  };
 }
 
 /**
@@ -23,7 +32,8 @@ export const SEO: React.FC<SEOProps> = ({
   title, 
   description = "Elite performance tracking and biometric architecture. Mehri Group delivers executive fitness via Mehri fitness tracker hardware and Alma AI coaching.",
   view,
-  article
+  article,
+  product
 }) => {
   const brandName = "Mehri Group of Companies";
   const defaultTitle = `${brandName} | Executive Wellness & AI Fitness`;
@@ -106,13 +116,31 @@ export const SEO: React.FC<SEOProps> = ({
       });
     }
 
+    // Add Product Schema if applicable
+    if (product) {
+      schemaData["@graph"].push({
+        "@type": "Product",
+        "name": product.name,
+        "description": product.description,
+        "image": product.image,
+        "offers": {
+          "@type": "Offer",
+          "price": product.price,
+          "priceCurrency": product.currency,
+          "availability": product.availability === 'InStock' ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+          "url": product.url
+        },
+        "brand": { "@id": "https://mehrigroupofcompanies.com/#organization" }
+      });
+    }
+
     const script = document.createElement('script');
     script.id = 'mehri-json-ld';
     script.type = 'application/ld+json';
     script.text = JSON.stringify(schemaData);
     document.head.appendChild(script);
 
-  }, [finalTitle, description, view, article]);
+  }, [finalTitle, description, view, article, product]);
 
   return null;
 };
