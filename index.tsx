@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { createRoot } from 'react-dom/client';
 import ReactGA from "react-ga4";
 import { safeParse, detectSystemUnits, calculateStreak, api, updateUserCache } from './utils.ts';
-import { getLocalTodayStr, ADMIN_EMAIL } from './constants.ts';
+import { getLocalTodayStr, ADMIN_EMAIL, FAQ_DATA } from './constants.ts';
 import { Header } from './Header.tsx';
 import { ShopModal } from './ShopModal.tsx';
 import { AdInterstitial } from './AdInterstitial.tsx';
@@ -531,7 +531,7 @@ const App = () => {
     <div className="min-h-screen bg-[#FCFCFC] font-sans text-slate-900 selection:bg-emerald-100 relative overflow-x-hidden">
       
       <ScrollToTop view={view} dashView={dashView} />
-      <SEO title={getSEOTitle()} view={`${view}-${dashView}`} />
+      <SEO title={getSEOTitle()} view={`${view}-${dashView}`} faq={view === "landing" ? FAQ_DATA : undefined} />
 
       {/* Unified Loader that handles both app transitions and initial auth check */}
       <Loader 
