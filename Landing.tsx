@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Target, Users, Brain, Eraser, LineChart, MessageSquare, ArrowRight, HelpCircle, ChevronDown, Trophy, Activity, Check, Shield, Zap, TrendingUp } from 'lucide-react';
+import { FAQ_DATA } from './constants';
 import { Footer } from './Footer.tsx';
 import { motion, useScroll, useTransform, useInView, AnimatePresence } from 'framer-motion';
 
@@ -335,8 +336,13 @@ const FAQItem = ({ question, answer }: { question: string, answer: string }) => 
   const [isOpen, setIsOpen] = useState(false);
   return (
     <motion.div layout className="border-b border-slate-200 last:border-0 overflow-hidden">
-       <motion.button layout onClick={() => setIsOpen(!isOpen)} className="w-full py-6 flex items-center justify-between text-left focus:outline-none group">
-          <span className="text-base md:text-lg font-bold text-slate-900 group-hover:text-emerald-600 transition-colors pr-4">{question}</span>
+       <motion.button
+         layout
+         onClick={() => setIsOpen(!isOpen)}
+         className="w-full py-6 flex items-center justify-between text-left focus:outline-none group"
+         aria-expanded={isOpen}
+       >
+          <h3 className="text-base md:text-lg font-bold text-slate-900 group-hover:text-emerald-600 transition-colors pr-4">{question}</h3>
           <motion.div animate={{ rotate: isOpen ? 180 : 0 }} transition={{ type: "spring", stiffness: 200, damping: 20 }}>
              <ChevronDown className="text-slate-400 shrink-0 group-hover:text-emerald-500 transition-colors" />
           </motion.div>
@@ -365,26 +371,9 @@ const FAQSection = () => (
         <p className="text-slate-400 font-bold uppercase tracking-widest text-xs">Common Questions</p>
      </div>
      <div className="bg-white rounded-[30px] md:rounded-[40px] shadow-xl border border-slate-100 p-6 md:p-12">
-        <FAQItem 
-           question="Does Mehri Fitness work without the Mehri fitness tracker?" 
-           answer="Yes. You can use Mehri Fitness with just your smartphone to track workouts, log meals, and access Alma coaching. The Mehri fitness tracker is optional hardware for automated biometric data like continuous heart rate and sleep tracking." 
-        />
-        <FAQItem 
-           question="Is the Mehri fitness tracker compatible with iOS and Android?" 
-           answer="Yes, the Mehri fitness tracker features universal compatibility. It syncs seamlessly via Bluetooth 5.3 to the Mehri app on both iOS and Android platforms." 
-        />
-        <FAQItem 
-           question="Is this a medical device?" 
-           answer="No. Mehri Fitness and the Mehri fitness tracker are wellness tools designed for recreational use, training, and performance tracking. They are not medical devices and should not be used to diagnose or treat medical conditions." 
-        />
-        <FAQItem 
-           question="Is my biometric data secure?" 
-           answer="Yes. We prioritize your privacy. Biometric data is encrypted locally on the device and during transmission to ensure your personal health information remains secure." 
-        />
-        <FAQItem 
-           question="What is the battery life of the Mehri fitness tracker?" 
-           answer="The Mehri fitness tracker is engineered for endurance, boasting an intelligent 14-day battery life on a single charge under typical usage conditions." 
-        />
+        {FAQ_DATA.map((item, index) => (
+          <FAQItem key={index} question={item.question} answer={item.answer} />
+        ))}
      </div>
   </section>
 );

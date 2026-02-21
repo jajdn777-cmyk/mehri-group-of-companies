@@ -129,3 +129,30 @@ These Terms shall be governed and construed in accordance with the laws of the S
 9. MODIFICATIONS TO SERVICE
 We reserve the right to modify or discontinue, temporarily or permanently, the Service (or any part thereof) with or without notice. We shall not be liable to you or to any third party for any modification, price change, suspension, or discontinuance of the Service.
 `;
+
+export const FAQ_DATA = [
+  {
+    question: "Are AI fitness trackers like the Mehri fitness tracker as accurate as medical devices?",
+    answer: "While the Mehri fitness tracker provides high-precision biometric data—including heart rate variability (HRV) and SpO2—it is designed for wellness trends, not medical diagnosis. Its value lies in identifying long-term patterns in your recovery and stress levels, allowing for proactive health management rather than reactive treatment."
+  },
+  {
+    question: "How does the Mehri fitness tracker protect my biometric data and privacy?",
+    answer: "We utilize decentralized encryption for all health data. Unlike standard trackers, Alma Intelligence processes sensitive biometrics locally on the device or through secure, end-to-end encrypted tunnels, ensuring your health insights remain your private property and are never sold to third-party advertisers."
+  },
+  {
+    question: "What makes the Mehri fitness tracker different from a standard Apple Watch or Garmin?",
+    answer: "The Mehri fitness tracker bridges the gap between a rugged sports watch and an executive accessory. It features \"Alma AI Coaching,\" which doesn't just show you steps—it analyzes your sleep and strain to tell you exactly when to work out and when to rest for peak performance."
+  },
+  {
+    question: "Does the Mehri fitness tracker require a monthly subscription for AI features?",
+    answer: "No. Unlike many 2026 wearables that paywall your own data, the Mehri fitness tracker offers all core AI health insights, sleep analytics, and the Alma Intelligence dashboard with no hidden monthly fees. You own the hardware and the insights for life."
+  },
+  {
+    question: "How does the \"Alma Intelligence\" AI coaching actually work?",
+    answer: "Alma AI uses a proprietary machine learning model to correlate your heart rate, sleep stages, and daily activity. It builds a \"Digital Twin\" of your physiology to predict fatigue before you feel it, providing actionable notifications like \"Your recovery is low; prioritize 20 more minutes of REM sleep tonight.\""
+  },
+  {
+    question: "Can I use the Mehri fitness tracker for contactless payments and smart home control?",
+    answer: "Yes. The Mehri Series 1 includes integrated NFC for universal contactless payments and a built-in IoT hub, allowing you to control your \"Alma Smart Home\" devices directly from your wrist using simple haptic gestures or voice commands."
+  }
+];

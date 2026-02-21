@@ -21,6 +21,10 @@ interface SEOProps {
     availability: string;
     url: string;
   };
+  faq?: Array<{
+    question: string;
+    answer: string;
+  }>;
 }
 
 /**
@@ -33,7 +37,8 @@ export const SEO: React.FC<SEOProps> = ({
   description = "Elite performance tracking and biometric architecture. Mehri Group delivers executive fitness via Mehri fitness tracker hardware and Alma AI coaching.",
   view,
   article,
-  product
+  product,
+  faq
 }) => {
   const brandName = "Mehri Group of Companies";
   const defaultTitle = `${brandName} | Executive Wellness & AI Fitness`;
@@ -134,13 +139,28 @@ export const SEO: React.FC<SEOProps> = ({
       });
     }
 
+    // Add FAQ Schema if applicable
+    if (faq && faq.length > 0) {
+      schemaData["@graph"].push({
+        "@type": "FAQPage",
+        "mainEntity": faq.map(item => ({
+          "@type": "Question",
+          "name": item.question,
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": item.answer
+          }
+        }))
+      });
+    }
+
     const script = document.createElement('script');
     script.id = 'mehri-json-ld';
     script.type = 'application/ld+json';
     script.text = JSON.stringify(schemaData);
     document.head.appendChild(script);
 
-  }, [finalTitle, description, view, article, product]);
+  }, [finalTitle, description, view, article, product, faq]);
 
   return null;
 };
