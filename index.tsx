@@ -27,6 +27,7 @@ import { PrivacyPolicy } from './PrivacyPolicy.tsx';
 import { TermsOfService } from './TermsOfService.tsx';
 import { SEO } from './SEO.tsx';
 import { supabase } from './supabaseClient.ts';
+import NotFound from './NotFound.tsx';
 
 // --- SCROLL PRESERVATION COMPONENT ---
 const ScrollToTop = ({ view, dashView }: { view: string, dashView?: string }) => {
@@ -43,71 +44,86 @@ interface ErrorBoundaryProps {
 
 interface ErrorBoundaryState {
   hasError: boolean;
+  countdown: number;
 }
-
 class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
+  private redirectTimer: any;
+  private intervalTimer: any;
+
   constructor(props: ErrorBoundaryProps) {
     super(props);
-    this.state = { hasError: false };
+    this.state = { hasError: false, countdown: 4 };
   }
 
   static getDerivedStateFromError(error: any) {
     return { hasError: true };
   }
 
-  componentDidCatch(error: any, errorInfo: any) {
-    // SECURITY: Only log technical details in development environment
-    const isDev = (import.meta as any).env.DEV;
-    
-    if (isDev) {
-      console.group("🔥 CRITICAL ERROR BOUNDARY CAUGHT:");
-      console.error("Error:", error);
-      console.error("Stack:", errorInfo.componentStack);
-      console.groupEnd();
-    } else {
-      // In production, we suppress the stack trace to the user.
-      // Optionally, send this to a logging service here.
+  componentDidUpdate(prevProps: any, prevState: ErrorBoundaryState) {
+    if (this.state.hasError && !prevState.hasError) {
+      this.startCountdown();
     }
   }
 
-  handleReset = () => {
-    // Hard reset: Clear all local storage and reload app from root
-    localStorage.clear();
-    sessionStorage.clear();
-    window.location.href = '/';
+  componentWillUnmount() {
+    clearInterval(this.intervalTimer);
+    clearTimeout(this.redirectTimer);
+  }
+
+  startCountdown = () => {
+    this.intervalTimer = setInterval(() => {
+      this.setState(prev => ({ countdown: Math.max(0, prev.countdown - 1) }));
+    }, 1000);
+
+    this.redirectTimer = setTimeout(() => {
+      this.handleSmartRedirect();
+    }, 4000);
+  };
+
+  handleSmartRedirect = () => {
+    try {
+      const keys = Object.keys(localStorage);
+      const isLoggedIn = keys.some(key => key.includes("auth-token") && !!localStorage.getItem(key));
+      window.location.href = isLoggedIn ? "/dashboard" : "/";
+    } catch {
+      window.location.href = "/";
+    }
   };
 
   render() {
     if (this.state.hasError) {
       return (
-        <div className="min-h-screen bg-slate-900 text-white flex flex-col items-center justify-center p-6 text-center font-sans selection:bg-red-500/30">
-           <div className="mb-8 relative">
-              <div className="w-20 h-20 bg-slate-800 rounded-[20px] flex items-center justify-center border border-slate-700 shadow-2xl relative z-10">
-                 <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#EF4444" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M18.364 18.364A9 9 0 0 0 5.636 5.636m12.728 12.728A9 9 0 0 1 5.636 5.636m12.728 12.728L5.636 5.636" />
+        <div className="min-h-screen bg-[#FCFCFC] flex flex-col items-center justify-center p-6 text-center font-sans selection:bg-emerald-100">
+           <div className="mb-8 relative flex justify-center">
+              <div className="w-24 h-24 bg-[#A7F3D0]/30 rounded-[32px] flex items-center justify-center border border-emerald-100 shadow-sm relative z-10">
+                 <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="#10B981" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="12" cy="12" r="10" />
+                    <path d="M16 16s-1.5-2-4-2-4 2-4 2" />
+                    <line x1="9" y1="9" x2="9.01" y2="9" />
+                    <line x1="15" y1="9" x2="15.01" y2="9" />
                  </svg>
               </div>
-              <div className="absolute -top-4 -right-4 w-28 h-28 bg-red-500/10 rounded-full blur-[40px] pointer-events-none" />
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-emerald-100/40 rounded-full blur-2xl pointer-events-none" />
            </div>
 
-           <h1 className="text-4xl md:text-5xl font-black uppercase tracking-tighter text-white mb-4 leading-none">
-              Workout<br/><span className="text-red-500">Interrupted</span>
+           <h1 className="text-5xl md:text-6xl font-black uppercase tracking-tighter text-slate-900 mb-4 leading-none">
+              System<br/><span className="text-emerald-500">Glitch</span>
            </h1>
            
-           <p className="text-slate-400 font-medium text-sm md:text-base max-w-md mb-10 leading-relaxed tracking-wide">
-              We're fixing a glitch in the system. <br/>
-              Your session data is safe, but we need to reboot the interface.
+           <p className="text-slate-500 font-medium text-sm md:text-base max-w-md mb-10 leading-relaxed tracking-wide">
+              We encountered an unexpected error. <br/>
+              Redirecting you home in <span className="text-emerald-500 font-extrabold">{this.state.countdown}s</span>.
            </p>
            
            <button 
-             onClick={this.handleReset} 
-             className="bg-white text-slate-900 px-10 py-4 rounded-full font-black uppercase text-xs tracking-[0.2em] hover:bg-emerald-400 hover:text-slate-900 transition-all shadow-[0_0_30px_rgba(255,255,255,0.1)] active:scale-95"
+             onClick={this.handleSmartRedirect}
+             className="bg-[#A7F3D0] text-emerald-900 px-10 py-4 rounded-full font-black uppercase text-xs tracking-[0.2em] hover:bg-emerald-300 transition-all shadow-sm active:scale-95"
            >
-              Reset App
+              Go Back Now
            </button>
 
-           <div className="mt-12 text-[10px] font-bold text-slate-600 uppercase tracking-widest">
-              Error Code: SYSTEM_HALT
+           <div className="mt-12 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+              Error Code: MEHRI_CORE_ERR
            </div>
         </div>
       );
@@ -148,12 +164,12 @@ const App = () => {
     if (VALID_ROUTES[path]) {
         return VALID_ROUTES[path];
     }
-    return { view: 'landing', dashView: 'dashboard' };
+    return { view: 'notfound', dashView: 'dashboard' };
   };
 
   const initialState = getInitialState();
 
-  const [view, setView] = useState<'landing' | 'auth' | 'specs' | 'goal' | 'main' | 'settings' | 'privacy' | 'terms'>(initialState.view as any);
+  const [view, setView] = useState<'landing' | 'auth' | 'specs' | 'goal' | 'main' | 'settings' | 'privacy' | 'terms' | 'notfound'>(initialState.view as any);
   const [dashView, setDashView] = useState<'dashboard' | 'stats' | 'goals' | 'routes' | 'challenges' | 'alma' | 'alma-meals' | 'blogs' | 'write'>(initialState.dashView as any);
   const [authMode, setAuthMode] = useState<'login' | 'signup'>('login');
   
@@ -233,7 +249,7 @@ const App = () => {
            setView(route.view as any);
            if (route.dashView) setDashView(route.dashView as any);
       } else {
-        setView('landing');
+        setView('notfound');
       }
     };
     window.addEventListener('popstate', handlePopState);
@@ -330,7 +346,7 @@ const App = () => {
         } catch (error) {
             console.error("Critical Auth Error:", error);
             // Fallback to landing if auth processing fails completely
-            setView('landing');
+            setView('notfound');
         } finally {
             // 5. Lower Shield & Mark Session as Loaded
             // CRITICAL: This ensures the loader ALWAYS disappears, even if errors occur above
@@ -524,6 +540,7 @@ const App = () => {
     if (view === 'auth') return 'Sign In';
     if (view === 'settings') return 'Settings';
     if (view === 'privacy') return 'Privacy Policy';
+    if (view === 'notfound') return 'Page Not Found';
     return undefined;
   };
 
@@ -573,6 +590,7 @@ const App = () => {
                 {view === 'auth' && <AuthSection onComplete={handleAuthComplete} initialView={authMode} onNavigate={navigateTo} />}
                 {view === 'privacy' && <PrivacyPolicy onNavigate={navigateTo} />}
                 {view === 'terms' && <TermsOfService onNavigate={navigateTo} />}
+                {view === 'notfound' && <NotFound onNavigate={navigateTo} />}
                 
                 {view === 'specs' && (
                     <SpecsSection specs={userSpecs} userPreferences={userPreferences} onComplete={(s: any) => { 
