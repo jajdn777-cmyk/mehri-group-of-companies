@@ -62,9 +62,10 @@ const StaggeredText = ({ text, className = "", delayStart = 0, withUnderline = f
   );
 };
 
-const ScrollReveal = ({ children, className = "" }: { children?: React.ReactNode, className?: string }) => {
+const ScrollReveal = ({ children, className = "", id = "" }: { children?: React.ReactNode, className?: string, id?: string }) => {
   return (
     <motion.div
+      id={id}
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-50px" }}
@@ -230,7 +231,7 @@ const AlmaLiveDemo = () => {
   );
 };
 
-// --- NEW SECTION COMPONENTS ---
+// --- SECTION COMPONENTS ---
 
 const WhatWeDoSection = () => (
   <section className="max-w-4xl mx-auto px-6 md:px-8 py-24 text-center bg-white">
@@ -449,161 +450,199 @@ const GoalsCTASection = ({ onAction }: { onAction: () => void }) => (
   <section className="relative py-32 md:py-48 overflow-hidden w-full max-w-[95%] mx-auto rounded-[60px] my-20 shadow-2xl">
      <div className="absolute inset-0 bg-slate-900">
         <img 
-           src="https://images.unsplash.com/photo-1452626038306-9aae5e071dd3?q=80&w=1920" 
-           className="w-full h-full object-cover opacity-40 blur-sm" 
-           alt="Running Legs"
+           src="https://images.unsplash.com/photo-1548690312-e3b507d17a47?q=80&w=1920&auto=format&fit=crop"
+           className="w-full h-full object-cover opacity-20"
+           alt="Fitness Motivation"
         />
-        <div className="absolute inset-0 bg-black/40" />
+        <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-900/80 to-emerald-900/40" />
      </div>
      
-     <div className="relative z-10 max-w-4xl mx-auto px-6 text-center space-y-8">
-        <div className="w-20 h-20 border-2 border-[#A7F3D0] rounded-full flex items-center justify-center mx-auto text-[#A7F3D0] bg-slate-900/50 backdrop-blur-md">
-           <Target size={40} />
-        </div>
-        <h2 className="text-5xl md:text-8xl font-black uppercase tracking-tighter text-white leading-none drop-shadow-xl">
-           What's Next?
-        </h2>
-        <p className="text-lg md:text-2xl text-slate-200 font-medium max-w-2xl mx-auto leading-relaxed drop-shadow-md">
-           Take the first step towards your physical peak. Define your path, track your progress, and join the elite Mehri community today.
-        </p>
-        <div className="pt-8">
+     <div className="relative z-10 max-container px-6 text-center">
+        <motion.div
+           initial={{ opacity: 0, scale: 0.9 }}
+           whileInView={{ opacity: 1, scale: 1 }}
+           viewport={{ once: true }}
+           transition={{ duration: 0.8 }}
+           className="space-y-12"
+        >
+           <h2 className="text-6xl md:text-9xl font-black text-white uppercase tracking-tighter leading-none">
+              READY TO <br/> <span className="text-emerald-400">EVOLVE?</span>
+           </h2>
+           <p className="text-xl md:text-3xl text-slate-300 font-medium max-w-3xl mx-auto leading-relaxed">
+              Stop guessing. Start knowing. Join the ecosystem designed for peak human performance.
+           </p>
            <button onClick={onAction} className="bg-[#A7F3D0] text-slate-900 px-12 py-6 rounded-full font-black uppercase text-xs md:text-sm tracking-[0.3em] hover:bg-white transition-all shadow-[0_0_40px_rgba(167,243,208,0.4)] hover:scale-105 active:scale-95">
               Get Started Now
            </button>
-        </div>
+        </motion.div>
      </div>
   </section>
 );
 
 // --- MAIN LANDING COMPONENT ---
 
-export const LandingSection = ({ onStart, onNavigate, onShop }: any) => {
+export const LandingSection = ({ onStart, onNavigate, onShop }: { onStart: () => void, onNavigate: (view: string) => void, onShop: () => void }) => {
   const createRipple = () => {
     onStart(); 
   };
 
   return (
-    <div className="space-y-0 pb-0 overflow-hidden bg-white">
+    <div className="bg-white min-h-screen">
       
       {/* 1. HERO SECTION */}
-      <section className="relative min-h-screen w-full flex flex-col justify-center items-start overflow-hidden isolate pt-32 pb-10">
-        <div className="absolute inset-0 z-0">
-          <video
-            autoPlay
-            muted
-            loop
-            playsInline
-            className="w-full h-full object-cover"
-            poster="/watch-black.jpg"
-          >
-            <source src="/landingpagevid.webm" type="video/webm" />
-          </video>
-          <div className="absolute inset-0 bg-black/40 backdrop-blur-[1px]" />
-        </div>
+      <section className="relative h-[100dvh] w-full overflow-hidden">
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          poster="/landingpage_poster.jpg"
+          className="absolute inset-0 w-full h-full object-cover"
+        >
+          <source src="/landingpage_hero.webm" type="video/webm" />
+        </video>
+        <div className="absolute inset-0 bg-black/40" />
         
-        <div className="relative z-10 px-6 md:px-16 text-white flex flex-col items-start w-full max-w-7xl mx-auto">
-          
-          <h1 className="font-black tracking-tighter uppercase mb-4 leading-none text-4xl md:text-8xl drop-shadow-2xl flex flex-wrap gap-x-4 justify-start text-left">
-            <StaggeredText text="REACH YOUR" delayStart={0} justify="flex-start" />
-            <StaggeredText text="BEST." delayStart={0.8} className="text-emerald-400" withUnderline={true} justify="flex-start" />
-          </h1>
+        <div className="relative h-full flex flex-col items-center justify-center text-center px-6">
+          <div className="max-w-4xl">
+            <StaggeredText
+              text="REACH YOUR BEST"
+              className="text-6xl md:text-8xl font-black text-white mb-6"
+            />
+            <p className="text-xl md:text-2xl text-white/90 mb-10 font-light tracking-wide">
+              Train smarter with Mehri. The ecosystem designed for peak performance.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+              <button
+                onClick={() => onNavigate('auth')}
+                className="px-10 py-4 bg-emerald-500 text-white rounded-full font-bold hover:bg-emerald-600 transition-all flex items-center gap-2 group text-lg"
+              >
+                Get Started
+                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </button>
+              <button
+                onClick={() => {
+                  const el = document.getElementById('watch');
+                  el?.scrollIntoView({ behavior: 'smooth' });
+                }}
+                className="px-10 py-4 bg-white/10 backdrop-blur-md border border-white/20 text-white rounded-full font-bold hover:bg-white/20 transition-all text-lg"
+              >
+                Learn More
+              </button>
+            </div>
+          </div>
           
           <motion.div 
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1.5, duration: 0.8 }}
-            className="text-left"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1, duration: 1 }}
+            className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
           >
-            <p className="text-lg md:text-2xl font-medium mb-8 leading-relaxed tracking-tight drop-shadow-md text-white/90">
-              Train smarter with Mehri
-            </p>
-            <motion.button 
-              onClick={createRipple} 
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="px-10 md:px-16 py-5 md:py-8 bg-emerald-400 text-slate-900 font-black uppercase tracking-[0.3em] md:tracking-[0.5em] text-[10px] rounded-full shadow-2xl relative overflow-hidden"
-            >
-              Get Started
-            </motion.button>
+            <span className="text-white/50 text-sm font-medium tracking-widest">SCROLL TO EXPLORE</span>
+            <div className="w-px h-12 bg-gradient-to-b from-emerald-500 to-transparent" />
           </motion.div>
         </div>
       </section>
-      {/* 2. WHAT WE DO (Answers Q1 & Q3) */}
-      <WhatWeDoSection />
 
-      {/* 3. WHO IT IS FOR (Answers Q2) */}
-      <WhoItIsForSection />
-
-      {/* 4. OUR SERVICES (Answers Q4) */}
-      <ServicesSection />
-
-      {/* 5. WATCH FEATURE (Hardware Detail) */}
-      <ScrollReveal className="max-w-7xl mx-auto px-6 md:px-8 py-20">
-        <div className="bg-slate-900 rounded-[40px] md:rounded-[80px] p-8 md:p-24 flex flex-col lg:flex-row items-center gap-12 md:gap-20 relative overflow-hidden shadow-2xl group">
+      {/* 2. WATCH SECTION (Moved here, Expanded) */}
+      <ScrollReveal id="watch" className="max-w-7xl mx-auto px-6 md:px-8 py-24 md:py-32">
+        <div className="bg-slate-900 rounded-[40px] md:rounded-[80px] p-8 md:p-24 relative overflow-hidden shadow-2xl group">
             <div className="absolute top-0 right-0 w-full h-full bg-gradient-to-br from-emerald-500/5 to-transparent pointer-events-none" />
             <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-emerald-500/10 rounded-full blur-[100px] pointer-events-none transition-all duration-1000 group-hover:bg-emerald-500/20" />
 
-            <div className="flex-1 space-y-8 md:space-y-12 z-10 text-center lg:text-left">
-              <div className="space-y-6">
-                <div className="flex flex-col md:flex-row items-center gap-4 justify-center lg:justify-start">
-                   <span className="bg-emerald-400 text-slate-900 px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-[0.3em] shadow-[0_0_20px_rgba(52,211,153,0.4)]">Mehri Series</span>
-                   <span className="text-slate-500 text-[10px] font-bold uppercase tracking-widest flex items-center gap-2"><span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"/> In Stock</span>
+            <div className="flex flex-col lg:flex-row items-center gap-12 md:gap-20">
+              <div className="flex-1 space-y-8 md:space-y-12 z-10 text-center lg:text-left">
+                <div className="space-y-6">
+                  <div className="flex flex-col md:flex-row items-center gap-4 justify-center lg:justify-start">
+                     <span className="bg-emerald-400 text-slate-900 px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-[0.3em] shadow-[0_0_20px_rgba(52,211,153,0.4)]">Mehri Tracker</span>
+                     <span className="text-emerald-400 text-[10px] font-bold uppercase tracking-widest flex items-center gap-2">Special Offer: $34.99</span>
+                  </div>
+                  <h2 className="text-4xl md:text-7xl font-black text-white uppercase tracking-tighter leading-[0.9]">
+                    Meet the <br/> <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-200">Mehri Fitness Tracker</span>
+                  </h2>
                 </div>
-                <h2 className="text-4xl md:text-7xl font-black text-white uppercase tracking-tighter leading-[0.9]">
-                  Biometric <br/> <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-200">Dominance</span>
-                </h2>
-              </div>
-              
-              <div className="space-y-8">
-                <p className="text-slate-400 text-base md:text-xl font-medium leading-relaxed max-w-xl mx-auto lg:mx-0">
-                  The Mehri fitness tracker is a precision instrument for your wrist. Milled from aerospace-grade titanium, it provides continuous physiological tracking to inform your training decisions.
-                </p>
                 
-                <ul className="space-y-3 inline-block text-left">
-                   {[
-                     "Continuous heart-rate tracking",
-                     "HRV analysis during rest and sleep",
-                     "Night-time SpO₂ estimation",
-                     "Activity and workout detection",
-                     "Up to 14-day intelligent battery life"
-                   ].map(item => (
-                     <li key={item} className="flex items-center gap-3 text-slate-300 font-bold text-sm tracking-wide">
-                        <div className="w-1.5 h-1.5 bg-emerald-400 rounded-full" /> {item}
-                     </li>
-                   ))}
-                </ul>
+                <div className="space-y-8">
+                  <p className="text-slate-400 text-base md:text-xl font-medium leading-relaxed max-w-xl mx-auto lg:mx-0">
+                    Performance isn't just about how hard you work—it's about how well you recover. The Mehri fitness tracker is a precision instrument designed to give you a complete picture of your health, 24/7. Simple language, elite results.
+                  </p>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <ul className="space-y-3 text-left">
+                      {[
+                        "Continuous Heart Rate",
+                        "HRV & Sleep Analysis",
+                        "SpO2 Blood Oxygen",
+                      ].map(item => (
+                        <li key={item} className="flex items-center gap-3 text-slate-300 font-bold text-sm tracking-wide">
+                            <div className="w-1.5 h-1.5 bg-emerald-400 rounded-full" /> {item}
+                        </li>
+                      ))}
+                    </ul>
+                    <ul className="space-y-3 text-left">
+                      {[
+                        "Activity Detection",
+                        "14-Day Battery Life",
+                        "Water Resistant",
+                      ].map(item => (
+                        <li key={item} className="flex items-center gap-3 text-slate-300 font-bold text-sm tracking-wide">
+                            <div className="w-1.5 h-1.5 bg-emerald-400 rounded-full" /> {item}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <p className="text-slate-500 text-sm font-medium leading-relaxed max-w-xl mx-auto lg:mx-0 italic">
+                    Available in Black and Rose Pink. Built for high performance.
+                  </p>
+                </div>
+
+                <div className="flex flex-col sm:flex-row gap-6 pt-4 justify-center lg:justify-start">
+                  <motion.button
+                    onClick={onShop}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="px-12 py-6 bg-emerald-400 text-slate-900 rounded-full font-black uppercase text-xs tracking-[0.3em] shadow-[0_10px_30px_-10px_rgba(52,211,153,0.5)] text-center flex items-center justify-center gap-3 group/btn"
+                  >
+                    Buy Now - $34.99 <ArrowRight size={16} className="transition-transform group-hover/btn:translate-x-1"/>
+                  </motion.button>
+                </div>
               </div>
 
-              <div className="flex flex-col sm:flex-row gap-6 pt-4 justify-center lg:justify-start">
-                <motion.button
-                  onClick={onShop}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="px-12 py-6 bg-white text-slate-900 rounded-full font-black uppercase text-xs tracking-[0.3em] shadow-[0_10px_30px_-10px_rgba(255,255,255,0.3)] hover:shadow-[0_10px_30px_-10px_rgba(52,211,153,0.5)] text-center flex items-center justify-center gap-3 group/btn"
-                >
-                  Explore the Watch <ArrowRight size={16} className="transition-transform group-hover/btn:translate-x-1"/>
-                </motion.button>
+              <div className="flex-1 relative w-full flex justify-center lg:justify-end mt-8 lg:mt-0">
+                 <div className="relative z-10 grid grid-cols-2 gap-4 md:gap-6 w-full max-w-lg">
+                    <div className="space-y-4 md:space-y-6">
+                       <motion.div whileHover={{ y: -10 }} className="aspect-[4/5] rounded-[30px] md:rounded-[40px] overflow-hidden shadow-2xl border-4 border-slate-800">
+                           <img src="/watchpic1.jpeg" className="w-full h-full object-cover" alt="Mehri Watch Front" />
+                       </motion.div>
+                       <motion.div whileHover={{ y: -10 }} className="aspect-[4/5] rounded-[30px] md:rounded-[40px] overflow-hidden shadow-2xl border-4 border-slate-800">
+                           <img src="/watchpic8.jpeg" className="w-full h-full object-cover" alt="Mehri Watch Detail" />
+                       </motion.div>
+                    </div>
+                    <div className="space-y-4 md:space-y-6 pt-12">
+                       <motion.div whileHover={{ y: -10 }} className="aspect-[4/5] rounded-[30px] md:rounded-[40px] overflow-hidden shadow-2xl border-4 border-slate-800">
+                           <img src="/watchpic2.jpeg" className="w-full h-full object-cover" alt="Mehri Watch Side" />
+                       </motion.div>
+                       <motion.div whileHover={{ y: -10 }} className="aspect-[4/5] rounded-[30px] md:rounded-[40px] overflow-hidden shadow-2xl border-4 border-slate-800">
+                           <img src="/watchpic10.jpeg" className="w-full h-full object-cover" alt="Mehri Watch Wrist" />
+                       </motion.div>
+                    </div>
+                 </div>
               </div>
-            </div>
-
-            <div className="flex-1 relative w-full flex justify-center lg:justify-end mt-8 lg:mt-0">
-               <div className="relative z-10 grid grid-cols-2 gap-4 md:gap-6 w-full max-w-lg">
-                  <motion.div whileHover={{ y: -10 }} className="space-y-6 pt-12">
-                     <div className="aspect-[3/4] rounded-[30px] md:rounded-[40px] overflow-hidden shadow-2xl border-4 border-slate-800 relative group/img">
-                         <img src="https://images2.imgbox.com/56/17/7wy6uJHG_o.jpeg" className="w-full h-full object-cover" alt="Mehri Watch Face" />
-                     </div>
-                  </motion.div>
-                  <motion.div whileHover={{ y: -10 }} className="space-y-6 pb-12">
-                     <div className="aspect-[3/4] rounded-[30px] md:rounded-[40px] overflow-hidden shadow-2xl border-4 border-slate-800 relative group/img">
-                         <img src="https://images2.imgbox.com/3b/e6/QhMzpqDY_o.jpeg" className="w-full h-full object-cover" alt="Mehri Side Profile" />
-                     </div>
-                  </motion.div>
-               </div>
             </div>
         </div>
       </ScrollReveal>
 
-      {/* 6. ALMA AI SECTION (Software Detail) */}
+      {/* 3. WHAT WE DO */}
+      <WhatWeDoSection />
+
+      {/* 4. WHO IT IS FOR */}
+      <WhoItIsForSection />
+
+      {/* 5. OUR SERVICES */}
+      <ServicesSection />
+
+      {/* 6. ALMA AI SECTION */}
       <ScrollReveal className="max-w-7xl mx-auto px-6 md:px-8 py-20">
         <div className="bg-slate-900 rounded-[40px] md:rounded-[80px] p-8 md:p-24 flex flex-col-reverse lg:flex-row items-center gap-12 md:gap-20 relative overflow-hidden shadow-2xl">
            <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-slate-800 via-slate-900 to-slate-900 pointer-events-none" />
@@ -661,13 +700,13 @@ export const LandingSection = ({ onStart, onNavigate, onShop }: any) => {
         </div>
       </ScrollReveal>
 
-      {/* 7. STRONG COMMUNITY (Answers Why it matters) */}
+      {/* 7. STRONG COMMUNITY */}
       <StrongCommunitySection />
 
       {/* 8. ONGOING CHALLENGES */}
       <ChallengesSection />
 
-      {/* 9. REACH GOALS CTA (Answers Q5) */}
+      {/* 9. REACH GOALS CTA */}
       <GoalsCTASection onAction={createRipple} />
 
       {/* 10. FAQ */}
@@ -678,3 +717,5 @@ export const LandingSection = ({ onStart, onNavigate, onShop }: any) => {
     </div>
   );
 };
+
+export default LandingSection;

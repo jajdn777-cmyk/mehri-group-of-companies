@@ -1,0 +1,8 @@
+      {/* 2. WHAT WE DO (Answers Q1 & Q3) */}
+      <WhatWeDoSection />
+
+      {/* 3. WHO IT IS FOR (Answers Q2) */}
+      <WhoItIsForSection />
+
+      {/* 4. OUR SERVICES (Answers Q4) */}
+      <ServicesSection />
