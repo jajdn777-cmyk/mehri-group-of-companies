@@ -46,7 +46,7 @@ const StaggeredText = ({ text, className = "", delayStart = 0, withUnderline = f
       className={className}
     >
       {words.map((word, index) => (
-        <motion.span variants={child} key={index} className={`inline-block ${withUnderline ? 'relative' : ''}`}>
+        <motion.span variants={child} key={index} className={`inline-block ${withUnderline ? "relative" : ""}`}>
           {word}
           {withUnderline && (
              <motion.div 
@@ -61,6 +61,69 @@ const StaggeredText = ({ text, className = "", delayStart = 0, withUnderline = f
     </motion.div>
   );
 };
+
+const LetterByLetterText = ({ text, className = "", delayStart = 0, justify = "center" }: { text: string, className?: string, delayStart?: number, justify?: string }) => {
+  const container = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: { staggerChildren: 0.04, delayChildren: delayStart }
+    }
+  };
+
+  const child = {
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        type: "spring",
+        damping: 12,
+        stiffness: 200,
+      },
+    },
+    hidden: {
+      opacity: 0,
+      y: 20,
+      transition: {
+        type: "spring",
+        damping: 12,
+        stiffness: 200,
+      },
+    },
+  };
+
+  return (
+    <motion.div
+      style={{ display: "flex", flexWrap: "wrap", justifyContent: justify }}
+      variants={container}
+      initial="hidden"
+      animate="visible"
+      className={className}
+    >
+      {text.split(" ").map((word, wordIdx) => (
+        <span key={wordIdx} className="inline-flex mr-[0.3em]">
+          {Array.from(word).map((letter, letterIdx) => (
+            <motion.span
+              variants={child}
+              key={letterIdx}
+            >
+              {letter}
+            </motion.span>
+          ))}
+        </span>
+      ))}
+    </motion.div>
+  );
+};
+
+const LiveDrawnLine = ({ delay = 1.5, color = "bg-emerald-400" }: { delay?: number, color?: string }) => (
+  <motion.div
+    initial={{ scaleX: 0 }}
+    animate={{ scaleX: 1 }}
+    transition={{ delay, duration: 1.2, ease: "easeInOut" }}
+    className={`absolute -bottom-2 left-0 right-0 h-2 ${color} rounded-full origin-left shadow-[0_0_20px_rgba(52,211,153,0.5)]`}
+  />
+);
 
 const ScrollReveal = ({ children, className = "", id = "" }: { children?: React.ReactNode, className?: string, id?: string }) => {
   return (
@@ -505,17 +568,27 @@ export const LandingSection = ({ onStart, onNavigate, onShop }: { onStart: () =>
         
         <div className="relative h-full flex flex-col items-center justify-center text-center px-6">
           <div className="max-w-4xl">
-            <StaggeredText
-              text="REACH YOUR BEST"
-              className="text-6xl md:text-8xl font-black text-white mb-6"
-            />
+            <div className="text-6xl md:text-9xl font-black mb-6 tracking-tighter flex flex-wrap justify-center items-center gap-x-4 md:gap-x-8">
+              <LetterByLetterText
+                text="REACH YOUR"
+                className="text-white"
+              />
+              <div className="relative inline-block">
+                <LetterByLetterText
+                  text="BEST"
+                  className="text-emerald-400 drop-shadow-[0_0_15px_rgba(52,211,153,0.3)]"
+                  delayStart={0.5}
+                />
+                <LiveDrawnLine delay={1.2} />
+              </div>
+            </div>
             <p className="text-xl md:text-2xl text-white/90 mb-10 font-light tracking-wide">
               Train smarter with Mehri. The ecosystem designed for peak performance.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               <button
                 onClick={() => onNavigate('auth')}
-                className="px-10 py-4 bg-emerald-500 text-white rounded-full font-bold hover:bg-emerald-600 transition-all flex items-center gap-2 group text-lg"
+                className="px-10 py-4 bg-emerald-400 text-slate-900 rounded-full font-black uppercase tracking-widest hover:bg-white transition-all flex items-center gap-2 group text-lg shadow-[0_10px_30px_-10px_rgba(52,211,153,0.5)]"
               >
                 Get Started
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
@@ -525,7 +598,7 @@ export const LandingSection = ({ onStart, onNavigate, onShop }: { onStart: () =>
                   const el = document.getElementById('watch');
                   el?.scrollIntoView({ behavior: 'smooth' });
                 }}
-                className="px-10 py-4 bg-white/10 backdrop-blur-md border border-white/20 text-white rounded-full font-bold hover:bg-white/20 transition-all text-lg"
+                className="px-10 py-4 bg-slate-900/40 backdrop-blur-md border border-emerald-500/30 text-emerald-400 rounded-full font-black uppercase tracking-widest hover:bg-emerald-400 hover:text-slate-900 transition-all text-lg"
               >
                 Learn More
               </button>
@@ -546,7 +619,7 @@ export const LandingSection = ({ onStart, onNavigate, onShop }: { onStart: () =>
 
       {/* 2. WATCH SECTION (Moved here, Expanded) */}
       <ScrollReveal id="watch" className="max-w-7xl mx-auto px-6 md:px-8 py-24 md:py-32">
-        <div className="bg-slate-900 rounded-[40px] md:rounded-[80px] p-8 md:p-24 relative overflow-hidden shadow-2xl group">
+        <div className="bg-slate-950 border border-slate-900 rounded-[40px] md:rounded-[80px] p-8 md:p-24 relative overflow-hidden shadow-2xl group hover:shadow-emerald-400/10 transition-shadow duration-1000">
             <div className="absolute top-0 right-0 w-full h-full bg-gradient-to-br from-emerald-500/5 to-transparent pointer-events-none" />
             <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-emerald-500/10 rounded-full blur-[100px] pointer-events-none transition-all duration-1000 group-hover:bg-emerald-500/20" />
 
@@ -558,13 +631,13 @@ export const LandingSection = ({ onStart, onNavigate, onShop }: { onStart: () =>
                      <span className="text-emerald-400 text-[10px] font-bold uppercase tracking-widest flex items-center gap-2">Special Offer: $34.99</span>
                   </div>
                   <h2 className="text-4xl md:text-7xl font-black text-white uppercase tracking-tighter leading-[0.9]">
-                    Meet the <br/> <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-200">Mehri Fitness Tracker</span>
+                    Meet the <br/> <span className="text-emerald-400 drop-shadow-[0_0_15px_rgba(52,211,153,0.3)]">Mehri Fitness Tracker</span>
                   </h2>
                 </div>
                 
                 <div className="space-y-8">
                   <p className="text-slate-400 text-base md:text-xl font-medium leading-relaxed max-w-xl mx-auto lg:mx-0">
-                    Performance isn't just about how hard you work—it's about how well you recover. The Mehri fitness tracker is a precision instrument designed to give you a complete picture of your health, 24/7. Simple language, elite results.
+                    Performance isn't just about how hard you work—it's about how well you recover. The Mehri fitness tracker is a precision instrument designed to give you a complete picture of your health, 24/7.
                   </p>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -573,10 +646,16 @@ export const LandingSection = ({ onStart, onNavigate, onShop }: { onStart: () =>
                         "Continuous Heart Rate",
                         "HRV & Sleep Analysis",
                         "SpO2 Blood Oxygen",
-                      ].map(item => (
-                        <li key={item} className="flex items-center gap-3 text-slate-300 font-bold text-sm tracking-wide">
+                      ].map((item, i) => (
+                        <motion.li
+                          initial={{ opacity: 0, x: -10 }}
+                          whileInView={{ opacity: 1, x: 0 }}
+                          transition={{ delay: i * 0.1 }}
+                          key={item}
+                          className="flex items-center gap-3 text-slate-300 font-bold text-sm tracking-wide"
+                        >
                             <div className="w-1.5 h-1.5 bg-emerald-400 rounded-full" /> {item}
-                        </li>
+                        </motion.li>
                       ))}
                     </ul>
                     <ul className="space-y-3 text-left">
@@ -584,10 +663,16 @@ export const LandingSection = ({ onStart, onNavigate, onShop }: { onStart: () =>
                         "Activity Detection",
                         "14-Day Battery Life",
                         "Water Resistant",
-                      ].map(item => (
-                        <li key={item} className="flex items-center gap-3 text-slate-300 font-bold text-sm tracking-wide">
+                      ].map((item, i) => (
+                        <motion.li
+                          initial={{ opacity: 0, x: -10 }}
+                          whileInView={{ opacity: 1, x: 0 }}
+                          transition={{ delay: (i + 3) * 0.1 }}
+                          key={item}
+                          className="flex items-center gap-3 text-slate-300 font-bold text-sm tracking-wide"
+                        >
                             <div className="w-1.5 h-1.5 bg-emerald-400 rounded-full" /> {item}
-                        </li>
+                        </motion.li>
                       ))}
                     </ul>
                   </div>
@@ -610,24 +695,60 @@ export const LandingSection = ({ onStart, onNavigate, onShop }: { onStart: () =>
               </div>
 
               <div className="flex-1 relative w-full flex justify-center lg:justify-end mt-8 lg:mt-0">
-                 <div className="relative z-10 grid grid-cols-2 gap-4 md:gap-6 w-full max-w-lg">
+                 <motion.div
+                   initial="hidden"
+                   whileInView="visible"
+                   viewport={{ once: true }}
+                   variants={{
+                     visible: { transition: { staggerChildren: 0.1 } }
+                   }}
+                   className="relative z-10 grid grid-cols-2 gap-4 md:gap-6 w-full max-w-lg"
+                 >
                     <div className="space-y-4 md:space-y-6">
-                       <motion.div whileHover={{ y: -10 }} className="aspect-[4/5] rounded-[30px] md:rounded-[40px] overflow-hidden shadow-2xl border-4 border-slate-800">
-                           <img src="/watchpic1.jpeg" className="w-full h-full object-cover" alt="Mehri Watch Front" />
+                       <motion.div
+                         variants={{
+                           hidden: { opacity: 0, y: 20 },
+                           visible: { opacity: 1, y: 0 }
+                         }}
+                         whileHover={{ y: -10, scale: 1.02 }}
+                         className="aspect-[4/5] rounded-[30px] md:rounded-[40px] overflow-hidden shadow-2xl border-4 border-slate-900 group/img"
+                       >
+                           <img src="/watchpic1.jpeg" className="w-full h-full object-cover transition-transform duration-700 group-hover/img:scale-110" alt="Mehri Watch Front" />
                        </motion.div>
-                       <motion.div whileHover={{ y: -10 }} className="aspect-[4/5] rounded-[30px] md:rounded-[40px] overflow-hidden shadow-2xl border-4 border-slate-800">
-                           <img src="/watchpic8.jpeg" className="w-full h-full object-cover" alt="Mehri Watch Detail" />
+                       <motion.div
+                         variants={{
+                           hidden: { opacity: 0, y: 20 },
+                           visible: { opacity: 1, y: 0 }
+                         }}
+                         whileHover={{ y: -10, scale: 1.02 }}
+                         className="aspect-[4/5] rounded-[30px] md:rounded-[40px] overflow-hidden shadow-2xl border-4 border-slate-900 group/img"
+                       >
+                           <img src="/watchpic8.jpeg" className="w-full h-full object-cover transition-transform duration-700 group-hover/img:scale-110" alt="Mehri Watch Detail" />
                        </motion.div>
                     </div>
                     <div className="space-y-4 md:space-y-6 pt-12">
-                       <motion.div whileHover={{ y: -10 }} className="aspect-[4/5] rounded-[30px] md:rounded-[40px] overflow-hidden shadow-2xl border-4 border-slate-800">
-                           <img src="/watchpic2.jpeg" className="w-full h-full object-cover" alt="Mehri Watch Side" />
+                       <motion.div
+                         variants={{
+                           hidden: { opacity: 0, y: 20 },
+                           visible: { opacity: 1, y: 0 }
+                         }}
+                         whileHover={{ y: -10, scale: 1.02 }}
+                         className="aspect-[4/5] rounded-[30px] md:rounded-[40px] overflow-hidden shadow-2xl border-4 border-slate-900 group/img"
+                       >
+                           <img src="/watchpic2.jpeg" className="w-full h-full object-cover transition-transform duration-700 group-hover/img:scale-110" alt="Mehri Watch Side" />
                        </motion.div>
-                       <motion.div whileHover={{ y: -10 }} className="aspect-[4/5] rounded-[30px] md:rounded-[40px] overflow-hidden shadow-2xl border-4 border-slate-800">
-                           <img src="/watchpic10.jpeg" className="w-full h-full object-cover" alt="Mehri Watch Wrist" />
+                       <motion.div
+                         variants={{
+                           hidden: { opacity: 0, y: 20 },
+                           visible: { opacity: 1, y: 0 }
+                         }}
+                         whileHover={{ y: -10, scale: 1.02 }}
+                         className="aspect-[4/5] rounded-[30px] md:rounded-[40px] overflow-hidden shadow-2xl border-4 border-slate-900 group/img"
+                       >
+                           <img src="/watchpic10.jpeg" className="w-full h-full object-cover transition-transform duration-700 group-hover/img:scale-110" alt="Mehri Watch Wrist" />
                        </motion.div>
                     </div>
-                 </div>
+                 </motion.div>
               </div>
             </div>
         </div>
