@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build && echo '/* /index.html 200' > dist/_redirects",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "supabase-upload": "ts-node --esm scripts/supabase-upload.ts"
   },
   "dependencies": {
     "@google/genai": "^1.3.0",
@@ -22,19 +23,25 @@
     "@tiptap/starter-kit": "^2.11.2",
     "canvas-confetti": "^1.9.2",
     "dompurify": "^3.0.9",
+    "dotenv": "^17.3.1",
     "framer-motion": "^11.0.0",
+    "gray-matter": "^4.0.3",
     "leaflet": "^1.9.4",
     "lucide-react": "^0.475.0",
+    "marked": "^17.0.3",
     "playwright": "^1.58.2",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-ga4": "^2.1.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.58.2",
+    "@types/node": "^25.3.0",
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",
     "@vitejs/plugin-react": "^4.2.1",
-    "typescript": "^5.3.3",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3",
     "vite": "^5.1.4"
   }
 }
