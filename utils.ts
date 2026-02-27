@@ -509,11 +509,11 @@ Goals: ${JSON.stringify(userContext.goals)}
           calories: payload.calories, 
           sets: payload.sets, 
           reps: payload.reps, 
-          weight_lifted: payload.weightLifted, 
+          weight_lifted: payload.weight_lifted,
           data: payload.data
        }).select().single();
        
-       if (error) return { status: 'error', message: error.message };
+       if (error) { console.error("[SAVE_WORKOUT] Error:", error); return { status: 'error', message: error.message }; }
        return { status: 'success', data };
     }
     
