@@ -332,6 +332,28 @@ export const LogModal = ({ date, routes, userSpecs, userProfile, userPreferences
 };
 
 export const DashboardView = ({ workouts, setWorkouts, userGoals, setUserGoals, routes, userSpecs, userProfile, userPreferences, userHandle, onForceSync, userMeals = [], almaChats = [], setAlmaChats, setAlmaNotification, onNavigate }: any) => {
+  // --- RESILIENCE CHECK ---
+  // If we don't have a user profile yet, we are likely in a hydration/auth transition.
+  // Show a "Warm up" state instead of crashing or showing default empty data.
+  if (!userProfile?.username && !userHandle) {
+    return (
+      <div className="min-h-[60vh] flex flex-col items-center justify-center p-8 space-y-8 animate-pulse">
+        <div className="w-20 h-20 bg-slate-100 rounded-[32px] flex items-center justify-center">
+           <RefreshCw size={32} className="text-slate-300 animate-spin" />
+        </div>
+        <div className="space-y-3 text-center">
+          <div className="h-6 w-48 bg-slate-100 rounded-full mx-auto" />
+          <div className="h-3 w-64 bg-slate-50 rounded-full mx-auto" />
+        </div>
+        <div className="grid grid-cols-3 gap-4 w-full max-w-lg pt-12">
+           <div className="h-32 bg-slate-50 rounded-[30px]" />
+           <div className="h-32 bg-slate-50 rounded-[30px]" />
+           <div className="h-32 bg-slate-50 rounded-[30px]" />
+        </div>
+      </div>
+    );
+  }
+
   const [tab, setTab] = useState<'monthly' | 'stats'>('monthly');
   const [precisionMode, setPrecisionMode] = useState(false);
   const [showStreakCelebration, setShowStreakCelebration] = useState(false);

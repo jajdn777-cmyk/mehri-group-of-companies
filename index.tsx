@@ -160,7 +160,17 @@ const App = () => {
   // --- INITIAL ROUTING LOGIC ---
   const getInitialState = () => {
     const path = window.location.pathname.replace(/\/$/, "") || "/"; 
-    // We defer session checks to the Smart Entry logic, but set initial route view
+    const isPublic = PUBLIC_ROUTES.includes(path);
+
+    // Quick check for existing session markers
+    const keys = typeof window !== 'undefined' ? Object.keys(localStorage) : [];
+    const probablyHasSession = keys.some(key => key.includes("auth-token") && !!localStorage.getItem(key));
+
+    // If on a protected route but no session marker, force landing early to avoid ghosting
+    if (!isPublic && !probablyHasSession) {
+        return { view: 'landing', dashView: 'dashboard' };
+    }
+
     if (VALID_ROUTES[path]) {
         return VALID_ROUTES[path];
     }
@@ -192,12 +202,12 @@ const App = () => {
   const [loadingText, setLoadingText] = useState('Processing...');
 
   // Data State - SOLE SOURCE OF TRUTH
-  const [workouts, setWorkouts] = useState<any[]>([]);
-  const [userGoals, setUserGoals] = useState<any[]>([]);
-  const [routes, setRoutes] = useState<any[]>([]);
-  const [userMeals, setUserMeals] = useState<any[]>([]);
-  const [blogs, setBlogs] = useState<any[]>([]);
-  const [userChallenges, setUserChallenges] = useState<any[]>([]);
+  const [workouts, setWorkouts] = useState<any[]>(() => safeParse('mehri_workouts', []));
+  const [userGoals, setUserGoals] = useState<any[]>(() => safeParse('mehri_goals', []));
+  const [routes, setRoutes] = useState<any[]>(() => safeParse('mehri_routes', []));
+  const [userMeals, setUserMeals] = useState<any[]>(() => safeParse('mehri_meals', []));
+  const [blogs, setBlogs] = useState<any[]>(() => safeParse('mehri_blogs', []));
+  const [userChallenges, setUserChallenges] = useState<any[]>(() => safeParse('mehri_challenges', []));
   
   // Alma State
   const [almaMemories, setAlmaMemories] = useState<string[]>([]);
@@ -205,7 +215,7 @@ const App = () => {
   const [almaNotification, setAlmaNotification] = useState<boolean>(false);
 
   // Profile State
-  const [userSpecs, setUserSpecs] = useState({ weight: '70', height: '175' });
+  const [userSpecs, setUserSpecs] = useState(() => safeParse('mehri_specs', { weight: '70', height: '175' }));
   const [userName, setUserName] = useState(() => safeParse('mehri_name', '')); 
   const [userHandle, setUserHandle] = useState(() => safeParse('mehri_handle', '')); 
 
@@ -225,12 +235,12 @@ const App = () => {
     currentStreak: 0
   };
 
-  const [userProfile, setUserProfile] = useState(defaultProfile);
-  const [userPreferences, setUserPreferences] = useState({
+  const [userProfile, setUserProfile] = useState(() => safeParse('mehri_profile', defaultProfile));
+  const [userPreferences, setUserPreferences] = useState(() => safeParse('mehri_preferences', {
     units: detectSystemUnits(),
     timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
     restDay: ''
-  });
+  }));
 
   // --- ANALYTICS INITIALIZATION ---
   useEffect(() => {
@@ -282,7 +292,9 @@ const App = () => {
       // 1. Session Detected (Login, Signup, or Initial Load)
       if ((event === 'SIGNED_IN' || event === 'INITIAL_SESSION') && session?.user) {
         // Double check shield - don't raise it if we already have data visible
-        if (!hasLoadedSession.current) {
+        // Check if we already have a hydrated state to avoid flickering
+        const hasData = userHandle || localStorage.getItem('mehri_handle');
+        if (!hasLoadedSession.current && !hasData) {
             setIsCheckingAuth(true); 
         }
         
@@ -355,19 +367,27 @@ const App = () => {
         }
 
       } else if (event === 'SIGNED_OUT' || (event as string) === 'USER_DELETED' || (event === 'INITIAL_SESSION' && !session)) {
-         // Handle No Session / Logout
-         // Transition to landing if on a protected route OR if we are on the home page displaying the dashboard.
-         if (!isPublic || (currentPath === "/" && viewRef.current === "main")) {
-            handleTransition("landing", "dashboard", "/", true);
+         const hasData = userHandle || localStorage.getItem('mehri_handle');
+
+         // Only treat INITIAL_SESSION with no session as a "logout" if we don't have cached data
+         // or if we're on a protected route.
+         const shouldRedirect = !isPublic && !hasData;
+
+         if (event === 'SIGNED_OUT' || (event as string) === 'USER_DELETED' || shouldRedirect) {
+            if (!isPublic || (currentPath === "/" && viewRef.current === "main")) {
+                handleTransition("landing", "dashboard", "/", true);
+            }
+
+            if (event === 'SIGNED_OUT' || (event as string) === 'USER_DELETED') {
+                localStorage.clear();
+                setWorkouts([]);
+                setUserName('');
+                setUserHandle('');
+                hasLoadedSession.current = false;
+            }
          }
-         if (event === 'SIGNED_OUT' || (event as string) === 'USER_DELETED') {
-            localStorage.clear();
-            setWorkouts([]);
-            setUserName('');
-            hasLoadedSession.current = false;
-         } else {
-            hasLoadedSession.current = true;
-         }
+
+         hasLoadedSession.current = true;
          setIsCheckingAuth(false);
       }
     });
@@ -397,8 +417,15 @@ const App = () => {
                  currentStreak: d.user.streaks?.current || 0
               };
               setUserProfile(newProfile);
-              if (d.user.specs) setUserSpecs(d.user.specs);
-              if (d.user.preferences) setUserPreferences(d.user.preferences);
+              localStorage.setItem('mehri_profile', JSON.stringify(newProfile));
+              if (d.user.specs) {
+                  setUserSpecs(d.user.specs);
+                  localStorage.setItem('mehri_specs', JSON.stringify(d.user.specs));
+              }
+              if (d.user.preferences) {
+                  setUserPreferences(d.user.preferences);
+                  localStorage.setItem('mehri_preferences', JSON.stringify(d.user.preferences));
+              }
            }
            // Data hydration...
            const fixDate = (item: any) => {
