@@ -101,16 +101,83 @@
     </script>
 
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              colors: {
+                background: "var(--background)",
+                foreground: "var(--foreground)",
+                skeleton: "var(--skeleton)",
+                border: "var(--btn-border)",
+                input: "var(--input)",
+                mehri: {
+                  mint: "#A7F3D0",
+                  slate: "#1E293B",
+                }
+              },
+              borderRadius: {
+                DEFAULT: "0.5rem",
+              },
+              boxShadow: {
+                input: [
+                  "0px 2px 3px -1px rgba(0, 0, 0, 0.1)",
+                  "0px 1px 0px 0px rgba(25, 28, 33, 0.02)",
+                  "0px 0px 0px 1px rgba(25, 28, 33, 0.08)",
+                ].join(", "),
+              },
+              animation: {
+                ripple: "ripple 2s ease calc(var(--i, 0) * 0.2s) infinite",
+                orbit: "orbit calc(var(--duration) * 1s) linear infinite",
+              },
+              keyframes: {
+                ripple: {
+                  "0%, 100%": { transform: "translate(-50%, -50%) scale(1)" },
+                  "50%": { transform: "translate(-50%, -50%) scale(0.9)" },
+                },
+                orbit: {
+                  "0%": {
+                    transform:
+                      "rotate(0deg) translateY(calc(var(--radius) * 1px)) rotate(0deg)",
+                  },
+                  "100%": {
+                    transform:
+                      "rotate(360deg) translateY(calc(var(--radius) * 1px)) rotate(-360deg)",
+                  },
+                }
+              },
+            },
+          },
+        };
+    </script>
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Lora:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <style>
+        <style>
         :root {
             --mehri-mint: #A7F3D0;
             --mehri-slate: #1E293B;
             --mehri-white: #FFFFFF;
             --ease-out-quart: cubic-bezier(0.17, 0.55, 0.55, 1);
+            --background: hsl(0, 0%, 100%);
+            --foreground: hsl(0, 0%, 0%);
+            --skeleton: hsl(0, 0%, 90%);
+            --border: hsl(220, 20%, 90%);
+            --btn-border: hsl(214deg, 31.8%, 91.4%);
+            --input: hsl(220, 20%, 90%);
+            --radius: 0.5rem;
+        }
+
+        .dark {
+            --background: hsl(222, 94%, 5%);
+            --foreground: hsl(0, 0%, 100%);
+            --skeleton: hsl(218, 36%, 16%);
+            --border: hsl(220, 20%, 90%);
+            --btn-border: hsl(217deg, 32.6%, 17.5%);
+            --input: hsl(219, 63%, 16%);
+            --radius: 0.5rem;
         }
         body {
             background-color: var(--mehri-white);
@@ -149,6 +216,19 @@
         @keyframes scaleIn {
             from { opacity: 0; transform: scale(0.8); }
             to { opacity: 1; transform: scale(1); }
+        }
+
+        @layer base {
+          body {
+            @apply bg-background text-foreground;
+          }
+        }
+
+        @layer components {
+          .g-button {
+            @apply rounded-[var(--radius)] border;
+            border-color: var(--btn-border);
+          }
         }
 
         /* --- TIPTAP ELITE EDITOR STYLES --- */
@@ -221,6 +301,7 @@
             cursor: pointer;
         }
     </style>
+
 <script type="importmap">
 {
   "imports": {
