@@ -164,7 +164,8 @@ const App = () => {
 
     // Quick check for existing session markers
     const keys = typeof window !== 'undefined' ? Object.keys(localStorage) : [];
-    const probablyHasSession = keys.some(key => key.includes("auth-token") && !!localStorage.getItem(key));
+    const probablyHasSession = keys.some(key => key.includes("auth-token") && !!localStorage.getItem(key)) || (typeof window !== "undefined" && (window.location.hash.includes("access_token") || window.location.hash.includes("id_token")));
+
 
     // If on a protected route but no session marker, force landing early to avoid ghosting
     if (!isPublic && !probablyHasSession) {
@@ -350,7 +351,7 @@ const App = () => {
 
                   // If they just signed in (and aren't already in the app), take them to dashboard.
                   // If it's an initial session, they stay on their current route.
-                  if (event === 'SIGNED_IN' && viewRef.current !== 'main') {
+                  if ((event === 'SIGNED_IN' || (event === 'INITIAL_SESSION' && (currentPath === '/' || currentPath === '/auth'))) && viewRef.current !== 'main') {
                      handleTransition('main', 'dashboard', undefined, true);
                   }
                }
@@ -371,7 +372,8 @@ const App = () => {
 
          // Only treat INITIAL_SESSION with no session as a "logout" if we don't have cached data
          // or if we're on a protected route.
-         const shouldRedirect = !isPublic && !hasData;
+         const hasHash = typeof window !== 'undefined' && (window.location.hash.includes('access_token') || window.location.hash.includes('id_token'));
+         const shouldRedirect = !isPublic && !hasData && !hasHash;
 
          if (event === 'SIGNED_OUT' || (event as string) === 'USER_DELETED' || shouldRedirect) {
             if (!isPublic || (currentPath === "/" && viewRef.current === "main")) {
