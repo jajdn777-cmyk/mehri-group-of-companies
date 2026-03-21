@@ -1,6 +1,13 @@
-import { api } from './utils.js';
-
-// Mock supabase if needed or use real if keys are available in env
-// But since I'm in a bash session, I can't easily run TS directly without setup
+import { api } from './utils.ts';
 
 console.log("Mock test for api call logic");
+async function test() {
+    console.log("Testing API existence...");
+    if (typeof api === 'function') {
+        console.log("API function is available.");
+    } else {
+        console.error("API function is NOT available.");
+        process.exit(1);
+    }
+}
+test();
