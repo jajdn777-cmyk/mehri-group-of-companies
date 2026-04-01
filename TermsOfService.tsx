@@ -49,7 +49,7 @@ export const TermsOfService = ({ onNavigate }: any) => {
 
          <div className="mt-20 pt-10 border-t border-slate-800 text-center text-slate-500 text-xs font-bold uppercase tracking-widest">
             Last Updated: January 2026 • San Francisco, CA • MEHRI Legal Division<br/>
-            Inquiries: <a href="mailto:jajdn777@gmail.com" className="text-emerald-500 hover:text-emerald-400 transition-colors">jajdn777@gmail.com</a>
+            Inquiries: <a href="mailto:shamsullah.mehri@gmail.com" className="text-emerald-500 hover:text-emerald-400 transition-colors">shamsullah.mehri@gmail.com</a>
          </div>
       </div>
     </div>

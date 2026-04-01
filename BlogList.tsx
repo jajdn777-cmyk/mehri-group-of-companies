@@ -4,7 +4,7 @@ import { supabase } from './supabaseClient';
 import { createPortal } from 'react-dom';
 import DOMPurify from 'dompurify';
 
-const ADMIN_EMAIL = 'jajdn777@gmail.com';
+const ADMIN_EMAIL = 'shamsullah.mehri@gmail.com';
 
 const BlogReaderModal = ({ post, onClose }: { post: any, onClose: () => void }) => {
   const sanitizedContent = useMemo(() => DOMPurify.sanitize(post.content || ""), [post.content]);

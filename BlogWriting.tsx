@@ -266,7 +266,7 @@ export const BlogWriting = ({ onClose, userName, userProfile }: any) => {
     
     setIsPublishing(true);
     const content = editorRef.current.innerHTML;
-    const author_name = 'Mehri Group';
+    const author_name = 'Shamsullah Mehri';
 
     try {
         const { error } = await supabase.from('blogs').insert([{
