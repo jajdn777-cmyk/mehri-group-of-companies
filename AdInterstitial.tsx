@@ -130,7 +130,7 @@ export const AdInterstitial = ({ isOpen, onClose }: AdInterstitialProps) => {
                    transition={{ delay: 0.9 }}
                    className="text-slate-400 font-medium text-sm md:text-lg leading-relaxed max-w-md mx-auto"
                 >
-                  Master your health with the precision Mehri fitness tracker. Now syncing with Alma 3.0.
+                  Master your health with the precision Mehri fitness tracker. Now syncing with Calorie AI 3.0.
                 </motion.p>
               </div>
 

@@ -34,7 +34,7 @@ interface SEOProps {
  */
 export const SEO: React.FC<SEOProps> = ({ 
   title, 
-  description = "Elite performance tracking and biometric architecture. Mehri Group delivers executive fitness via Mehri fitness tracker hardware and Alma AI coaching.",
+  description = "Elite performance tracking and biometric architecture. Mehri Group delivers executive fitness via Mehri fitness tracker hardware and Calorie AI AI coaching.",
   view,
   article,
   product,

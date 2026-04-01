@@ -164,7 +164,7 @@ const CountUpStat = ({ end, suffix = "", duration = 2 }: { end: number, suffix?:
   return <span ref={ref}>0{suffix}</span>;
 };
 
-// --- ALMA LIVE DEMO COMPONENTS ---
+// --- CALORIE AI LIVE DEMO COMPONENTS ---
 
 const TypingIndicator = () => (
   <div className="flex gap-1 px-2 py-1 items-center h-5">
@@ -199,7 +199,7 @@ const TypewriterText = ({ text, onComplete }: { text: string, onComplete?: () =>
   return <span>{display}</span>;
 };
 
-const AlmaLiveDemo = () => {
+const MealAIDemo = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-20% 0px -20% 0px" });
   const [step, setStep] = useState(0); 
@@ -230,7 +230,7 @@ const AlmaLiveDemo = () => {
              <div className="absolute inset-0 bg-emerald-500/10 animate-pulse" />
           </div>
           <div>
-             <p className="text-white font-bold">Alma</p>
+             <p className="text-white font-bold">Calorie AI</p>
              <p className="text-emerald-400 text-xs uppercase font-black tracking-widest flex items-center gap-2">
                <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse shadow-[0_0_8px_#34D399]"/> Online
              </p>
@@ -256,7 +256,7 @@ const AlmaLiveDemo = () => {
                  className="bg-slate-700/50 rounded-2xl rounded-tl-sm p-4 text-sm text-slate-300 self-start"
                >
                  <TypewriterText 
-                    text="Hey there. I noticed your HRV dropped 12% after yesterday's 10k run." 
+                    text="I analyzed that grilled salmon. It's high in protein (32g) and perfect for your recovery."
                     onComplete={() => step === 2 && setTimeout(() => setStep(3), 800)}
                  />
                </motion.div>
@@ -281,7 +281,7 @@ const AlmaLiveDemo = () => {
                  className="bg-emerald-500/10 border border-emerald-500/20 rounded-2xl rounded-tl-sm p-4 text-sm text-emerald-100 self-start mt-2 shadow-[0_0_30px_-5px_rgba(16,185,129,0.1)]"
                >
                  <TypewriterText 
-                    text="Recommendation: Focus on zone 2 recovery today. Want me to schedule a light 20min yoga session?" 
+                    text="Insight: You are 400kcal under your target for today. Consider a light snack before your next session."
                     onComplete={() => setStep(5)}
                  />
                </motion.div>
@@ -373,7 +373,7 @@ const ServicesSection = () => (
      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {[
            { icon: Activity, title: "Biometric Architecture", desc: "Advanced physiological tracking and analysis of your core vitals like HRV, SpO2, and resting heart rate." },
-           { icon: Brain, title: "Alma AI Coaching", desc: "Real-time, context-aware health and performance optimization through our proprietary neural engine." },
+           { icon: Brain, title: "Calorie AI Nutrition", desc: "Real-time, context-aware health and performance optimization through our proprietary neural engine." },
            { icon: Target, title: "Precision Training", desc: "Custom-built workout protocols that adapt dynamically to your daily readiness and recovery scores." },
            { icon: Trophy, title: "Global Challenges", desc: "Compete in community challenges to push your boundaries and stay motivated with like-minded achievers." }
         ].map((service, i) => (
@@ -763,7 +763,7 @@ export const LandingSection = ({ onStart, onNavigate, onShop }: { onStart: () =>
       {/* 5. OUR SERVICES */}
       <ServicesSection />
 
-      {/* 6. ALMA AI SECTION */}
+      {/* 6. CALORIE AI AI SECTION */}
       <ScrollReveal className="max-w-7xl mx-auto px-6 md:px-8 py-20">
         <div className="bg-slate-900 rounded-[40px] md:rounded-[80px] p-8 md:p-24 flex flex-col-reverse lg:flex-row items-center gap-12 md:gap-20 relative overflow-hidden shadow-2xl">
            <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-slate-800 via-slate-900 to-slate-900 pointer-events-none" />
@@ -777,12 +777,12 @@ export const LandingSection = ({ onStart, onNavigate, onShop }: { onStart: () =>
               </div>
               
               <h2 className="text-4xl md:text-6xl font-black text-white uppercase tracking-tighter leading-none">
-                 COMMAND YOUR DATA <br/>
-                 <span className="text-emerald-400">WITH ALMA</span>
+                 MASTER YOUR NUTRITION <br/>
+                 <span className="text-emerald-400">WITH CALORIE AI</span>
               </h2>
               
               <p className="text-slate-400 text-base md:text-xl font-medium leading-relaxed max-w-xl mx-auto lg:mx-0">
-                 Your personal AI coach that does the work for you. Command Alma to log new sessions, analyze trends, or optimize your recovery through a simple conversational interface.
+                 Precision calorie counting and nutrition analysis. Scan your meals and get instant macro breakdowns to reach your fitness goals faster.
               </p>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 md:gap-8 pt-4">
@@ -810,13 +810,13 @@ export const LandingSection = ({ onStart, onNavigate, onShop }: { onStart: () =>
                   whileTap={{ scale: 0.95 }}
                   className="px-12 py-6 bg-emerald-400 text-slate-900 rounded-full font-black uppercase text-xs tracking-[0.4em] hover:bg-white transition-colors shadow-lg relative overflow-hidden flex items-center gap-3 group"
                 >
-                   Talk to Alma <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
+                   Track with Calorie AI <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
                 </motion.button>
               </div>
            </div>
 
            <div className="flex-1 w-full relative z-10 flex justify-center mt-8 lg:mt-0">
-              <AlmaLiveDemo />
+              <MealAIDemo />
            </div>
         </div>
       </ScrollReveal>

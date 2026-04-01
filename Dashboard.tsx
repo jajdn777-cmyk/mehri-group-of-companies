@@ -331,7 +331,7 @@ export const LogModal = ({ date, routes, userSpecs, userProfile, userPreferences
   );
 };
 
-export const DashboardView = ({ workouts, setWorkouts, userGoals, setUserGoals, routes, userSpecs, userProfile, userPreferences, userHandle, onForceSync, userMeals = [], almaChats = [], setAlmaChats, setAlmaNotification, onNavigate }: any) => {
+export const DashboardView = ({ workouts, setWorkouts, userGoals, setUserGoals, routes, userSpecs, userProfile, userPreferences, userHandle, onForceSync, userMeals = [], calorieAIChats = [], setCalorieAIChats, setCalorieAINotification, onNavigate }: any) => {
   // --- RESILIENCE CHECK ---
   // If we don't have a user profile yet, we are likely in a hydration/auth transition.
   // Show a "Warm up" state instead of crashing or showing default empty data.
@@ -359,13 +359,13 @@ export const DashboardView = ({ workouts, setWorkouts, userGoals, setUserGoals, 
   const [showStreakCelebration, setShowStreakCelebration] = useState(false);
   const [celebratingGoal, setCelebratingGoal] = useState<any>(null);
   const [isSyncing, setIsSyncing] = useState(false);
-  const [almaMessage, setAlmaMessage] = useState<any>(null);
+  const [calorieAIMessage, setCalorieAIMessage] = useState<any>(null);
   const [progress, setProgress] = useState(100);
 
   useEffect(() => {
     // 1. Morning Brief Logic
     const today = getLocalTodayStr();
-    const lastBrief = localStorage.getItem('lastAlmaBrief');
+    const lastBrief = localStorage.getItem('lastCalorieAIBrief');
 
     if (lastBrief !== today) {
         const yesterday = new Date();
@@ -396,9 +396,9 @@ export const DashboardView = ({ workouts, setWorkouts, userGoals, setUserGoals, 
 
         message += `I recommend ${yesterdayCalories > 500 ? 'a recovery session' : 'pushing your limits'} today.`;
 
-        setAlmaMessage({ type: 'morning', text: message });
-        if (setAlmaNotification) setAlmaNotification(true);
-        localStorage.setItem('lastAlmaBrief', today);
+        setCalorieAIMessage({ type: 'morning', text: message });
+        if (setCalorieAINotification) setCalorieAINotification(true);
+        localStorage.setItem('lastCalorieAIBrief', today);
     }
   }, []);
 
@@ -407,14 +407,14 @@ export const DashboardView = ({ workouts, setWorkouts, userGoals, setUserGoals, 
     if (workouts.length > prevWorkoutCount.current) {
         const lastWorkout = workouts[0];
         const message = `Post-Workout Insight: Great ${lastWorkout.type} session! You burned ${lastWorkout.calories}kcal. That effort is moving you closer to your goals!`;
-        setAlmaMessage({ type: 'workout', text: message });
-        if (setAlmaNotification) setAlmaNotification(true);
+        setCalorieAIMessage({ type: 'workout', text: message });
+        if (setCalorieAINotification) setCalorieAINotification(true);
     }
     prevWorkoutCount.current = workouts.length;
   }, [workouts]);
 
   useEffect(() => {
-    if (almaMessage) {
+    if (calorieAIMessage) {
         setProgress(100);
         const duration = 10000;
         const interval = 100;
@@ -424,7 +424,7 @@ export const DashboardView = ({ workouts, setWorkouts, userGoals, setUserGoals, 
             setProgress(prev => {
                 if (prev <= 0) {
                     clearInterval(timer);
-                    setAlmaMessage(null);
+                    setCalorieAIMessage(null);
                     return 0;
                 }
                 return prev - step;
@@ -433,24 +433,24 @@ export const DashboardView = ({ workouts, setWorkouts, userGoals, setUserGoals, 
 
         return () => clearInterval(timer);
     }
-  }, [almaMessage]);
+  }, [calorieAIMessage]);
 
   const handleMessageClick = () => {
-    if (!almaMessage) return;
-    const newMessage = { role: 'model', text: almaMessage.text, timestamp: new Date().toISOString() };
+    if (!calorieAIMessage) return;
+    const newMessage = { role: 'model', text: calorieAIMessage.text, timestamp: new Date().toISOString() };
 
-    let activeChat = almaChats[0];
+    let activeChat = calorieAIChats[0];
     if (!activeChat) {
-        activeChat = { id: Date.now(), title: 'Alma Coach', messages: [newMessage] };
-        if (setAlmaChats) setAlmaChats([activeChat, ...almaChats]);
+        activeChat = { id: Date.now(), title: 'Calorie AI Coach', messages: [newMessage] };
+        if (setCalorieAIChats) setCalorieAIChats([activeChat, ...calorieAIChats]);
     } else {
         const updatedChat = { ...activeChat, messages: [...activeChat.messages, newMessage] };
-        if (setAlmaChats) setAlmaChats([updatedChat, ...almaChats.filter((c: any) => c.id !== activeChat.id)]);
+        if (setCalorieAIChats) setCalorieAIChats([updatedChat, ...calorieAIChats.filter((c: any) => c.id !== activeChat.id)]);
     }
 
-    if (onNavigate) onNavigate('alma');
-    setAlmaMessage(null);
-    if (setAlmaNotification) setAlmaNotification(false);
+    if (onNavigate) onNavigate('calorie-ai');
+    setCalorieAIMessage(null);
+    if (setCalorieAINotification) setCalorieAINotification(false);
   };
 
   
@@ -704,7 +704,7 @@ export const DashboardView = ({ workouts, setWorkouts, userGoals, setUserGoals, 
 
   return (
     <div className="space-y-6 md:space-y-12 animate-fade-in pb-32 max-w-7xl mx-auto font-sans">
-      {almaMessage && (
+      {calorieAIMessage && (
         <div
           onClick={handleMessageClick}
           className="fixed top-32 left-1/2 -translate-x-1/2 z-[6000] w-[90%] max-w-xl bg-slate-900 text-white p-6 rounded-[30px] shadow-2xl cursor-pointer hover:scale-[1.02] transition-all group overflow-hidden border border-white/10"
@@ -714,8 +714,8 @@ export const DashboardView = ({ workouts, setWorkouts, userGoals, setUserGoals, 
                     <Brain size={20} />
                 </div>
                 <div className="flex-1 space-y-1">
-                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#A7F3D0]">Alma Intelligence</p>
-                    <p className="text-sm font-bold leading-relaxed">{almaMessage.text}</p>
+                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#A7F3D0]">Calorie AI Intelligence</p>
+                    <p className="text-sm font-bold leading-relaxed">{calorieAIMessage.text}</p>
                 </div>
                 <div className="text-white/20 group-hover:text-white transition-colors">
                     <ArrowRight size={20} />
