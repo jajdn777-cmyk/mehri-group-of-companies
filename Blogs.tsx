@@ -4,7 +4,7 @@ import { createPortal } from 'react-dom';
 import { ArrowLeft, X, Plus, Search } from 'lucide-react';
 import { api } from './utils.ts';
 
-const ADMIN_EMAIL = 'jajdn777@gmail.com';
+const ADMIN_EMAIL = 'shamsullah.mehri@gmail.com';
 const UNSPLASH_ACCESS_KEY = '1d9v_ms8MN4-yNNluvqVEu-xB679PBMYlkhPkv-6koU';
 
 interface BlogPost {

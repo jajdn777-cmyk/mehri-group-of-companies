@@ -34,13 +34,13 @@ interface SEOProps {
  */
 export const SEO: React.FC<SEOProps> = ({ 
   title, 
-  description = "Elite performance tracking and biometric architecture. Mehri Group delivers executive fitness via Mehri fitness tracker hardware and Alma AI coaching.",
+  description = "Elite performance tracking and biometric architecture. Shamsullah Mehri delivers executive fitness via Mehri fitness tracker hardware and Alma AI coaching.",
   view,
   article,
   product,
   faq
 }) => {
-  const brandName = "Mehri Group of Companies";
+  const brandName = "Shamsullah Mehri";
   const defaultTitle = `${brandName} | Executive Wellness & AI Fitness`;
   const finalTitle = title ? `${title} | ${brandName}` : defaultTitle;
 
@@ -81,12 +81,12 @@ export const SEO: React.FC<SEOProps> = ({
         {
           "@type": "Organization",
           "@id": "https://mehrigroupofcompanies.com/#organization",
-          "name": "Mehri Group of Companies",
+          "name": "Shamsullah Mehri",
           "url": "https://mehrigroupofcompanies.com/",
           "logo": "https://i.ibb.co.com/xqxm5rCT/logo-mehri-no-bg.png",
           "contactPoint": {
             "@type": "ContactPoint",
-            "email": "jajdn777@gmail.com",
+            "email": "shamsullah.mehri@gmail.com",
             "contactType": "customer service"
           }
         },
@@ -94,7 +94,7 @@ export const SEO: React.FC<SEOProps> = ({
           "@type": "WebSite",
           "@id": "https://mehrigroupofcompanies.com/#website",
           "url": "https://mehrigroupofcompanies.com/",
-          "name": "Mehri Group",
+          "name": "Shamsullah Mehri",
           "publisher": { "@id": "https://mehrigroupofcompanies.com/#organization" }
         }
       ]
@@ -110,7 +110,7 @@ export const SEO: React.FC<SEOProps> = ({
         "author": {
           "@type": "Person",
           "name": article.author,
-          "email": "jajdn777@gmail.com"
+          "email": "shamsullah.mehri@gmail.com"
         },
         "publisher": { "@id": "https://mehrigroupofcompanies.com/#organization" },
         "datePublished": article.datePublished,

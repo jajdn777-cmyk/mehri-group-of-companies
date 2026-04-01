@@ -134,11 +134,11 @@ export const Footer = ({ onNavigate }: any) => {
                    <MehriLogo size="lg" className="brightness-0 invert" />
                 </div>
                 <p className="text-slate-500 text-sm leading-relaxed max-w-xs">
-                   Mehri Group of Companies is the premier ecosystem for elite performance tracking. Powered by the Mehri fitness tracker hardware kernel.
+                   Shamsullah Mehri is the premier ecosystem for elite performance tracking. Powered by the Mehri fitness tracker hardware kernel.
                 </p>
                 <div className="space-y-4 pt-2">
                    <a 
-                      href="https://medium.com/@jajdn777/beyond-the-step-counter-the-new-rules-of-personal-health-monitoring-ee7f3d27d5a9" 
+                      href="https://medium.com/@shamsullah.mehri/beyond-the-step-counter-the-new-rules-of-personal-health-monitoring-ee7f3d27d5a9"
                       target="_blank" 
                       rel="noopener noreferrer" 
                       className="flex items-center gap-3 text-slate-400 hover:text-white transition-colors group"
@@ -176,11 +176,13 @@ export const Footer = ({ onNavigate }: any) => {
                 <h4 className="text-sm font-black uppercase tracking-widest text-slate-600">Product</h4>
                 <ul className="space-y-4">
                    <li><a href="https://www.amazon.com/dp/B0FH4YTQ78?ref=cm_sw_r_cso_wa_apin_dp_9WM50155ESTE8FG1JDZG&ref_=cm_sw_r_cso_wa_apin_dp_9WM50155ESTE8FG1JDZG&social_share=cm_sw_r_cso_wa_apin_dp_9WM50155ESTE8FG1JDZG&titleSource=true&th=1" target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-emerald-400 text-sm font-medium transition-colors">Mehri fitness tracker</a></li>
+                   <li><a href="https://apps.apple.com/us/app/runmefit/id1541334057" target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-emerald-400 text-sm font-medium transition-colors">App Store (iOS)</a></li>
+                   <li><a href="https://play.google.com/store/apps/details?id=com.runmefit.wear" target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-emerald-400 text-sm font-medium transition-colors">Google Play (Android)</a></li>
                 </ul>
                 <h4 className="text-sm font-black uppercase tracking-widest text-slate-600 pt-4">Support</h4>
                 <ul className="space-y-4">
                    <li><button onClick={() => setActiveModal('about')} className="text-slate-400 hover:text-emerald-400 text-sm font-medium transition-colors">About Us</button></li>
-                   <li><a href="mailto:jajdn777@gmail.com" className="text-slate-400 hover:text-emerald-400 text-sm font-medium transition-colors">Contact Support</a></li>
+                   <li><a href="mailto:shamsullah.mehri@gmail.com" className="text-slate-400 hover:text-emerald-400 text-sm font-medium transition-colors">Contact Support</a></li>
                 </ul>
              </div>
              <div className="lg:col-span-5 bg-slate-900/30 p-8 rounded-[30px] border border-slate-900/50 backdrop-blur-md">

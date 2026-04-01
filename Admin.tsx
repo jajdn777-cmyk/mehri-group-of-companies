@@ -160,7 +160,7 @@ export const AdminView = ({ onClose, adminEmail, currentBlogs = [], currentWorko
           </div>
           <div>
             <h2 className="text-xl font-black uppercase tracking-tighter text-white leading-none">Command Center</h2>
-            <p className="text-[10px] font-bold text-[#A7F3D0] uppercase tracking-[0.3em]">Administrator: jajdn777</p>
+            <p className="text-[10px] font-bold text-[#A7F3D0] uppercase tracking-[0.3em]">Administrator: shamsullah.mehri</p>
           </div>
         </div>
         <div className="flex gap-4">
