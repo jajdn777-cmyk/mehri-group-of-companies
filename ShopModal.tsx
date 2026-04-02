@@ -51,12 +51,12 @@ export const ShopModal = ({ onClose, onBuy }: any) => {
     <div className="fixed inset-0 z-[6000] flex items-end md:items-center justify-center bg-slate-900/95 backdrop-blur-xl animate-fade-in overflow-hidden">
        <SEO
          title="Shop Mehri Fitness Tracker"
-         description="Get the Mehri Fitness Tracker for only $34.99. 24/7 Heart Rate, SpO2, and Sleep tracking. Lightweight and high-performance."
+         description="Get the Mehri Fitness Tracker for a special price. 24/7 Heart Rate, SpO2, and Sleep tracking. Lightweight and high-performance."
          product={{
            name: "Mehri Fitness Tracker",
            description: "Elite performance tracking with 24/7 biometric monitoring.",
            image: PRODUCT_IMAGES[1],
-           price: "34.99",
+           price: "Special Offer",
            currency: "USD",
            availability: "InStock",
            url: AMAZON_URL
@@ -84,7 +84,7 @@ export const ShopModal = ({ onClose, onBuy }: any) => {
           </button>
 
           {/* LEFT: VISUALS */}
-          <div className="w-full lg:w-1/2 bg-slate-50 relative group h-[45vh] lg:h-full shrink-0 overflow-hidden border-r border-slate-100">
+          <div className="w-full lg:w-1/2 bg-slate-50 relative flex flex-col group h-auto lg:h-full shrink-0 overflow-hidden border-r border-slate-100">
              {/* Background Video for Premium Feel */}
              <div className="absolute inset-0 z-0">
                 <video
@@ -115,7 +115,7 @@ export const ShopModal = ({ onClose, onBuy }: any) => {
                 </motion.span>
              </div>
 
-             <div className="h-full w-full relative z-10 flex items-center justify-center p-8 lg:p-12">
+             <div className="h-[45vh] lg:h-full w-full relative z-10 flex items-center justify-center p-8 lg:p-12">
                 <AnimatePresence mode="wait">
                    <motion.img
                       key={currentImgIndex}
@@ -141,7 +141,7 @@ export const ShopModal = ({ onClose, onBuy }: any) => {
              </div>
 
              {/* Gallery Scroller */}
-             <div className="absolute bottom-8 left-8 right-8 z-20 bg-white/60 backdrop-blur-2xl p-4 rounded-[30px] border border-white/40 shadow-2xl overflow-hidden">
+             <div className="relative lg:absolute lg:bottom-8 lg:left-8 lg:right-8 mx-6 mb-8 lg:mx-0 lg:mb-0 z-20 bg-white/60 backdrop-blur-2xl p-4 rounded-[30px] border border-white/40 shadow-2xl overflow-hidden">
                 <div className="flex justify-between items-center mb-3 px-2">
                    <span className="text-[10px] font-black uppercase text-slate-900 tracking-widest">Product Showcase</span>
                    <p className="text-[10px] font-bold text-slate-500 tracking-widest">{currentImgIndex + 1} / {PRODUCT_IMAGES.length}</p>
@@ -172,7 +172,7 @@ export const ShopModal = ({ onClose, onBuy }: any) => {
                    </div>
                    <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">4.8 Average • 450+ Verified Sales</span>
                 </div>
-                <h2 className="text-5xl lg:text-7xl font-black uppercase text-slate-900 tracking-tighter leading-[0.85] mb-6">
+                <h2 className="text-3xl lg:text-5xl lg:text-7xl font-black uppercase text-slate-900 tracking-tighter leading-[0.85] mb-6">
                    MEHRI <br/>
                    <span className="text-emerald-500 italic">TRACKER</span>
                 </h2>
@@ -258,10 +258,10 @@ export const ShopModal = ({ onClose, onBuy }: any) => {
                 <div className="flex justify-between items-center">
                    <div className="space-y-1">
                       <div className="flex items-center gap-3">
-                         <p className="text-5xl font-black text-slate-900 tracking-tighter">$34.99</p>
+                         <p className="text-3xl lg:text-5xl font-black text-slate-900 tracking-tighter">Special Offer</p>
                          <span className="bg-emerald-100 text-emerald-700 px-3 py-1.5 rounded-xl text-[10px] font-black uppercase shadow-sm">Save 28%</span>
                       </div>
-                      <p className="text-sm font-bold text-slate-300 line-through tracking-wide pl-1">List Price: $48.48</p>
+                      <p className="text-sm font-bold text-slate-300 line-through tracking-wide pl-1">Massive Savings</p>
                    </div>
                    <div className="flex flex-col items-end gap-1">
                       <div className="flex items-center gap-2 text-emerald-600 font-black uppercase text-[10px] tracking-widest">
