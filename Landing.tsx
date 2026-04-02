@@ -628,7 +628,7 @@ export const LandingSection = ({ onStart, onNavigate, onShop }: { onStart: () =>
                 <div className="space-y-6">
                   <div className="flex flex-col md:flex-row items-center gap-4 justify-center lg:justify-start">
                      <span className="bg-emerald-400 text-slate-900 px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-[0.3em] shadow-[0_0_20px_rgba(52,211,153,0.4)]">Mehri Tracker</span>
-                     <span className="text-emerald-400 text-[10px] font-bold uppercase tracking-widest flex items-center gap-2">Special Offer: $34.99</span>
+                     <span className="text-emerald-400 text-[10px] font-bold uppercase tracking-widest flex items-center gap-2">Limited Time Special Offer</span>
                   </div>
                   <h2 className="text-4xl md:text-7xl font-black text-white uppercase tracking-tighter leading-[0.9]">
                     Meet the <br/> <span className="text-emerald-400 drop-shadow-[0_0_15px_rgba(52,211,153,0.3)]">Mehri Fitness Tracker</span>
@@ -689,7 +689,7 @@ export const LandingSection = ({ onStart, onNavigate, onShop }: { onStart: () =>
                     whileTap={{ scale: 0.95 }}
                     className="px-12 py-6 bg-emerald-400 text-slate-900 rounded-full font-black uppercase text-xs tracking-[0.3em] shadow-[0_10px_30px_-10px_rgba(52,211,153,0.5)] text-center flex items-center justify-center gap-3 group/btn"
                   >
-                    Buy Now - $34.99 <ArrowRight size={16} className="transition-transform group-hover/btn:translate-x-1"/>
+                    Get The Best Deal <ArrowRight size={16} className="transition-transform group-hover/btn:translate-x-1"/>
                   </motion.button>
                 </div>
               </div>
