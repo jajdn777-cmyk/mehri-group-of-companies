@@ -183,28 +183,28 @@ export const LogModal = ({ date, routes, userSpecs, userProfile, userPreferences
               <h3 className="text-2xl md:text-3xl font-black uppercase text-slate-900 tracking-tighter">Add Workout</h3>
               <p className="text-xs md:text-[10px] font-black uppercase text-slate-400 tracking-[0.2em] mt-1">Target Date: {date}</p>
            </div>
-           <button onClick={onClose} className="p-2 -mr-2 text-slate-300 hover:text-red-500 transition-colors"><X size={28}/></button>
+           <button onClick={onClose} className="p-2 -mr-2 text-slate-300 hover:text-red-500 transition-colors" aria-label="Close modal"><X size={28}/></button>
         </div>
 
         <div className="p-6 md:p-10 pb-10 grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-10">
           <div className="space-y-6">
             <div className="space-y-2">
-              <label className="text-xs md:text-[10px] font-black uppercase text-slate-400 ml-4">Activity Name</label>
-              <input className="w-full bg-slate-50 p-5 rounded-[25px] font-bold border-none text-base focus:ring-2 ring-emerald-500/20" placeholder={isStrength ? "e.g. Chest Day" : "e.g. Morning Run"} value={form.name} onChange={e=>setForm({...form, name: e.target.value})} autoFocus />
+              <label htmlFor="activity-name" className="text-xs md:text-[10px] font-black uppercase text-slate-400 ml-4">Activity Name</label>
+              <input id="activity-name" className="w-full bg-slate-50 p-5 rounded-[25px] font-bold border-none text-base focus:ring-2 ring-emerald-500/20" placeholder={isStrength ? "e.g. Chest Day" : "e.g. Morning Run"} value={form.name} onChange={e=>setForm({...form, name: e.target.value})} autoFocus />
             </div>
 
             <div className="space-y-2 relative z-[60]">
-              <label className="text-xs md:text-[10px] font-black uppercase text-slate-400 ml-4">Activity Type</label>
+              <label htmlFor="activity-type-trigger" className="text-xs md:text-[10px] font-black uppercase text-slate-400 ml-4">Activity Type</label>
               <div className="relative">
-                <div className="w-full bg-slate-50 p-5 rounded-[25px] font-bold text-base flex items-center justify-between cursor-pointer hover:bg-slate-100 transition-colors active:scale-[0.98]" onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
+                <button type="button" id="activity-type-trigger" className="w-full bg-slate-50 p-5 rounded-[25px] font-bold text-base flex items-center justify-between cursor-pointer hover:bg-slate-100 transition-colors active:scale-[0.98]" onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
                   <span className="text-slate-900">{form.type || "Select Category..."}</span>
                   <ChevronDown size={20} className="text-slate-400" />
-                </div>
+                </button>
                 {isDropdownOpen && (
                   <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-slate-100 rounded-[25px] shadow-2xl z-[100] overflow-hidden h-64 flex flex-col">
                     <div className="p-3 border-b border-slate-50 bg-white">
                       <div className="flex items-center bg-slate-50 rounded-xl px-3 py-2">
-                        <Search size={14} className="text-slate-400 mr-2"/><input className="bg-transparent w-full font-bold text-base md:text-xs outline-none" placeholder="Search..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} onClick={(e) => e.stopPropagation()}/>
+                        <Search size={14} className="text-slate-400 mr-2"/><input id="activity-type-search" className="bg-transparent w-full font-bold text-base md:text-xs outline-none" placeholder="Search..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} onClick={(e) => e.stopPropagation()} aria-label="Search activities"/>
                       </div>
                     </div>
                     <div className="overflow-y-auto custom-scrollbar p-2 flex-1 bg-white">
@@ -226,12 +226,12 @@ export const LogModal = ({ date, routes, userSpecs, userProfile, userPreferences
 
             {isRouteApplicable && (
               <div className="space-y-2 animate-fade-in relative z-[50]">
-                <label className="text-xs md:text-[10px] font-black uppercase text-slate-400 ml-4">Load Route</label>
+                <label htmlFor="route-selector-trigger" className="text-xs md:text-[10px] font-black uppercase text-slate-400 ml-4">Load Route</label>
                 <div className="relative">
-                  <div className={`w-full p-5 rounded-[25px] font-bold text-base flex items-center justify-between cursor-pointer border-2 transition-all ${routes.length > 0 ? 'bg-emerald-50 border-emerald-100 hover:border-emerald-200' : 'bg-slate-50 border-transparent opacity-50 cursor-not-allowed'}`} onClick={() => routes.length > 0 && setIsRouteDropdownOpen(!isRouteDropdownOpen)}>
+                  <button type="button" id="route-selector-trigger" disabled={routes.length === 0} className={`w-full p-5 rounded-[25px] font-bold text-base flex items-center justify-between cursor-pointer border-2 transition-all ${routes.length > 0 ? 'bg-emerald-50 border-emerald-100 hover:border-emerald-200' : 'bg-slate-50 border-transparent opacity-50 cursor-not-allowed'}`} onClick={() => routes.length > 0 && setIsRouteDropdownOpen(!isRouteDropdownOpen)}>
                     <span className="text-slate-900 flex items-center gap-2 truncate"><MapPin size={16}/> {routes.find((r:any) => getDistVal(r.distance, units, 2) === form.distance)?.name || (routes.length > 0 ? "Pick a Saved Route" : "No Saved Routes")}</span>
                     <ChevronDown size={20} className="text-slate-400" />
-                  </div>
+                  </button>
                   {isRouteDropdownOpen && routes.length > 0 && (
                     <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-slate-100 rounded-[25px] shadow-2xl z-[100] overflow-hidden p-2">
                       {routes.map((route: any) => (
@@ -252,49 +252,50 @@ export const LogModal = ({ date, routes, userSpecs, userProfile, userPreferences
               {isStrength ? (
                 <div className="grid grid-cols-3 gap-4 animate-fade-in">
                     <div className="space-y-2">
-                      <label className="text-xs md:text-[10px] font-black uppercase text-slate-400 ml-3">Sets</label>
-                      <input type="number" className="w-full bg-slate-50 p-5 rounded-[25px] font-bold text-base text-center" placeholder="0" value={form.sets} onChange={e=>setForm({...form, sets: e.target.value})} />
+                      <label htmlFor="workout-sets" className="text-xs md:text-[10px] font-black uppercase text-slate-400 ml-3">Sets</label>
+                      <input id="workout-sets" type="number" className="w-full bg-slate-50 p-5 rounded-[25px] font-bold text-base text-center" placeholder="0" value={form.sets} onChange={e=>setForm({...form, sets: e.target.value})} />
                     </div>
                     <div className="space-y-2">
-                      <label className="text-xs md:text-[10px] font-black uppercase text-slate-400 ml-3">Reps</label>
-                      <input type="number" className="w-full bg-slate-50 p-5 rounded-[25px] font-bold text-base text-center" placeholder="0" value={form.reps} onChange={e=>setForm({...form, reps: e.target.value})} />
+                      <label htmlFor="workout-reps" className="text-xs md:text-[10px] font-black uppercase text-slate-400 ml-3">Reps</label>
+                      <input id="workout-reps" type="number" className="w-full bg-slate-50 p-5 rounded-[25px] font-bold text-base text-center" placeholder="0" value={form.reps} onChange={e=>setForm({...form, reps: e.target.value})} />
                     </div>
                     <div className="space-y-2">
-                      <label className="text-xs md:text-[10px] font-black uppercase text-slate-400 ml-3">{weightUnit}</label>
-                      <input type="number" className="w-full bg-slate-50 p-5 rounded-[25px] font-bold text-base text-center" placeholder="0" value={form.weightLifted} onChange={e=>setForm({...form, weightLifted: e.target.value})} />
+                      <label htmlFor="workout-weight" className="text-xs md:text-[10px] font-black uppercase text-slate-400 ml-3">{weightUnit}</label>
+                      <input id="workout-weight" type="number" className="w-full bg-slate-50 p-5 rounded-[25px] font-bold text-base text-center" placeholder="0" value={form.weightLifted} onChange={e=>setForm({...form, weightLifted: e.target.value})} />
                     </div>
                 </div>
               ) : (
                 <div className="space-y-2 animate-fade-in">
-                   <label className="text-xs md:text-[10px] font-black uppercase text-slate-400 ml-4">Distance ({distUnit})</label>
-                   <input type="number" step="0.01" className="w-full bg-slate-50 p-5 rounded-[25px] font-bold text-base" placeholder="0.00" value={form.distance} onChange={e=>setForm({...form, distance: e.target.value})} />
+                   <label htmlFor="workout-distance" className="text-xs md:text-[10px] font-black uppercase text-slate-400 ml-4">Distance ({distUnit})</label>
+                   <input id="workout-distance" type="number" step="0.01" className="w-full bg-slate-50 p-5 rounded-[25px] font-bold text-base" placeholder="0.00" value={form.distance} onChange={e=>setForm({...form, distance: e.target.value})} />
                 </div>
               )}
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                   <label className="text-xs md:text-[10px] font-black uppercase text-slate-400 ml-4">Duration</label>
-                   <input className="w-full bg-slate-50 p-5 rounded-[25px] font-bold text-base" placeholder="HH:MM:SS" value={form.duration} onChange={e=>setForm({...form, duration: e.target.value})} />
+                   <label htmlFor="workout-duration" className="text-xs md:text-[10px] font-black uppercase text-slate-400 ml-4">Duration</label>
+                   <input id="workout-duration" className="w-full bg-slate-50 p-5 rounded-[25px] font-bold text-base" placeholder="HH:MM:SS" value={form.duration} onChange={e=>setForm({...form, duration: e.target.value})} />
                 </div>
                 <div className="space-y-2 relative">
-                  <label className="text-xs md:text-[10px] font-black uppercase text-slate-400 ml-4">Calories</label>
+                  <label htmlFor="workout-calories" className="text-xs md:text-[10px] font-black uppercase text-slate-400 ml-4">Calories</label>
                   <div className="relative flex gap-2">
-                    <input type="number" className="w-full bg-slate-50 p-5 rounded-[25px] font-bold text-base" placeholder="0" value={form.calories} onChange={e=>setForm({...form, calories: e.target.value})} />
-                    <button onClick={calculateBurn} className="bg-slate-900 text-white px-4 rounded-[20px] hover:bg-emerald-500 transition-colors flex items-center justify-center shrink-0" title="Auto-Calculate"><CalcIcon size={18}/></button>
+                    <input id="workout-calories" type="number" className="w-full bg-slate-50 p-5 rounded-[25px] font-bold text-base" placeholder="0" value={form.calories} onChange={e=>setForm({...form, calories: e.target.value})} />
+                    <button onClick={calculateBurn} className="bg-slate-900 text-white px-4 rounded-[20px] hover:bg-emerald-500 transition-colors flex items-center justify-center shrink-0" title="Auto-Calculate" aria-label="Calculate estimated calories"><CalcIcon size={18}/></button>
                   </div>
                 </div>
               </div>
 
               <div className="pt-2">
-                 <button onClick={() => setShowAdvanced(!showAdvanced)} className="text-xs md:text-[10px] font-black uppercase tracking-widest text-emerald-600 hover:text-emerald-500 flex items-center gap-1 mb-3">
+                 <button onClick={() => setShowAdvanced(!showAdvanced)} className="text-xs md:text-[10px] font-black uppercase tracking-widest text-emerald-600 hover:text-emerald-500 flex items-center gap-1 mb-3" aria-label="Toggle precision factors">
                     {showAdvanced ? "Hide Precision Factors" : "Show Precision Factors"} <ChevronDown size={12} className={`transition-transform ${showAdvanced ? 'rotate-180' : ''}`}/>
                  </button>
                  
                  {showAdvanced && (
                     <div className="grid grid-cols-2 gap-4 p-4 bg-slate-50 rounded-3xl border border-slate-100 animate-fade-in">
                        <div className="space-y-1">
-                          <label className="text-[9px] font-black uppercase text-slate-400 ml-2 tracking-widest flex items-center gap-1"><Mountain size={10}/> Surface</label>
+                          <label htmlFor="workout-surface" className="text-[9px] font-black uppercase text-slate-400 ml-2 tracking-widest flex items-center gap-1"><Mountain size={10}/> Surface</label>
                           <select 
+                             id="workout-surface"
                              className="w-full bg-white p-3 rounded-xl font-bold text-xs outline-none text-base md:text-xs"
                              value={form.surface}
                              onChange={e => setForm({...form, surface: e.target.value})}
@@ -307,8 +308,9 @@ export const LogModal = ({ date, routes, userSpecs, userProfile, userPreferences
                           </select>
                        </div>
                        <div className="space-y-1">
-                          <label className="text-[9px] font-black uppercase text-slate-400 ml-2 tracking-widest flex items-center gap-1"><Weight size={10}/> Added Load ({weightUnit})</label>
+                          <label htmlFor="workout-load" className="text-[9px] font-black uppercase text-slate-400 ml-2 tracking-widest flex items-center gap-1"><Weight size={10}/> Added Load ({weightUnit})</label>
                           <input 
+                             id="workout-load"
                              type="number" 
                              className="w-full bg-white p-3 rounded-xl font-bold outline-none text-base md:text-xs"
                              placeholder="Vest/Pack Weight"
