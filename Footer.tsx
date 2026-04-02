@@ -5,10 +5,10 @@ import { ArrowRight, Shield, FileText, X, Lock, Users, BookOpen, Facebook as Fac
 import { MehriLogo } from './Logo.tsx';
 
 const ABOUT_US_CONTENT = `
-ABOUT MEHRI GROUP
+ABOUT SHAMSULLAH MEHRI GROUP
 
-OUR MISSION: ARCHITECTING HUMAN VITALITY
-MEHRI is dedicated to democratizing high-level health data. We believe that elite performance analytics shouldn't be restricted to professional laboratories. By combining precision hardware with AI-driven insights, we empower individuals to move beyond basic tracking and start architecting their own physiology. Our mission is accuracy, accessibility, and absolute privacy.
+SHAMSULLAH MEHRI: ARCHITECTING HUMAN VITALITY
+Shamsullah Mehri is dedicated to democratizing high-level health data. We believe that elite performance analytics shouldn't be restricted to professional laboratories. By combining precision hardware with AI-driven insights, we empower individuals to move beyond basic tracking and start architecting their own physiology. Our mission is accuracy, accessibility, and absolute privacy.
 
 THE MEHRI VISION
 We envision a future where technology doesn't just track you—it understands you. From our Silicon Valley headquarters to our global user base, we are building an ecosystem where every heartbeat, every step, and every night of sleep contributes to a clearer picture of your potential. We are building the operating system for the human body.
@@ -134,7 +134,7 @@ export const Footer = ({ onNavigate }: any) => {
                    <MehriLogo size="lg" className="brightness-0 invert" />
                 </div>
                 <p className="text-slate-500 text-sm leading-relaxed max-w-xs">
-                   Shamsullah Mehri is the premier ecosystem for elite performance tracking. Powered by the Mehri fitness tracker hardware kernel.
+                   Calorie AI is the premier ecosystem for elite performance tracking. Powered by the Mehri fitness tracker hardware kernel.
                 </p>
                 <div className="space-y-4 pt-2">
                    <a 
