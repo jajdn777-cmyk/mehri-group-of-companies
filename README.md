@@ -9,7 +9,7 @@
 ## 🚀 Main Features
 
 - **Activity Tracking:** A simple calendar to see your workouts and how many days in a row you have been active.
-- **Calorie AI AI Coach:** An AI that gives you a morning update, looks at your workouts, and gives you health tips.
+- **AI calorie tracking:** An AI that gives you a morning update, looks at your workouts, and gives you health tips.
 - **Health Stats:** See your body stats and trends to understand your progress better.
 - **Blog Section:** Read articles about health, sleep, and fitness.
 - **Goals:** Set your own fitness goals and see when you reach them.
@@ -60,7 +60,7 @@
 
 - `index.tsx`: The main part of the app.
 - `Dashboard.tsx`: Your main home screen.
-- `Calorie AI.tsx`: Where you talk to the AI coach.
+- `AI-powered calorie tracking.tsx`: Where you talk to the AI coach.
 - `Stats.tsx`: Your health charts and numbers.
 - `Landing.tsx`: The first page people see.
 

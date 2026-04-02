@@ -15,7 +15,7 @@ We envision a future where technology doesn't just track you—it understands yo
 
 WHAT WE DO
 - Hardware Engineering: Creating robust, aerospace-grade wearables like the Mehri fitness tracker, milled from titanium and sapphire.
-- AI Development: Training "Calorie AI", our neural coaching engine, to provide context-aware health advice that adapts to your specific metabolic profile.
+- AI Development: Training "AI-powered calorie tracking", our neural coaching engine, to provide context-aware health advice that adapts to your specific metabolic profile.
 - Community Building: Fostering a worldwide network of athletes, bio-hackers, and everyday achievers committed to self-improvement.
 
 LOCATION & ORIGIN

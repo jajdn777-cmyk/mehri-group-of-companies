@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 export const Header = ({ currentView, onNavigate, onSignOut, onShop, userProfile, userName, streak = 0,  }: any) => {
   const [scrolled, setScrolled] = useState(false);
   const [workoutsHover, setWorkoutsHover] = useState(false);
-  const [calorieAIHover, setCalorieAIHover] = useState(false);
+  const [mealAIHover, setMealAIHover] = useState(false);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   
   // Mobile Menu State
@@ -14,7 +14,7 @@ export const Header = ({ currentView, onNavigate, onSignOut, onShop, userProfile
   const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({
     'workouts': true, // Default open for convenience
     'community': false,
-    'calorie-ai': false
+    'meal-ai': false
   });
 
   const profileMenuRef = useRef<HTMLDivElement>(null);
@@ -37,7 +37,7 @@ export const Header = ({ currentView, onNavigate, onSignOut, onShop, userProfile
     };
   }, []);
 
-  const isDashboard = ['dashboard', 'stats', 'goals', 'routes', 'challenges', 'calorie-ai', 'calorie-ai', 'blogs', 'settings'].includes(currentView);
+  const isDashboard = ['dashboard', 'stats', 'goals', 'routes', 'challenges', 'meal-ai', 'meal-ai', 'blogs', 'settings'].includes(currentView);
   const isTransparent = !scrolled && !isDashboard && currentView !== 'auth';
 
   // Helper to get initials
@@ -171,16 +171,16 @@ export const Header = ({ currentView, onNavigate, onSignOut, onShop, userProfile
                   <button onClick={() => onNavigate('challenges')} className="text-sm font-black uppercase tracking-[0.2em] text-slate-900 hover:text-emerald-500 transition-colors whitespace-nowrap">Challenges</button>
                   <button onClick={() => onNavigate('blogs')} className="text-sm font-black uppercase tracking-[0.2em] text-slate-900 hover:text-emerald-500 transition-colors flex items-center gap-1 whitespace-nowrap">Blogs</button>
                   
-                  {/* CALORIE AI HOVER MENU */}
-                  <div className="relative py-4" onMouseEnter={() => setCalorieAIHover(true)} onMouseLeave={() => setCalorieAIHover(false)}>
-                     <button onClick={() => onNavigate('calorie-ai')} className={`text-sm font-black uppercase tracking-[0.2em] flex items-center gap-1 transition-colors whitespace-nowrap relative ${calorieAIHover ? 'text-emerald-500' : 'text-slate-900'}`}>
-                        <Brain size={12}/> Calorie AI
+                  {/* AI-powered calorie tracking HOVER MENU */}
+                  <div className="relative py-4" onMouseEnter={() => setMealAIHover(true)} onMouseLeave={() => setMealAIHover(false)}>
+                     <button onClick={() => onNavigate('meal-ai')} className={`text-sm font-black uppercase tracking-[0.2em] flex items-center gap-1 transition-colors whitespace-nowrap relative ${mealAIHover ? 'text-emerald-500' : 'text-slate-900'}`}>
+                        <Brain size={12}/> AI-powered calorie tracking
                         { false && (
                            <span className="absolute -top-1 -right-2 w-4 h-4 bg-red-500 text-white text-[8px] flex items-center justify-center rounded-full animate-pulse shadow-sm border border-white">1</span>
                         )}
                      </button>
                      <AnimatePresence>
-                     {calorieAIHover && (
+                     {mealAIHover && (
                         <motion.div 
                           initial={{ opacity: 0, y: 10 }}
                           animate={{ opacity: 1, y: 0 }}
@@ -189,15 +189,15 @@ export const Header = ({ currentView, onNavigate, onSignOut, onShop, userProfile
                           className="absolute top-10 -left-10 pt-4"
                         >
                           <div className="w-72 bg-white/90 backdrop-blur-xl rounded-[40px] shadow-2xl border border-slate-100 p-6 flex flex-col gap-3">
-                             <button onClick={() => {onNavigate('calorie-ai'); setCalorieAIHover(false);}} className="w-full text-left px-6 py-4 rounded-[25px] hover:bg-slate-50 flex items-center gap-4 group transition-all">
+                             <button onClick={() => {onNavigate('meal-ai'); setMealAIHover(false);}} className="w-full text-left px-6 py-4 rounded-[25px] hover:bg-slate-50 flex items-center gap-4 group transition-all">
                                 <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-400 group-hover:bg-[#A7F3D0] group-hover:text-slate-900 transition-colors"><MessageSquare size={14}/></div>
-                                <span className="text-[10px] font-black uppercase tracking-widest text-slate-500 group-hover:text-slate-900">Calorie AI</span>
+                                <span className="text-[10px] font-black uppercase tracking-widest text-slate-500 group-hover:text-slate-900">AI-powered calorie tracking</span>
                              </button>
-                             <button onClick={() => {onNavigate('calorie-ai'); setCalorieAIHover(false);}} className="w-full text-left px-6 py-4 rounded-[25px] hover:bg-slate-50 flex items-center gap-4 group transition-all">
+                             <button onClick={() => {onNavigate('meal-ai'); setMealAIHover(false);}} className="w-full text-left px-6 py-4 rounded-[25px] hover:bg-slate-50 flex items-center gap-4 group transition-all">
                                 <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-400 group-hover:bg-[#A7F3D0] group-hover:text-slate-900 transition-colors"><Utensils size={14}/></div>
                                 <span className="text-[10px] font-black uppercase tracking-widest text-slate-500 group-hover:text-slate-900">Meal Tracker</span>
                              </button>
-                             <button onClick={() => {onNavigate('calorie-ai'); setCalorieAIHover(false);}} className="w-full text-left px-6 py-4 rounded-[25px] hover:bg-slate-50 flex items-center gap-4 group transition-all">
+                             <button onClick={() => {onNavigate('meal-ai'); setMealAIHover(false);}} className="w-full text-left px-6 py-4 rounded-[25px] hover:bg-slate-50 flex items-center gap-4 group transition-all">
                                 <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-400 group-hover:bg-[#A7F3D0] group-hover:text-slate-900 transition-colors"><Zap size={14}/></div>
                                 <span className="text-[10px] font-black uppercase tracking-widest text-slate-500 group-hover:text-slate-900">Daily Insights</span>
                              </button>
@@ -337,8 +337,8 @@ export const Header = ({ currentView, onNavigate, onSignOut, onShop, userProfile
                        <MobileSubLink onClick={() => onNavigate('blogs')} label="Blogs" icon={Newspaper} />
                     </MobileMenuSection>
 
-                    {/* CALORIE AI */}
-                    <MobileDirectLink onClick={() => onNavigate('calorie-ai')} label="Calorie AI" />
+                    {/* AI-powered calorie tracking */}
+                    <MobileDirectLink onClick={() => onNavigate('meal-ai')} label="AI-powered calorie tracking" />
 
                     <MobileDirectLink onClick={onShop} label="Shop Gear" />
                     <MobileDirectLink onClick={() => onNavigate('settings')} label="Settings" />

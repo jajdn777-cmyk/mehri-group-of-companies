@@ -155,7 +155,7 @@ export const MealAIView = ({ onNavigate, userMeals, setUserMeals, userSpecs, use
                       ))}
                    </div>
                    <div className="pt-8 border-t border-slate-50">
-                      <div className="flex gap-4"><div className="w-12 h-12 bg-slate-900 rounded-full flex items-center justify-center text-[#A7F3D0] shrink-0 shadow-lg"><Zap size={20} fill="#A7F3D0" /></div><div className="space-y-2"><p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Calorie AI says</p><p className="text-lg font-serif text-slate-800 leading-relaxed italic">"{result.contextualAdvice}"</p></div></div>
+                      <div className="flex gap-4"><div className="w-12 h-12 bg-slate-900 rounded-full flex items-center justify-center text-[#A7F3D0] shrink-0 shadow-lg"><Zap size={20} fill="#A7F3D0" /></div><div className="space-y-2"><p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">AI says</p><p className="text-lg font-serif text-slate-800 leading-relaxed italic">"{result.contextualAdvice}"</p></div></div>
                    </div>
                    <button onClick={handleSave} className="w-full py-5 bg-slate-900 text-white rounded-2xl font-black uppercase text-xs tracking-[0.3em] hover:bg-emerald-500 transition-all shadow-xl hover:scale-[1.02]">Add to Day</button>
                 </div>

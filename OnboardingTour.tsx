@@ -46,7 +46,7 @@ export const OnboardingTour = ({ onComplete, onNavigate }: any) => {
         onNavigate('routes');
         setStep(1);
     } else if (nextStep === 2) {
-        onNavigate('calorie-ai');
+        onNavigate('meal-ai');
         setStep(2);
     } else if (nextStep === 3) {
         if (isStandalone) {
@@ -86,7 +86,7 @@ export const OnboardingTour = ({ onComplete, onNavigate }: any) => {
           icon: Map,
       },
       {
-          title: "Calorie AI Intelligence",
+          title: "AI-powered nutrition insights",
           text: "Your AI coach. Ask her about recovery, nutrition, or log workouts via chat.",
           icon: Brain,
       },

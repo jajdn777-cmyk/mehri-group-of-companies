@@ -145,7 +145,7 @@ const VALID_ROUTES: Record<string, { view: string, dashView?: string }> = {
   '/goals': { view: 'main', dashView: 'goals' },
   '/routes': { view: 'main', dashView: 'routes' },
   '/challenges': { view: 'main', dashView: 'challenges' },
-  '/calorie-ai': { view: 'main', dashView: 'calorie-ai' },
+  '/meal-ai': { view: 'main', dashView: 'meal-ai' },
   '/blogs': { view: 'main', dashView: 'blogs' },
   '/write': { view: 'main', dashView: 'write' }, 
   '/dashboard': { view: 'main', dashView: 'dashboard' },
@@ -172,7 +172,7 @@ const App = () => {
   const initialState = getInitialState();
 
   const [view, setView] = useState<'landing' | 'auth' | 'specs' | 'goal' | 'main' | 'settings' | 'privacy' | 'terms' | 'notfound'>(initialState.view as any);
-  const [dashView, setDashView] = useState<'dashboard' | 'stats' | 'goals' | 'routes' | 'challenges' | 'calorie-ai' | 'blogs' | 'write'>(initialState.dashView as any);
+  const [dashView, setDashView] = useState<'dashboard' | 'stats' | 'goals' | 'routes' | 'challenges' | 'meal-ai' | 'blogs' | 'write'>(initialState.dashView as any);
   const [authMode, setAuthMode] = useState<'login' | 'signup'>('login');
   
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
@@ -365,7 +365,7 @@ const App = () => {
   const navigateTo = (v: string) => {
     if (v === 'auth-login') { setAuthMode('login'); handleTransition('auth'); return; }
     if (v === 'auth-signup') { setAuthMode('signup'); handleTransition('auth'); return; }
-    if (['dashboard', 'stats', 'goals', 'routes', 'challenges', 'calorie-ai', 'blogs', 'write'].includes(v)) {
+    if (['dashboard', 'stats', 'goals', 'routes', 'challenges', 'meal-ai', 'blogs', 'write'].includes(v)) {
       handleTransition('main', v as any);
     } else { handleTransition(v as any); }
   };
@@ -436,7 +436,7 @@ const App = () => {
                     {dashView === 'blogs' && <BlogList blogs={blogs} setBlogs={setBlogs} userProfile={userProfile} onNavigate={navigateTo} onDelete={handleDeleteBlog} />}
                     {dashView === 'write' && <BlogWriting onClose={() => navigateTo('blogs')} onPublish={handlePublishBlog} userName={userName} userProfile={userProfile} />}
                     {dashView === 'goals' && <GoalsView userGoals={userGoals} setUserGoals={setUserGoals} onNavigate={navigateTo} userPreferences={userPreferences} userProfile={userProfile} userHandle={userHandle} workouts={workouts} />}
-                    {dashView === 'calorie-ai' && <MealAIView userMeals={userMeals} setUserMeals={setUserMeals} userSpecs={userSpecs} userProfile={userProfile} workouts={workouts} userHandle={userHandle} onNavigate={navigateTo} />}
+                    {dashView === 'meal-ai' && <MealAIView userMeals={userMeals} setUserMeals={setUserMeals} userSpecs={userSpecs} userProfile={userProfile} workouts={workouts} userHandle={userHandle} onNavigate={navigateTo} />}
                   </div>
                 )}
             </>

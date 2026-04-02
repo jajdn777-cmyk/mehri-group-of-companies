@@ -1,1 +1,1 @@
-// Distributed to individual files (Logo.tsx, Header.tsx, ShopModal.tsx, Calorie AI.tsx)
+// Distributed to individual files (Logo.tsx, Header.tsx, ShopModal.tsx, AI-powered calorie tracking.tsx)

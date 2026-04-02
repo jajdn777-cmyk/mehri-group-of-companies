@@ -331,7 +331,7 @@ export const LogModal = ({ date, routes, userSpecs, userProfile, userPreferences
   );
 };
 
-export const DashboardView = ({ workouts, setWorkouts, userGoals, setUserGoals, routes, userSpecs, userProfile, userPreferences, userHandle, onForceSync, userMeals = [], calorieAIChats = [], setCalorieAIChats, setCalorieAINotification, onNavigate }: any) => {
+export const DashboardView = ({ workouts, setWorkouts, userGoals, setUserGoals, routes, userSpecs, userProfile, userPreferences, userHandle, onForceSync, userMeals = [], mealAIChats = [], setMealAIChats, setMealAINotification, onNavigate }: any) => {
   // --- RESILIENCE CHECK ---
   // If we don't have a user profile yet, we are likely in a hydration/auth transition.
   // Show a "Warm up" state instead of crashing or showing default empty data.
@@ -359,13 +359,13 @@ export const DashboardView = ({ workouts, setWorkouts, userGoals, setUserGoals, 
   const [showStreakCelebration, setShowStreakCelebration] = useState(false);
   const [celebratingGoal, setCelebratingGoal] = useState<any>(null);
   const [isSyncing, setIsSyncing] = useState(false);
-  const [calorieAIMessage, setCalorieAIMessage] = useState<any>(null);
+  const [mealAIMessage, setMealAIMessage] = useState<any>(null);
   const [progress, setProgress] = useState(100);
 
   useEffect(() => {
     // 1. Morning Brief Logic
     const today = getLocalTodayStr();
-    const lastBrief = localStorage.getItem('lastCalorieAIBrief');
+    const lastBrief = localStorage.getItem('lastMealAIBrief');
 
     if (lastBrief !== today) {
         const yesterday = new Date();
@@ -396,9 +396,9 @@ export const DashboardView = ({ workouts, setWorkouts, userGoals, setUserGoals, 
 
         message += `I recommend ${yesterdayCalories > 500 ? 'a recovery session' : 'pushing your limits'} today.`;
 
-        setCalorieAIMessage({ type: 'morning', text: message });
-        if (setCalorieAINotification) setCalorieAINotification(true);
-        localStorage.setItem('lastCalorieAIBrief', today);
+        setMealAIMessage({ type: 'morning', text: message });
+        if (setMealAINotification) setMealAINotification(true);
+        localStorage.setItem('lastMealAIBrief', today);
     }
   }, []);
 
@@ -407,14 +407,14 @@ export const DashboardView = ({ workouts, setWorkouts, userGoals, setUserGoals, 
     if (workouts.length > prevWorkoutCount.current) {
         const lastWorkout = workouts[0];
         const message = `Post-Workout Insight: Great ${lastWorkout.type} session! You burned ${lastWorkout.calories}kcal. That effort is moving you closer to your goals!`;
-        setCalorieAIMessage({ type: 'workout', text: message });
-        if (setCalorieAINotification) setCalorieAINotification(true);
+        setMealAIMessage({ type: 'workout', text: message });
+        if (setMealAINotification) setMealAINotification(true);
     }
     prevWorkoutCount.current = workouts.length;
   }, [workouts]);
 
   useEffect(() => {
-    if (calorieAIMessage) {
+    if (mealAIMessage) {
         setProgress(100);
         const duration = 10000;
         const interval = 100;
@@ -424,7 +424,7 @@ export const DashboardView = ({ workouts, setWorkouts, userGoals, setUserGoals, 
             setProgress(prev => {
                 if (prev <= 0) {
                     clearInterval(timer);
-                    setCalorieAIMessage(null);
+                    setMealAIMessage(null);
                     return 0;
                 }
                 return prev - step;
@@ -433,24 +433,24 @@ export const DashboardView = ({ workouts, setWorkouts, userGoals, setUserGoals, 
 
         return () => clearInterval(timer);
     }
-  }, [calorieAIMessage]);
+  }, [mealAIMessage]);
 
   const handleMessageClick = () => {
-    if (!calorieAIMessage) return;
-    const newMessage = { role: 'model', text: calorieAIMessage.text, timestamp: new Date().toISOString() };
+    if (!mealAIMessage) return;
+    const newMessage = { role: 'model', text: mealAIMessage.text, timestamp: new Date().toISOString() };
 
-    let activeChat = calorieAIChats[0];
+    let activeChat = mealAIChats[0];
     if (!activeChat) {
-        activeChat = { id: Date.now(), title: 'Calorie AI Coach', messages: [newMessage] };
-        if (setCalorieAIChats) setCalorieAIChats([activeChat, ...calorieAIChats]);
+        activeChat = { id: Date.now(), title: 'AI calorie tracking', messages: [newMessage] };
+        if (setMealAIChats) setMealAIChats([activeChat, ...mealAIChats]);
     } else {
         const updatedChat = { ...activeChat, messages: [...activeChat.messages, newMessage] };
-        if (setCalorieAIChats) setCalorieAIChats([updatedChat, ...calorieAIChats.filter((c: any) => c.id !== activeChat.id)]);
+        if (setMealAIChats) setMealAIChats([updatedChat, ...mealAIChats.filter((c: any) => c.id !== activeChat.id)]);
     }
 
-    if (onNavigate) onNavigate('calorie-ai');
-    setCalorieAIMessage(null);
-    if (setCalorieAINotification) setCalorieAINotification(false);
+    if (onNavigate) onNavigate('meal-ai');
+    setMealAIMessage(null);
+    if (setMealAINotification) setMealAINotification(false);
   };
 
   
@@ -704,7 +704,7 @@ export const DashboardView = ({ workouts, setWorkouts, userGoals, setUserGoals, 
 
   return (
     <div className="space-y-6 md:space-y-12 animate-fade-in pb-32 max-w-7xl mx-auto font-sans">
-      {calorieAIMessage && (
+      {mealAIMessage && (
         <div
           onClick={handleMessageClick}
           className="fixed top-32 left-1/2 -translate-x-1/2 z-[6000] w-[90%] max-w-xl bg-slate-900 text-white p-6 rounded-[30px] shadow-2xl cursor-pointer hover:scale-[1.02] transition-all group overflow-hidden border border-white/10"
@@ -714,8 +714,8 @@ export const DashboardView = ({ workouts, setWorkouts, userGoals, setUserGoals, 
                     <Brain size={20} />
                 </div>
                 <div className="flex-1 space-y-1">
-                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#A7F3D0]">Calorie AI Intelligence</p>
-                    <p className="text-sm font-bold leading-relaxed">{calorieAIMessage.text}</p>
+                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#A7F3D0]">AI-powered nutrition insights</p>
+                    <p className="text-sm font-bold leading-relaxed">{mealAIMessage.text}</p>
                 </div>
                 <div className="text-white/20 group-hover:text-white transition-colors">
                     <ArrowRight size={20} />

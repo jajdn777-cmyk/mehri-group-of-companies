@@ -164,7 +164,7 @@ const CountUpStat = ({ end, suffix = "", duration = 2 }: { end: number, suffix?:
   return <span ref={ref}>0{suffix}</span>;
 };
 
-// --- CALORIE AI LIVE DEMO COMPONENTS ---
+// --- AI-powered calorie tracking LIVE DEMO COMPONENTS ---
 
 const TypingIndicator = () => (
   <div className="flex gap-1 px-2 py-1 items-center h-5">
@@ -230,7 +230,7 @@ const MealAIDemo = () => {
              <div className="absolute inset-0 bg-emerald-500/10 animate-pulse" />
           </div>
           <div>
-             <p className="text-white font-bold">Calorie AI</p>
+             <p className="text-white font-bold">AI-powered calorie tracking</p>
              <p className="text-emerald-400 text-xs uppercase font-black tracking-widest flex items-center gap-2">
                <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse shadow-[0_0_8px_#34D399]"/> Online
              </p>
@@ -373,7 +373,7 @@ const ServicesSection = () => (
      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {[
            { icon: Activity, title: "Biometric Architecture", desc: "Advanced physiological tracking and analysis of your core vitals like HRV, SpO2, and resting heart rate." },
-           { icon: Brain, title: "Calorie AI Nutrition", desc: "Real-time, context-aware health and performance optimization through our proprietary neural engine." },
+           { icon: Brain, title: "AI-powered calorie tracking Nutrition", desc: "Real-time, context-aware health and performance optimization through our proprietary neural engine." },
            { icon: Target, title: "Precision Training", desc: "Custom-built workout protocols that adapt dynamically to your daily readiness and recovery scores." },
            { icon: Trophy, title: "Global Challenges", desc: "Compete in community challenges to push your boundaries and stay motivated with like-minded achievers." }
         ].map((service, i) => (
@@ -763,7 +763,7 @@ export const LandingSection = ({ onStart, onNavigate, onShop }: { onStart: () =>
       {/* 5. OUR SERVICES */}
       <ServicesSection />
 
-      {/* 6. CALORIE AI AI SECTION */}
+      {/* 6. AI-powered calorie tracking AI SECTION */}
       <ScrollReveal className="max-w-7xl mx-auto px-6 md:px-8 py-20">
         <div className="bg-slate-900 rounded-[40px] md:rounded-[80px] p-8 md:p-24 flex flex-col-reverse lg:flex-row items-center gap-12 md:gap-20 relative overflow-hidden shadow-2xl">
            <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-slate-800 via-slate-900 to-slate-900 pointer-events-none" />
@@ -778,7 +778,7 @@ export const LandingSection = ({ onStart, onNavigate, onShop }: { onStart: () =>
               
               <h2 className="text-4xl md:text-6xl font-black text-white uppercase tracking-tighter leading-none">
                  MASTER YOUR NUTRITION <br/>
-                 <span className="text-emerald-400">WITH CALORIE AI</span>
+                 <span className="text-emerald-400">WITH AI</span>
               </h2>
               
               <p className="text-slate-400 text-base md:text-xl font-medium leading-relaxed max-w-xl mx-auto lg:mx-0">
@@ -810,7 +810,7 @@ export const LandingSection = ({ onStart, onNavigate, onShop }: { onStart: () =>
                   whileTap={{ scale: 0.95 }}
                   className="px-12 py-6 bg-emerald-400 text-slate-900 rounded-full font-black uppercase text-xs tracking-[0.4em] hover:bg-white transition-colors shadow-lg relative overflow-hidden flex items-center gap-3 group"
                 >
-                   Track with Calorie AI <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
+                   Track with AI-powered calorie tracking <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
                 </motion.button>
               </div>
            </div>

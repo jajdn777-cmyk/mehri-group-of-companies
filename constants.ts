@@ -43,12 +43,12 @@ Effective Date: January 27, 2026
 Version: 2.4 (Global/Enterprise Compliance)
 
 1. INTRODUCTION AND SCOPE
-The MEHRI Group ("we," "us," or "our") operates at the intersection of biotechnology, consumer electronics, and artificial intelligence. This Privacy Policy governs your use of the Mehri Group platform, the Mehri fitness tracker hardware, and the Calorie AI AI coaching interface. We are committed to transparency regarding the collection, encryption, and utilization of your physiological data. This policy applies to users globally, with specific addendums for residents of the European Economic Area (EEA), California (CCPA/CPRA), and Brazil (LGPD).
+The MEHRI Group ("we," "us," or "our") operates at the intersection of biotechnology, consumer electronics, and artificial intelligence. This Privacy Policy governs your use of the Mehri Group platform, the Mehri fitness tracker hardware, and the AI calorie trackinging interface. We are committed to transparency regarding the collection, encryption, and utilization of your physiological data. This policy applies to users globally, with specific addendums for residents of the European Economic Area (EEA), California (CCPA/CPRA), and Brazil (LGPD).
 
 2. BIOMETRIC DATA CONTROLLER & PROCESSING
 MEHRI Group acts as the Data Controller for your personal information.
 - Biometric Data Collection: When you use the Mehri fitness tracker, we collect high-frequency physiological telemetry including but not limited to: Heart Rate Variability (HRV), Blood Oxygen Saturation (SpO2), Accelerometer patterns (Gait Analysis), and Sleep Staging architecture (REM/Deep/Light cycles).
-- Purpose of Processing: This data is processed strictly to provide: (a) Real-time performance analytics; (b) "Calorie AI" AI-driven coaching insights; and (c) Long-term health trend visualization.
+- Purpose of Processing: This data is processed strictly to provide: (a) Real-time performance analytics; (b) "AI-powered calorie tracking" AI-driven coaching insights; and (c) Long-term health trend visualization.
 - No Sale of Biometric Data: We do NOT sell, rent, or trade your physiological data to third-party advertisers or data brokers. Your biological signature is yours alone.
 
 3. DATA SOVEREIGNTY AND ENCRYPTION STANDARDS
@@ -56,7 +56,7 @@ We employ military-grade security architectures to protect your digital biologic
 - Edge Encryption: All sensor data is encrypted locally on the Mehri fitness tracker Cortex-M processor using AES-256 hardware encryption before transmission via Bluetooth 5.3.
 - Transit Security: Data synchronization occurs exclusively over TLS 1.3 encrypted channels.
 - At-Rest Encryption: User databases are sharded and encrypted using XChaCha20-Poly1305 algorithms.
-- Anonymization: For the purpose of improving the Calorie AI neural engine, data is stripped of all Personally Identifiable Information (PII) before being used in aggregate training sets.
+- Anonymization: For the purpose of improving the AI-powered calorie tracking neural engine, data is stripped of all Personally Identifiable Information (PII) before being used in aggregate training sets.
 
 4. GEOGRAPHIC RIGHTS AND COMPLIANCE
 
@@ -73,10 +73,10 @@ Pursuant to the California Consumer Privacy Act:
 - You have the right to non-discrimination for exercising your privacy rights.
 - We do not sell personal information. Therefore, we do not offer a "Do Not Sell My Info" opt-out, as it is our default standard.
 
-5. AI INTERACTION DISCLAIMER (CALORIE AI INTELLIGENCE)
-The "Calorie AI" coaching assistant utilizes Large Language Models (LLMs) to interpret your health data. While we strive for accuracy:
-- Calorie AI is an informational tool, NOT a medical practitioner.
-- Interactions with Calorie AI are processed via secure cloud inference APIs. Contextual data sent to the model is ephemeral and not used to train public models.
+5. AI INTERACTION DISCLAIMER (AI-powered nutrition insights)
+The "AI-powered calorie tracking" coaching assistant utilizes Large Language Models (LLMs) to interpret your health data. While we strive for accuracy:
+- AI-powered calorie tracking is an informational tool, NOT a medical practitioner.
+- Interactions with AI-powered calorie tracking are processed via secure cloud inference APIs. Contextual data sent to the model is ephemeral and not used to train public models.
 
 6. DATA RETENTION
 We retain your personal data only for as long as necessary to fulfill the purposes for which we collected it. Upon account termination, biometric data is purged from our hot storage within 48 hours and from cold backups within 30 days.
@@ -101,7 +101,7 @@ We warrant that the Mehri fitness tracker shall be free from defects in material
 
 3. MEDICAL DISCLAIMER AND SAFETY WARNINGS
 THE MEHRI FITNESS TRACKER AND MEHRI GROUP PLATFORM ARE NOT MEDICAL DEVICES.
-- No Medical Advice: The data, insights, text, graphics, and suggestions provided by the "Calorie AI" AI coach are for informational and recreational purposes only. They are not intended to diagnose, treat, cure, or prevent any disease.
+- No Medical Advice: The data, insights, text, graphics, and suggestions provided by the "AI-powered calorie tracking" AI coach are for informational and recreational purposes only. They are not intended to diagnose, treat, cure, or prevent any disease.
 - Consultation Required: Always consult with a qualified physician before starting any new exercise regime, especially if you have a history of heart disease, high blood pressure, or other chronic conditions.
 - Emergency Situations: Do not rely on the Mehri fitness tracker for emergency monitoring. The optical heart rate sensor may be affected by motion artifacts and should not be used as a clinical vital signs monitor.
 
@@ -113,7 +113,7 @@ You are responsible for maintaining the confidentiality of your account credenti
 Violation of these rules may result in immediate termination of your account without refund.
 
 5. INTELLECTUAL PROPERTY RIGHTS
-The Mehri Group design, the "Calorie AI" personality engine, the Mehri fitness tracker industrial design, and all associated logos and trademarks are the exclusive property of MEHRI Group. You are granted a limited, non-exclusive, non-transferable license to use the software solely in connection with the Mehri fitness tracker hardware.
+The Mehri Group design, the "AI-powered calorie tracking" personality engine, the Mehri fitness tracker industrial design, and all associated logos and trademarks are the exclusive property of MEHRI Group. You are granted a limited, non-exclusive, non-transferable license to use the software solely in connection with the Mehri fitness tracker hardware.
 
 6. DISPUTE RESOLUTION AND CLASS ACTION WAIVER
 PLEASE READ THIS SECTION CAREFULLY. IT AFFECTS YOUR LEGAL RIGHTS.
@@ -137,22 +137,22 @@ export const FAQ_DATA = [
   },
   {
     question: "How does the Mehri fitness tracker protect my biometric data and privacy?",
-    answer: "We utilize decentralized encryption for all health data. Unlike standard trackers, Calorie AI Intelligence processes sensitive biometrics locally on the device or through secure, end-to-end encrypted tunnels, ensuring your health insights remain your private property and are never sold to third-party advertisers."
+    answer: "We utilize decentralized encryption for all health data. Unlike standard trackers, AI-powered nutrition insights processes sensitive biometrics locally on the device or through secure, end-to-end encrypted tunnels, ensuring your health insights remain your private property and are never sold to third-party advertisers."
   },
   {
     question: "What makes the Mehri fitness tracker different from a standard Apple Watch or Garmin?",
-    answer: "The Mehri fitness tracker bridges the gap between a rugged sports watch and an executive accessory. It features \"Calorie AI AI Coaching,\" which doesn't just show you steps—it analyzes your sleep and strain to tell you exactly when to work out and when to rest for peak performance."
+    answer: "The Mehri fitness tracker bridges the gap between a rugged sports watch and an executive accessory. It features \"AI calorie tracking,\" which doesn't just show you steps—it analyzes your sleep and strain to tell you exactly when to work out and when to rest for peak performance."
   },
   {
     question: "Does the Mehri fitness tracker require a monthly subscription for AI features?",
-    answer: "No. Unlike many 2026 wearables that paywall your own data, the Mehri fitness tracker offers all core AI health insights, sleep analytics, and the Calorie AI Intelligence dashboard with no hidden monthly fees. You own the hardware and the insights for life."
+    answer: "No. Unlike many 2026 wearables that paywall your own data, the Mehri fitness tracker offers all core AI health insights, sleep analytics, and the AI-powered nutrition insights dashboard with no hidden monthly fees. You own the hardware and the insights for life."
   },
   {
-    question: "How does the \"Calorie AI Intelligence\" AI coaching actually work?",
-    answer: "Calorie AI AI uses a proprietary machine learning model to correlate your heart rate, sleep stages, and daily activity. It builds a \"Digital Twin\" of your physiology to predict fatigue before you feel it, providing actionable notifications like \"Your recovery is low; prioritize 20 more minutes of REM sleep tonight.\""
+    question: "How does the \"AI-powered nutrition insights\" AI coaching actually work?",
+    answer: "AI-powered calorie tracking uses a proprietary machine learning model to correlate your heart rate, sleep stages, and daily activity. It builds a \"Digital Twin\" of your physiology to predict fatigue before you feel it, providing actionable notifications like \"Your recovery is low; prioritize 20 more minutes of REM sleep tonight.\""
   },
   {
     question: "Can I use the Mehri fitness tracker for contactless payments and smart home control?",
-    answer: "Yes. The Mehri Series 1 includes integrated NFC for universal contactless payments and a built-in IoT hub, allowing you to control your \"Calorie AI Smart Home\" devices directly from your wrist using simple haptic gestures or voice commands."
+    answer: "Yes. The Mehri Series 1 includes integrated NFC for universal contactless payments and a built-in IoT hub, allowing you to control your \"AI-powered calorie tracking Smart Home\" devices directly from your wrist using simple haptic gestures or voice commands."
   }
 ];
