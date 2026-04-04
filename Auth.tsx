@@ -324,7 +324,7 @@ export const AuthSection = ({ onComplete, initialView = 'login', onNavigate }: a
 
   return (
     <div className={`min-h-screen bg-white flex overflow-hidden ${shake ? 'animate-shake' : ''}`}>
-      {isLoading && <Loader text={loadingText} />}
+      <Loader isVisible={isLoading} text={loadingText} onDismiss={() => setIsLoading(false)} />
       {toast && <Toast message={toast.msg} type={toast.type} onClose={() => setToast(null)} />}
 
       {/* Left Side: Animated Orbit */}

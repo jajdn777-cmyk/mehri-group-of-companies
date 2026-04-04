@@ -183,7 +183,13 @@ export const LogModal = ({ date, routes, userSpecs, userProfile, userPreferences
               <h3 className="text-2xl md:text-3xl font-black uppercase text-slate-900 tracking-tighter">Add Workout</h3>
               <p className="text-xs md:text-[10px] font-black uppercase text-slate-400 tracking-[0.2em] mt-1">Target Date: {date}</p>
            </div>
-           <button onClick={onClose} className="p-2 -mr-2 text-slate-300 hover:text-red-500 transition-colors"><X size={28}/></button>
+           <button
+             onClick={onClose}
+             aria-label="Close modal"
+             className="p-2 -mr-2 text-slate-300 hover:text-red-500 transition-colors"
+           >
+             <X size={28}/>
+           </button>
         </div>
 
         <div className="p-6 md:p-10 pb-10 grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-10">
@@ -741,7 +747,13 @@ export const DashboardView = ({ workouts, setWorkouts, userGoals, setUserGoals, 
         ) : <div className="h-10 md:h-12"/>}
         
         <div className={`flex gap-4 w-full md:w-auto justify-between md:justify-end ${tab !== 'monthly' ? 'md:ml-auto' : ''}`}>
-          <button onClick={handleManualSync} disabled={isSyncing} className={`p-2 rounded-full hover:bg-slate-50 transition-all ${isSyncing ? 'animate-spin text-emerald-500' : 'text-slate-300'}`} title="Force Sync Data">
+          <button
+            onClick={handleManualSync}
+            disabled={isSyncing}
+            aria-label="Sync data"
+            className={`p-2 rounded-full hover:bg-slate-50 transition-all ${isSyncing ? 'animate-spin text-emerald-500' : 'text-slate-300'}`}
+            title="Force Sync Data"
+          >
              <RefreshCw size={16}/>
           </button>
           <div className="flex gap-4 md:gap-8 border-l border-slate-100 pl-4">
@@ -835,7 +847,11 @@ export const DashboardView = ({ workouts, setWorkouts, userGoals, setUserGoals, 
                                <p className="text-[9px] font-black uppercase text-emerald-500 tracking-widest mb-1">Active Goal</p>
                                <h4 className="text-lg font-black uppercase tracking-tight text-slate-900">{goal.title}</h4>
                             </div>
-                            <button onClick={(e) => deleteGoal(e, goal.id)} className="text-slate-300 hover:text-red-500 transition-colors z-20 p-2 rounded-full hover:bg-slate-50">
+                            <button
+                              onClick={(e) => deleteGoal(e, goal.id)}
+                              aria-label="Delete goal"
+                              className="text-slate-300 hover:text-red-500 transition-colors z-20 p-2 rounded-full hover:bg-slate-50"
+                            >
                                 <Trash2 size={16}/>
                             </button>
                          </div>
@@ -866,8 +882,20 @@ export const DashboardView = ({ workouts, setWorkouts, userGoals, setUserGoals, 
                      <button onClick={jumpToToday} className="text-[10px] font-black uppercase tracking-widest text-emerald-500 bg-emerald-50 px-3 py-1 rounded-full hover:bg-emerald-100 transition-colors" title="Jump to Current Month">Today</button>
                   </div>
                   <div className="hidden md:flex gap-4">
-                    <button onClick={prevMonth} className="text-slate-300 hover:text-slate-900 transition-colors p-2 rounded-full hover:bg-slate-50"><ArrowRight className="rotate-180"/></button>
-                    <button onClick={nextMonth} className="text-slate-300 hover:text-slate-900 transition-colors p-2 rounded-full hover:bg-slate-50"><ArrowRight/></button>
+                    <button
+                      onClick={prevMonth}
+                      aria-label="Previous month"
+                      className="text-slate-300 hover:text-slate-900 transition-colors p-2 rounded-full hover:bg-slate-50"
+                    >
+                      <ArrowRight className="rotate-180"/>
+                    </button>
+                    <button
+                      onClick={nextMonth}
+                      aria-label="Next month"
+                      className="text-slate-300 hover:text-slate-900 transition-colors p-2 rounded-full hover:bg-slate-50"
+                    >
+                      <ArrowRight/>
+                    </button>
                   </div>
                 </div>
 
@@ -955,7 +983,11 @@ export const DashboardView = ({ workouts, setWorkouts, userGoals, setUserGoals, 
                                  {isStrengthLog ? <Dumbbell size={8} className="text-slate-900 md:w-[10px] md:h-[10px]"/> : <span className="text-[#A7F3D0] text-[8px] md:text-[10px]">🏃</span>} 
                                  {displayVal}
                                  {isToday && (
-                                   <button onClick={(e) => { e.stopPropagation(); handleDeleteWorkout(log.id); }} className="absolute -right-1 -top-1 bg-red-500 text-white rounded-full p-0.5 opacity-0 group-hover/pill:opacity-100 transition-opacity z-50">
+                                   <button
+                                      onClick={(e) => { e.stopPropagation(); handleDeleteWorkout(log.id); }}
+                                      aria-label="Delete workout"
+                                      className="absolute -right-1 -top-1 bg-red-500 text-white rounded-full p-0.5 opacity-0 group-hover/pill:opacity-100 transition-opacity z-50"
+                                   >
                                       <X size={8}/>
                                    </button>
                                  )}
@@ -1008,6 +1040,7 @@ export const DashboardView = ({ workouts, setWorkouts, userGoals, setUserGoals, 
                               </div>
                               <button 
                                 onClick={() => handleDeleteWorkout(log.id)} 
+                                aria-label="Delete workout"
                                 className="p-2 text-slate-300 hover:text-red-500 rounded-full hover:bg-red-50 transition-all opacity-0 group-hover:opacity-100"
                               >
                                  <Trash2 size={18}/>
