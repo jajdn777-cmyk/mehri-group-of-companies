@@ -98,15 +98,20 @@ export const Header = ({ currentView, onNavigate, onSignOut, onShop, userProfile
             {/* MOBILE: HAMBURGER (LEFT) - Pushed down slightly to align with logo visual center */}
             <motion.button 
               whileTap={{ scale: 0.9 }}
-              className={`md:hidden p-2 -ml-2 mt-3 rounded-full transition-colors z-[5050] ${isTransparent && !mobileMenuOpen ? 'text-white' : 'text-slate-900 hover:bg-slate-100'}`}
+              aria-label="Open menu"
+              aria-expanded={mobileMenuOpen}
+              className={`md:hidden p-2 -ml-2 mt-3 rounded-full transition-colors z-[5050] focus-visible:ring-2 focus-visible:ring-emerald-500 outline-none ${isTransparent && !mobileMenuOpen ? 'text-white' : 'text-slate-900 hover:bg-slate-100'}`}
               onClick={() => setMobileMenuOpen(true)}
             >
               <Menu size={24} />
             </motion.button>
 
             {/* LOGO (LEFT ALIGNED) - Pulled up with negative margin */}
-            <div 
-              className="relative flex items-center cursor-pointer hover:scale-[1.02] active:scale-95 transition-all z-50" 
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.95 }}
+              aria-label="Go to dashboard"
+              className="relative flex items-center cursor-pointer transition-all z-50 focus-visible:ring-2 focus-visible:ring-emerald-500 outline-none rounded-2xl"
               onClick={() => {
                 if (userProfile?.username) {
                   onNavigate('dashboard');
@@ -121,18 +126,23 @@ export const Header = ({ currentView, onNavigate, onSignOut, onShop, userProfile
               {/* Direct IMG for precise size control - Fixed dimensions, pulled up via negative margin */}
               <img 
                  src="https://i.ibb.co/xqxm5rCT/logo-mehri-no-bg.png" 
-                 alt="Shamsullah Mehri Logo"
+                 alt=""
                  className="relative z-10 w-auto object-contain drop-shadow-sm h-40 md:h-64 -mt-10 md:-mt-20 -ml-2 md:-ml-6"
               />
-            </div>
+            </motion.button>
         </div>
         
         {/* MOBILE: PROFILE AVATAR (RIGHT) */}
         <div className="md:hidden z-[5050] mt-3">
            {isDashboard || currentView === 'main' ? (
-             <div onClick={() => setMobileMenuOpen(true)} className={`w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center text-slate-900 font-bold text-xs border border-slate-200 shadow-sm ${userProfile?.hasWatch ? 'ring-2 ring-[#A7F3D0] ring-offset-1' : ''}`}>
+             <button
+               onClick={() => setMobileMenuOpen(true)}
+               aria-label="User menu"
+               aria-expanded={mobileMenuOpen}
+               className={`w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center text-slate-900 font-bold text-xs border border-slate-200 shadow-sm focus-visible:ring-2 focus-visible:ring-emerald-500 outline-none ${userProfile?.hasWatch ? 'ring-2 ring-[#A7F3D0] ring-offset-1' : ''}`}
+             >
                 {getInitials(userName || userProfile?.firstName)}
-             </div>
+             </button>
            ) : (
              <div className="w-9 h-9" /> /* Spacer */
            )}
@@ -220,13 +230,17 @@ export const Header = ({ currentView, onNavigate, onSignOut, onShop, userProfile
                       </div>
                     )}
 
-                    <motion.div 
+                    <motion.button
                       whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.95 }}
                       onClick={() => setShowProfileMenu(!showProfileMenu)}
-                      className={`w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-900 font-bold text-xs cursor-pointer hover:bg-slate-200 transition-all select-none ${userProfile?.hasWatch ? 'ring-2 ring-[#A7F3D0] ring-offset-2' : ''}`}
+                      aria-label="Toggle user profile menu"
+                      aria-expanded={showProfileMenu}
+                      aria-haspopup="true"
+                      className={`w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-900 font-bold text-xs cursor-pointer hover:bg-slate-200 transition-all select-none focus-visible:ring-2 focus-visible:ring-emerald-500 outline-none ${userProfile?.hasWatch ? 'ring-2 ring-[#A7F3D0] ring-offset-2' : ''}`}
                     >
                       {getInitials(userName || userProfile?.firstName)}
-                    </motion.div>
+                    </motion.button>
                     
                     <AnimatePresence>
                     {showProfileMenu && (
@@ -303,7 +317,11 @@ export const Header = ({ currentView, onNavigate, onSignOut, onShop, userProfile
                    </div>
                 </div>
                 {/* Close Button */}
-                <button onClick={() => setMobileMenuOpen(false)} className="p-2 -mr-2 text-slate-300 hover:text-red-500 transition-colors rounded-full active:bg-slate-100">
+                <button
+                  onClick={() => setMobileMenuOpen(false)}
+                  aria-label="Close menu"
+                  className="p-2 -mr-2 text-slate-300 hover:text-red-500 transition-colors rounded-full active:bg-slate-100 focus-visible:ring-2 focus-visible:ring-emerald-500 outline-none"
+                >
                    <X size={24}/>
                 </button>
             </div>
