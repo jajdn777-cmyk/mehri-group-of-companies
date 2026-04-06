@@ -183,7 +183,7 @@ export const LogModal = ({ date, routes, userSpecs, userProfile, userPreferences
               <h3 className="text-2xl md:text-3xl font-black uppercase text-slate-900 tracking-tighter">Add Workout</h3>
               <p className="text-xs md:text-[10px] font-black uppercase text-slate-400 tracking-[0.2em] mt-1">Target Date: {date}</p>
            </div>
-           <button onClick={onClose} className="p-2 -mr-2 text-slate-300 hover:text-red-500 transition-colors"><X size={28}/></button>
+           <button onClick={onClose} aria-label="Close modal" className="p-2 -mr-2 text-slate-300 hover:text-red-500 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 rounded-full"><X size={28}/></button>
         </div>
 
         <div className="p-6 md:p-10 pb-10 grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-10">
@@ -741,7 +741,7 @@ export const DashboardView = ({ workouts, setWorkouts, userGoals, setUserGoals, 
         ) : <div className="h-10 md:h-12"/>}
         
         <div className={`flex gap-4 w-full md:w-auto justify-between md:justify-end ${tab !== 'monthly' ? 'md:ml-auto' : ''}`}>
-          <button onClick={handleManualSync} disabled={isSyncing} className={`p-2 rounded-full hover:bg-slate-50 transition-all ${isSyncing ? 'animate-spin text-emerald-500' : 'text-slate-300'}`} title="Force Sync Data">
+          <button onClick={handleManualSync} disabled={isSyncing} aria-label="Force sync data" className={`p-2 rounded-full hover:bg-slate-50 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 ${isSyncing ? 'animate-spin text-emerald-500' : 'text-slate-300'}`} title="Force Sync Data">
              <RefreshCw size={16}/>
           </button>
           <div className="flex gap-4 md:gap-8 border-l border-slate-100 pl-4">
@@ -761,7 +761,7 @@ export const DashboardView = ({ workouts, setWorkouts, userGoals, setUserGoals, 
               <div className="flex flex-col md:flex-row justify-between items-start md:items-center relative z-10 gap-4">
                 <div className="flex items-center gap-4 w-full md:w-auto justify-between">
                    <p className="text-[10px] font-black uppercase text-slate-400 tracking-[0.2em] self-center">Activity: {selectedDay}</p>
-                   <button onClick={() => setPrecisionMode(!precisionMode)} className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-slate-300 hover:text-[#A7F3D0] transition-colors">
+                   <button onClick={() => setPrecisionMode(!precisionMode)} aria-label="Toggle precision view" className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-slate-300 hover:text-[#A7F3D0] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 rounded-lg px-2 py-1">
                       {precisionMode ? <ToggleRight size={24} className="text-[#A7F3D0]"/> : <ToggleLeft size={24}/>}
                       Precision View
                    </button>
