@@ -91,15 +91,7 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundarySta
   render() {
     if (this.state.hasError) {
 
-  // Helper for dynamic SEO titles
-  const getSEOTitle = () => {
-    if (view === 'main') return dashView === "dashboard" ? "Dashboard" : dashView.charAt(0).toUpperCase() + dashView.slice(1);
-    if (view === 'auth') return 'Sign In';
-    if (view === 'settings') return 'Settings';
-    if (view === 'privacy') return 'Privacy Policy';
-    if (view === 'notfound') return 'Page Not Found';
-    return undefined;
-  };
+
 
   return (
         <div className="min-h-screen bg-[#FCFCFC] flex flex-col items-center justify-center p-6 text-center font-sans selection:bg-emerald-100">
@@ -252,15 +244,7 @@ const App = () => {
     };
     window.addEventListener('popstate', handlePopState);
 
-  // Helper for dynamic SEO titles
-  const getSEOTitle = () => {
-    if (view === 'main') return dashView === "dashboard" ? "Dashboard" : dashView.charAt(0).toUpperCase() + dashView.slice(1);
-    if (view === 'auth') return 'Sign In';
-    if (view === 'settings') return 'Settings';
-    if (view === 'privacy') return 'Privacy Policy';
-    if (view === 'notfound') return 'Page Not Found';
-    return undefined;
-  };
+
 
   return () => window.removeEventListener('popstate', handlePopState);
   }, []);
@@ -272,15 +256,7 @@ const App = () => {
         setIsCheckingAuth(false);
       }, 4000);
 
-  // Helper for dynamic SEO titles
-  const getSEOTitle = () => {
-    if (view === 'main') return dashView === "dashboard" ? "Dashboard" : dashView.charAt(0).toUpperCase() + dashView.slice(1);
-    if (view === 'auth') return 'Sign In';
-    if (view === 'settings') return 'Settings';
-    if (view === 'privacy') return 'Privacy Policy';
-    if (view === 'notfound') return 'Page Not Found';
-    return undefined;
-  };
+
 
   return () => clearTimeout(timer);
     }
@@ -340,15 +316,7 @@ const App = () => {
       }
     });
 
-  // Helper for dynamic SEO titles
-  const getSEOTitle = () => {
-    if (view === 'main') return dashView === "dashboard" ? "Dashboard" : dashView.charAt(0).toUpperCase() + dashView.slice(1);
-    if (view === 'auth') return 'Sign In';
-    if (view === 'settings') return 'Settings';
-    if (view === 'privacy') return 'Privacy Policy';
-    if (view === 'notfound') return 'Page Not Found';
-    return undefined;
-  };
+
 
   return () => { authListener.subscription.unsubscribe(); };
   }, []);
