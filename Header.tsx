@@ -98,6 +98,7 @@ export const Header = ({ currentView, onNavigate, onSignOut, onShop, userProfile
             {/* MOBILE: HAMBURGER (LEFT) - Pushed down slightly to align with logo visual center */}
             <motion.button 
               whileTap={{ scale: 0.9 }}
+              aria-label="Open navigation menu"
               className={`md:hidden p-2 -ml-2 mt-3 rounded-full transition-colors z-[5050] ${isTransparent && !mobileMenuOpen ? 'text-white' : 'text-slate-900 hover:bg-slate-100'}`}
               onClick={() => setMobileMenuOpen(true)}
             >
@@ -130,9 +131,14 @@ export const Header = ({ currentView, onNavigate, onSignOut, onShop, userProfile
         {/* MOBILE: PROFILE AVATAR (RIGHT) */}
         <div className="md:hidden z-[5050] mt-3">
            {isDashboard || currentView === 'main' ? (
-             <div onClick={() => setMobileMenuOpen(true)} className={`w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center text-slate-900 font-bold text-xs border border-slate-200 shadow-sm ${userProfile?.hasWatch ? 'ring-2 ring-[#A7F3D0] ring-offset-1' : ''}`}>
+             <button
+                type="button"
+                onClick={() => setMobileMenuOpen(true)}
+                aria-label="Open navigation menu"
+                className={`w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center text-slate-900 font-bold text-xs border border-slate-200 shadow-sm ${userProfile?.hasWatch ? 'ring-2 ring-[#A7F3D0] ring-offset-1' : ''}`}
+             >
                 {getInitials(userName || userProfile?.firstName)}
-             </div>
+             </button>
            ) : (
              <div className="w-9 h-9" /> /* Spacer */
            )}
@@ -220,13 +226,15 @@ export const Header = ({ currentView, onNavigate, onSignOut, onShop, userProfile
                       </div>
                     )}
 
-                    <motion.div 
+                    <motion.button
+                      type="button"
                       whileHover={{ scale: 1.1 }}
                       onClick={() => setShowProfileMenu(!showProfileMenu)}
+                      aria-label="Toggle profile menu"
                       className={`w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-900 font-bold text-xs cursor-pointer hover:bg-slate-200 transition-all select-none ${userProfile?.hasWatch ? 'ring-2 ring-[#A7F3D0] ring-offset-2' : ''}`}
                     >
                       {getInitials(userName || userProfile?.firstName)}
-                    </motion.div>
+                    </motion.button>
                     
                     <AnimatePresence>
                     {showProfileMenu && (
@@ -303,7 +311,11 @@ export const Header = ({ currentView, onNavigate, onSignOut, onShop, userProfile
                    </div>
                 </div>
                 {/* Close Button */}
-                <button onClick={() => setMobileMenuOpen(false)} className="p-2 -mr-2 text-slate-300 hover:text-red-500 transition-colors rounded-full active:bg-slate-100">
+                <button
+                  onClick={() => setMobileMenuOpen(false)}
+                  aria-label="Close navigation menu"
+                  className="p-2 -mr-2 text-slate-300 hover:text-red-500 transition-colors rounded-full active:bg-slate-100"
+                >
                    <X size={24}/>
                 </button>
             </div>

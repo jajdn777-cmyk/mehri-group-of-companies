@@ -426,6 +426,7 @@ const AnimatedForm = memo(function AnimatedForm({
                   <button
                     type='button'
                     onClick={toggleVisibility}
+                    aria-label={visible ? "Hide password" : "Show password"}
                     className='absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors'
                   >
                     {visible ? (
