@@ -151,7 +151,7 @@ export const AdInterstitial = ({ isOpen, onClose }: AdInterstitialProps) => {
 
               <div className="flex justify-center gap-8 opacity-20">
                  <div className="h-px bg-slate-900 flex-1 self-center" />
-                 <span className="text-[8px] font-black uppercase tracking-widest text-slate-900">Calorie AI 2026</span>
+                 <span className="text-[8px] font-black uppercase tracking-widest text-slate-900">Mehri 2026</span>
                  <div className="h-px bg-slate-900 flex-1 self-center" />
               </div>
             </div>

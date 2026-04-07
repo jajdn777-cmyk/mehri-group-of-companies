@@ -134,7 +134,7 @@ export const Footer = ({ onNavigate }: any) => {
                    <MehriLogo size="lg" className="brightness-0 invert" />
                 </div>
                 <p className="text-slate-500 text-sm leading-relaxed max-w-xs">
-                   Calorie AI is the premier ecosystem for elite performance tracking. Powered by the Mehri fitness tracker hardware kernel.
+                   Mehri is the premier ecosystem for elite performance tracking. Powered by the Mehri fitness tracker hardware kernel.
                 </p>
                 <div className="space-y-4 pt-2">
                    <a 

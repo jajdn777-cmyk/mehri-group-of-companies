@@ -34,15 +34,15 @@ interface SEOProps {
  */
 export const SEO: React.FC<SEOProps> = ({ 
   title, 
-  description = "Elite performance tracking and biometric architecture. Calorie AI delivers executive fitness via Mehri fitness tracker hardware and Alma AI coaching.",
+  description = "Elite performance tracking and biometric architecture. Mehri delivers executive fitness via Mehri fitness tracker hardware and Alma AI coaching.",
   view,
   article,
   product,
   faq
 }) => {
-  const brandName = "Calorie AI";
+  const brandName = "Mehri";
   const defaultTitle = `${brandName} | Executive Wellness & AI Fitness`;
-  const finalTitle = title ? `${title} | ${brandName}` : defaultTitle;
+  const finalTitle = title || defaultTitle;
 
   useEffect(() => {
     // 1. Update Document Metadata
@@ -81,7 +81,7 @@ export const SEO: React.FC<SEOProps> = ({
         {
           "@type": "Organization",
           "@id": "https://mehrigroupofcompanies.com/#organization",
-          "name": "Calorie AI",
+          "name": "Mehri",
           "url": "https://mehrigroupofcompanies.com/",
           "logo": "https://i.ibb.co.com/xqxm5rCT/logo-mehri-no-bg.png",
           "contactPoint": {
@@ -94,7 +94,7 @@ export const SEO: React.FC<SEOProps> = ({
           "@type": "WebSite",
           "@id": "https://mehrigroupofcompanies.com/#website",
           "url": "https://mehrigroupofcompanies.com/",
-          "name": "Calorie AI",
+          "name": "Mehri",
           "publisher": { "@id": "https://mehrigroupofcompanies.com/#organization" }
         }
       ]
