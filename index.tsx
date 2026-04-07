@@ -565,7 +565,7 @@ const App = () => {
 
   // Helper for dynamic SEO titles
   const getSEOTitle = () => {
-    if (view === 'main') return dashView.charAt(0).toUpperCase() + dashView.slice(1);
+    if (view === 'main') return dashView === "dashboard" ? "Dashboard" : dashView.charAt(0).toUpperCase() + dashView.slice(1);
     if (view === 'auth') return 'Sign In';
     if (view === 'settings') return 'Settings';
     if (view === 'privacy') return 'Privacy Policy';

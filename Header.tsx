@@ -121,7 +121,7 @@ export const Header = ({ currentView, onNavigate, onSignOut, onShop, userProfile
               {/* Direct IMG for precise size control - Fixed dimensions, pulled up via negative margin */}
               <img 
                  src="https://i.ibb.co/xqxm5rCT/logo-mehri-no-bg.png" 
-                 alt="Shamsullah Mehri Logo"
+                 alt="Calorie AI Logo"
                  className="relative z-10 w-auto object-contain drop-shadow-sm h-40 md:h-64 -mt-10 md:-mt-20 -ml-2 md:-ml-6"
               />
             </div>

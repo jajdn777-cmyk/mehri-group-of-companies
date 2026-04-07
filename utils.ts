@@ -251,6 +251,7 @@ export const api = async (action: string, payload: any) => {
   }
 
   try {
+    if (action === 'LOGOUT') { await supabase.auth.signOut(); return { status: 'success' }; }
     const { data: authData, error: authError } = await supabase.auth.getUser();
     
     if (authError && action !== 'LOGIN' && action !== 'REGISTER') {
@@ -705,7 +706,6 @@ Goals: ${JSON.stringify(userContext.goals)}
        return { status: 'error', message: 'Google Auth requires backend configuration' };
     }
 
-    if (action === 'LOGOUT') { await supabase.auth.signOut(); return { status: 'success' }; }
 
     // --- ADMIN HANDLERS ---
     if (action === 'ADMIN_GET_ALL') {
