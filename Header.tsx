@@ -106,8 +106,12 @@ export const Header = ({ currentView, onNavigate, onSignOut, onShop, userProfile
             </motion.button>
 
             {/* LOGO (LEFT ALIGNED) - Pulled up with negative margin */}
-            <div 
-              className="relative flex items-center cursor-pointer hover:scale-[1.02] active:scale-95 transition-all z-50" 
+            <motion.button
+              type="button"
+              aria-label="Go to home"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.95 }}
+              className="relative flex items-center cursor-pointer transition-all z-50 bg-transparent border-none p-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2 rounded-lg"
               onClick={() => {
                 if (userProfile?.username) {
                   onNavigate('dashboard');
@@ -122,10 +126,10 @@ export const Header = ({ currentView, onNavigate, onSignOut, onShop, userProfile
               {/* Direct IMG for precise size control - Fixed dimensions, pulled up via negative margin */}
               <img 
                  src="https://i.ibb.co/xqxm5rCT/logo-mehri-no-bg.png" 
-                 alt="Mehri Logo"
+                 alt=""
                  className="relative z-10 w-auto object-contain drop-shadow-sm h-40 md:h-64 -mt-10 md:-mt-20 -ml-2 md:-ml-6"
               />
-            </div>
+            </motion.button>
         </div>
         
         {/* MOBILE: PROFILE AVATAR (RIGHT) */}
