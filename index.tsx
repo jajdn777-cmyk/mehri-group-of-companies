@@ -90,7 +90,18 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundarySta
 
   render() {
     if (this.state.hasError) {
-      return (
+
+  // Helper for dynamic SEO titles
+  const getSEOTitle = () => {
+    if (view === 'main') return dashView === "dashboard" ? "Dashboard" : dashView.charAt(0).toUpperCase() + dashView.slice(1);
+    if (view === 'auth') return 'Sign In';
+    if (view === 'settings') return 'Settings';
+    if (view === 'privacy') return 'Privacy Policy';
+    if (view === 'notfound') return 'Page Not Found';
+    return undefined;
+  };
+
+  return (
         <div className="min-h-screen bg-[#FCFCFC] flex flex-col items-center justify-center p-6 text-center font-sans selection:bg-emerald-100">
            <div className="mb-8 relative flex justify-center">
               <div className="w-24 h-24 bg-[#A7F3D0]/30 rounded-[32px] flex items-center justify-center border border-emerald-100 shadow-sm relative z-10">
@@ -240,7 +251,18 @@ const App = () => {
       }
     };
     window.addEventListener('popstate', handlePopState);
-    return () => window.removeEventListener('popstate', handlePopState);
+
+  // Helper for dynamic SEO titles
+  const getSEOTitle = () => {
+    if (view === 'main') return dashView === "dashboard" ? "Dashboard" : dashView.charAt(0).toUpperCase() + dashView.slice(1);
+    if (view === 'auth') return 'Sign In';
+    if (view === 'settings') return 'Settings';
+    if (view === 'privacy') return 'Privacy Policy';
+    if (view === 'notfound') return 'Page Not Found';
+    return undefined;
+  };
+
+  return () => window.removeEventListener('popstate', handlePopState);
   }, []);
 
   useEffect(() => {
@@ -249,7 +271,18 @@ const App = () => {
         setIsLoading(false);
         setIsCheckingAuth(false);
       }, 4000);
-      return () => clearTimeout(timer);
+
+  // Helper for dynamic SEO titles
+  const getSEOTitle = () => {
+    if (view === 'main') return dashView === "dashboard" ? "Dashboard" : dashView.charAt(0).toUpperCase() + dashView.slice(1);
+    if (view === 'auth') return 'Sign In';
+    if (view === 'settings') return 'Settings';
+    if (view === 'privacy') return 'Privacy Policy';
+    if (view === 'notfound') return 'Page Not Found';
+    return undefined;
+  };
+
+  return () => clearTimeout(timer);
     }
   }, [isLoading, isCheckingAuth]);
 
@@ -306,7 +339,18 @@ const App = () => {
          hasLoadedSession.current = true; setIsCheckingAuth(false);
       }
     });
-    return () => { authListener.subscription.unsubscribe(); };
+
+  // Helper for dynamic SEO titles
+  const getSEOTitle = () => {
+    if (view === 'main') return dashView === "dashboard" ? "Dashboard" : dashView.charAt(0).toUpperCase() + dashView.slice(1);
+    if (view === 'auth') return 'Sign In';
+    if (view === 'settings') return 'Settings';
+    if (view === 'privacy') return 'Privacy Policy';
+    if (view === 'notfound') return 'Page Not Found';
+    return undefined;
+  };
+
+  return () => { authListener.subscription.unsubscribe(); };
   }, []);
 
   const loadUserData = async (handle: string) => {
@@ -401,16 +445,32 @@ const App = () => {
   };
 
   const handleDeleteBlog = async (id: number) => {
-      try {
-          const res = await api("DELETE_BLOG", { id });
-          if (res.status === 'success') { setBlogs(prev => prev.filter((b: any) => b.id !== id)); }
-      } catch (e) {}
+    try {
+      const res = await api("DELETE_BLOG", { id });
+      if (res.status === 'success') {
+        setBlogs(prev => prev.filter((b: any) => b.id !== id));
+      } else {
+        alert("Could not delete blog post: " + res.message);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  // Helper for dynamic SEO titles
+  const getSEOTitle = () => {
+    if (view === 'main') return dashView === "dashboard" ? "Dashboard" : dashView.charAt(0).toUpperCase() + dashView.slice(1);
+    if (view === 'auth') return 'Sign In';
+    if (view === 'settings') return 'Settings';
+    if (view === 'privacy') return 'Privacy Policy';
+    if (view === 'notfound') return 'Page Not Found';
+    return undefined;
   };
 
   return (
     <div className="min-h-screen bg-[#FCFCFC] font-sans text-slate-900 selection:bg-emerald-100 relative overflow-x-hidden">
       <ScrollToTop view={view} dashView={dashView} />
-      <SEO title={view === 'main' ? dashView.charAt(0).toUpperCase() + dashView.slice(1) : undefined} view={view + '-' + dashView} faq={view === "landing" ? FAQ_DATA : undefined} />
+      <SEO title={getSEOTitle()} view={view + '-' + dashView} faq={view === "landing" ? FAQ_DATA : undefined} />
       <Loader isVisible={isLoading || isCheckingAuth} text={loadingText || "Initializing Core..."} onDismiss={() => { setIsLoading(false); setIsCheckingAuth(false); }} />
       {showOnboarding && <OnboardingTour onComplete={() => setShowOnboarding(false)} onNavigate={(page: any) => handleTransition('main', page, undefined, true)} />}
       {!isCheckingAuth && view !== 'privacy' && view !== 'terms' && dashView !== 'write' && (
