@@ -73,12 +73,21 @@ export const ShopModal = ({ onClose, onBuy }: any) => {
           {/* Header for Mobile */}
           <div className="lg:hidden flex items-center justify-between p-6 border-b border-slate-100 bg-white sticky top-0 z-50">
              <h3 className="font-black uppercase tracking-tighter text-xl">MEHRI <span className="text-emerald-500">PRO</span></h3>
-             <button onClick={onClose} className="p-2 bg-slate-100 rounded-full text-slate-900"><X size={20}/></button>
+             <button
+                type="button"
+                onClick={onClose}
+                aria-label="Close shop modal"
+                className="p-2 bg-slate-100 rounded-full text-slate-900 focus-visible:ring-2 focus-visible:ring-emerald-500 outline-none"
+             >
+                <X size={20}/>
+             </button>
           </div>
 
           <button 
+            type="button"
             onClick={onClose}
-            className="hidden lg:flex absolute top-8 right-8 z-50 p-3 bg-white/80 hover:bg-white rounded-full text-slate-900 transition-all shadow-lg backdrop-blur-md"
+            aria-label="Close shop modal"
+            className="hidden lg:flex absolute top-8 right-8 z-50 p-3 bg-white/80 hover:bg-white rounded-full text-slate-900 transition-all shadow-lg backdrop-blur-md focus-visible:ring-2 focus-visible:ring-emerald-500 outline-none"
           >
             <X size={24} />
           </button>
@@ -131,10 +140,20 @@ export const ShopModal = ({ onClose, onBuy }: any) => {
 
                 {/* Image Navigation */}
                 <div className="absolute inset-x-4 top-1/2 -translate-y-1/2 flex justify-between pointer-events-none">
-                   <button onClick={(e) => { e.stopPropagation(); prevImg(); }} className="p-3 rounded-full bg-white/50 backdrop-blur-md text-slate-900 hover:bg-white transition-all shadow-lg pointer-events-auto opacity-0 group-hover:opacity-100 transform -translate-x-4 group-hover:translate-x-0">
+                   <button
+                      type="button"
+                      onClick={(e) => { e.stopPropagation(); prevImg(); }}
+                      aria-label="Previous product image"
+                      className="p-3 rounded-full bg-white/50 backdrop-blur-md text-slate-900 hover:bg-white transition-all shadow-lg pointer-events-auto opacity-0 group-hover:opacity-100 transform -translate-x-4 group-hover:translate-x-0 focus-visible:opacity-100 focus-visible:translate-x-0 outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
+                   >
                       <ChevronLeft size={24} />
                    </button>
-                   <button onClick={(e) => { e.stopPropagation(); nextImg(); }} className="p-3 rounded-full bg-white/50 backdrop-blur-md text-slate-900 hover:bg-white transition-all shadow-lg pointer-events-auto opacity-0 group-hover:opacity-100 transform translate-x-4 group-hover:translate-x-0">
+                   <button
+                      type="button"
+                      onClick={(e) => { e.stopPropagation(); nextImg(); }}
+                      aria-label="Next product image"
+                      className="p-3 rounded-full bg-white/50 backdrop-blur-md text-slate-900 hover:bg-white transition-all shadow-lg pointer-events-auto opacity-0 group-hover:opacity-100 transform translate-x-4 group-hover:translate-x-0 focus-visible:opacity-100 focus-visible:translate-x-0 outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
+                   >
                       <ChevronRight size={24} />
                    </button>
                 </div>
@@ -147,16 +166,18 @@ export const ShopModal = ({ onClose, onBuy }: any) => {
                    <p className="text-[10px] font-bold text-slate-500 tracking-widest">{currentImgIndex + 1} / {PRODUCT_IMAGES.length}</p>
                 </div>
                 <div 
-
-                  className="flex gap-4 overflow-x-auto pb-2 custom-scrollbar px-2"
+                  className="flex gap-4 overflow-x-auto pb-2 custom-scrollbar px-2 snap-x scroll-smooth"
                 >
                    {PRODUCT_IMAGES.map((img, i) => (
                       <button
                         key={i}
-                        className={`w-16 h-16 lg:w-20 lg:h-20 rounded-2xl overflow-hidden shrink-0 border-2 transition-all duration-300 ${currentImgIndex === i ? 'border-emerald-400 scale-105 shadow-lg' : 'border-white/50 hover:border-white opacity-70 hover:opacity-100'}`}
+                        type="button"
+                        aria-label={`View product image ${i + 1}`}
+                        aria-pressed={currentImgIndex === i}
+                        className={`w-16 h-16 lg:w-20 lg:h-20 rounded-2xl overflow-hidden shrink-0 border-2 transition-all duration-300 snap-center outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 ${currentImgIndex === i ? 'border-emerald-400 scale-105 shadow-lg' : 'border-white/50 hover:border-white opacity-70 hover:opacity-100'}`}
                         onClick={() => setCurrentImgIndex(i)}
                       >
-                         <img src={img} className="w-full h-full object-cover" alt={`Gallery ${i}`} />
+                         <img src={img} className="w-full h-full object-cover" alt="" />
                       </button>
                    ))}
                 </div>
@@ -209,15 +230,19 @@ export const ShopModal = ({ onClose, onBuy }: any) => {
                    </p>
                    <div className="flex gap-4">
                       <button 
+                        type="button"
                         onClick={() => handleColorChange('Black')}
-                        className={`flex-1 p-6 rounded-3xl border-2 flex items-center gap-4 transition-all ${selectedColor === 'Black' ? 'border-slate-900 bg-slate-900 text-white shadow-2xl scale-[1.02]' : 'border-slate-100 text-slate-500 hover:border-slate-200'}`}
+                        aria-pressed={selectedColor === 'Black'}
+                        className={`flex-1 p-6 rounded-3xl border-2 flex items-center gap-4 transition-all outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 ${selectedColor === 'Black' ? 'border-slate-900 bg-slate-900 text-white shadow-2xl scale-[1.02]' : 'border-slate-100 text-slate-500 hover:border-slate-200'}`}
                       >
                          <div className="w-8 h-8 rounded-full bg-slate-900 border border-slate-700 shadow-inner" />
                          <span className="text-sm font-black uppercase tracking-widest">Black</span>
                       </button>
                       <button 
+                         type="button"
                          onClick={() => handleColorChange('Rose Pink')}
-                         className={`flex-1 p-6 rounded-3xl border-2 flex items-center gap-4 transition-all ${selectedColor === 'Rose Pink' ? 'border-pink-300 bg-pink-50 text-slate-900 shadow-2xl scale-[1.02]' : 'border-slate-100 text-slate-500 hover:border-slate-200'}`}
+                         aria-pressed={selectedColor === 'Rose Pink'}
+                         className={`flex-1 p-6 rounded-3xl border-2 flex items-center gap-4 transition-all outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 ${selectedColor === 'Rose Pink' ? 'border-pink-300 bg-pink-50 text-slate-900 shadow-2xl scale-[1.02]' : 'border-slate-100 text-slate-500 hover:border-slate-200'}`}
                       >
                          <div className="w-8 h-8 rounded-full bg-pink-300 border border-pink-200 shadow-inner" />
                          <span className="text-sm font-black uppercase tracking-widest">Rose Pink</span>
@@ -282,7 +307,7 @@ export const ShopModal = ({ onClose, onBuy }: any) => {
                       }}
                       whileHover={{ scale: 1.02, y: -2 }}
                       whileTap={{ scale: 0.98 }}
-                      className="w-full py-7 bg-slate-900 text-white rounded-[30px] font-black uppercase text-sm tracking-[0.4em] transition-all shadow-2xl flex items-center justify-center gap-4 relative overflow-hidden group"
+                      className="w-full py-7 bg-slate-900 text-white rounded-[30px] font-black uppercase text-sm tracking-[0.4em] transition-all shadow-2xl flex items-center justify-center gap-4 relative overflow-hidden group outline-none focus-visible:ring-4 focus-visible:ring-emerald-500/50"
                    >
                       <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/0 via-emerald-500/20 to-emerald-500/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
                       Get Yours Now <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
