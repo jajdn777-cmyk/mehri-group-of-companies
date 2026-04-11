@@ -106,8 +106,12 @@ export const Header = ({ currentView, onNavigate, onSignOut, onShop, userProfile
             </motion.button>
 
             {/* LOGO (LEFT ALIGNED) - Pulled up with negative margin */}
-            <div 
-              className="relative flex items-center cursor-pointer hover:scale-[1.02] active:scale-95 transition-all z-50" 
+            <motion.button
+              type="button"
+              aria-label="Home"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.95 }}
+              className="relative flex items-center cursor-pointer transition-all z-50 focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:outline-none rounded-lg"
               onClick={() => {
                 if (userProfile?.username) {
                   onNavigate('dashboard');
@@ -122,10 +126,10 @@ export const Header = ({ currentView, onNavigate, onSignOut, onShop, userProfile
               {/* Direct IMG for precise size control - Fixed dimensions, pulled up via negative margin */}
               <img 
                  src="https://i.ibb.co/xqxm5rCT/logo-mehri-no-bg.png" 
-                 alt="Mehri Logo"
+                 alt=""
                  className="relative z-10 w-auto object-contain drop-shadow-sm h-40 md:h-64 -mt-10 md:-mt-20 -ml-2 md:-ml-6"
               />
-            </div>
+            </motion.button>
         </div>
         
         {/* MOBILE: PROFILE AVATAR (RIGHT) */}
@@ -150,8 +154,23 @@ export const Header = ({ currentView, onNavigate, onSignOut, onShop, userProfile
             <>
               {/* MAIN LINKS */}
               <div className="flex items-center gap-8 ml-6">
-                  <div className="relative py-4" onMouseEnter={() => setWorkoutsHover(true)} onMouseLeave={() => setWorkoutsHover(false)}>
-                    <button className={`text-sm font-black uppercase tracking-[0.2em] flex items-center gap-1 transition-colors whitespace-nowrap ${workoutsHover ? 'text-emerald-500' : 'text-slate-900'}`}>
+                  <div
+                    className="relative py-4"
+                    onMouseEnter={() => setWorkoutsHover(true)}
+                    onMouseLeave={() => setWorkoutsHover(false)}
+                    onFocusCapture={() => setWorkoutsHover(true)}
+                    onBlurCapture={(e) => {
+                      if (!e.currentTarget.contains(e.relatedTarget as Node)) {
+                        setWorkoutsHover(false);
+                      }
+                    }}
+                  >
+                    <button
+                      type="button"
+                      aria-haspopup="true"
+                      aria-expanded={workoutsHover}
+                      className={`text-sm font-black uppercase tracking-[0.2em] flex items-center gap-1 transition-colors whitespace-nowrap focus-visible:text-emerald-500 focus-visible:outline-none ${workoutsHover ? 'text-emerald-500' : 'text-slate-900'}`}
+                    >
                       Workouts <ChevronDown size={12} className={`transition-transform duration-500 ${workoutsHover ? 'rotate-180' : ''}`} />
                     </button>
                     <AnimatePresence>
@@ -178,11 +197,32 @@ export const Header = ({ currentView, onNavigate, onSignOut, onShop, userProfile
                   <button onClick={() => onNavigate('blogs')} className="text-sm font-black uppercase tracking-[0.2em] text-slate-900 hover:text-emerald-500 transition-colors flex items-center gap-1 whitespace-nowrap">Blogs</button>
                   
                   {/* ALMA HOVER MENU */}
-                  <div className="relative py-4" onMouseEnter={() => setAlmaHover(true)} onMouseLeave={() => setAlmaHover(false)}>
-                     <button onClick={() => onNavigate('alma')} className={`text-sm font-black uppercase tracking-[0.2em] flex items-center gap-1 transition-colors whitespace-nowrap relative ${almaHover ? 'text-emerald-500' : 'text-slate-900'}`}>
+                  <div
+                    className="relative py-4"
+                    onMouseEnter={() => setAlmaHover(true)}
+                    onMouseLeave={() => setAlmaHover(false)}
+                    onFocusCapture={() => setAlmaHover(true)}
+                    onBlurCapture={(e) => {
+                      if (!e.currentTarget.contains(e.relatedTarget as Node)) {
+                        setAlmaHover(false);
+                      }
+                    }}
+                  >
+                     <button
+                        type="button"
+                        onClick={() => onNavigate('alma')}
+                        aria-haspopup="true"
+                        aria-expanded={almaHover}
+                        className={`text-sm font-black uppercase tracking-[0.2em] flex items-center gap-1 transition-colors whitespace-nowrap relative focus-visible:text-emerald-500 focus-visible:outline-none ${almaHover ? 'text-emerald-500' : 'text-slate-900'}`}
+                     >
                         <Brain size={12}/> Alma
                         {hasAlmaNotification && (
-                           <span className="absolute -top-1 -right-2 w-4 h-4 bg-red-500 text-white text-[8px] flex items-center justify-center rounded-full animate-pulse shadow-sm border border-white">1</span>
+                           <span
+                            aria-label="1 new notification"
+                            className="absolute -top-1 -right-2 w-4 h-4 bg-red-500 text-white text-[8px] flex items-center justify-center rounded-full animate-pulse shadow-sm border border-white"
+                           >
+                            1
+                           </span>
                         )}
                      </button>
                      <AnimatePresence>
