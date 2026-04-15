@@ -202,15 +202,30 @@ export const LogModal = ({ date, routes, userSpecs, userProfile, userPreferences
             <div className="space-y-2 relative z-[60]">
               <label className="text-xs md:text-[10px] font-black uppercase text-slate-400 ml-4">Activity Type</label>
               <div className="relative">
-                <div className="w-full bg-slate-50 p-5 rounded-[25px] font-bold text-base flex items-center justify-between cursor-pointer hover:bg-slate-100 transition-colors active:scale-[0.98]" onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
+                <button
+                  type="button"
+                  aria-haspopup="listbox"
+                  aria-expanded={isDropdownOpen}
+                  aria-label="Select activity type"
+                  className="w-full bg-slate-50 p-5 rounded-[25px] font-bold text-base flex items-center justify-between cursor-pointer hover:bg-slate-100 transition-all active:scale-[0.98] focus-visible:ring-2 ring-emerald-500/50 outline-none"
+                  onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                >
                   <span className="text-slate-900">{form.type || "Select Category..."}</span>
-                  <ChevronDown size={20} className="text-slate-400" />
-                </div>
+                  <ChevronDown size={20} className={`text-slate-400 transition-transform duration-300 ${isDropdownOpen ? 'rotate-180' : ''}`} />
+                </button>
                 {isDropdownOpen && (
                   <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-slate-100 rounded-[25px] shadow-2xl z-[100] overflow-hidden h-64 flex flex-col">
                     <div className="p-3 border-b border-slate-50 bg-white">
                       <div className="flex items-center bg-slate-50 rounded-xl px-3 py-2">
-                        <Search size={14} className="text-slate-400 mr-2"/><input className="bg-transparent w-full font-bold text-base md:text-xs outline-none" placeholder="Search..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} onClick={(e) => e.stopPropagation()}/>
+                        <Search size={14} className="text-slate-400 mr-2"/>
+                        <input
+                          className="bg-transparent w-full font-bold text-base md:text-xs outline-none"
+                          placeholder="Search..."
+                          aria-label="Search activity types"
+                          value={searchTerm}
+                          onChange={(e) => setSearchTerm(e.target.value)}
+                          onClick={(e) => e.stopPropagation()}
+                        />
                       </div>
                     </div>
                     <div className="overflow-y-auto custom-scrollbar p-2 flex-1 bg-white">
@@ -234,10 +249,17 @@ export const LogModal = ({ date, routes, userSpecs, userProfile, userPreferences
               <div className="space-y-2 animate-fade-in relative z-[50]">
                 <label className="text-xs md:text-[10px] font-black uppercase text-slate-400 ml-4">Load Route</label>
                 <div className="relative">
-                  <div className={`w-full p-5 rounded-[25px] font-bold text-base flex items-center justify-between cursor-pointer border-2 transition-all ${routes.length > 0 ? 'bg-emerald-50 border-emerald-100 hover:border-emerald-200' : 'bg-slate-50 border-transparent opacity-50 cursor-not-allowed'}`} onClick={() => routes.length > 0 && setIsRouteDropdownOpen(!isRouteDropdownOpen)}>
+                  <button
+                    type="button"
+                    aria-haspopup="listbox"
+                    aria-expanded={isRouteDropdownOpen}
+                    aria-label="Load a saved route"
+                    className={`w-full p-5 rounded-[25px] font-bold text-base flex items-center justify-between cursor-pointer border-2 transition-all focus-visible:ring-2 ring-emerald-500/50 outline-none ${routes.length > 0 ? 'bg-emerald-50 border-emerald-100 hover:border-emerald-200' : 'bg-slate-50 border-transparent opacity-50 cursor-not-allowed'}`}
+                    onClick={() => routes.length > 0 && setIsRouteDropdownOpen(!isRouteDropdownOpen)}
+                  >
                     <span className="text-slate-900 flex items-center gap-2 truncate"><MapPin size={16}/> {routes.find((r:any) => getDistVal(r.distance, units, 2) === form.distance)?.name || (routes.length > 0 ? "Pick a Saved Route" : "No Saved Routes")}</span>
-                    <ChevronDown size={20} className="text-slate-400" />
-                  </div>
+                    <ChevronDown size={20} className={`text-slate-400 transition-transform duration-300 ${isRouteDropdownOpen ? 'rotate-180' : ''}`} />
+                  </button>
                   {isRouteDropdownOpen && routes.length > 0 && (
                     <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-slate-100 rounded-[25px] shadow-2xl z-[100] overflow-hidden p-2">
                       {routes.map((route: any) => (
@@ -286,7 +308,15 @@ export const LogModal = ({ date, routes, userSpecs, userProfile, userPreferences
                   <label className="text-xs md:text-[10px] font-black uppercase text-slate-400 ml-4">Calories</label>
                   <div className="relative flex gap-2">
                     <input type="number" className="w-full bg-slate-50 p-5 rounded-[25px] font-bold text-base" placeholder="0" value={form.calories} onChange={e=>setForm({...form, calories: e.target.value})} />
-                    <button onClick={calculateBurn} className="bg-slate-900 text-white px-4 rounded-[20px] hover:bg-emerald-500 transition-colors flex items-center justify-center shrink-0" title="Auto-Calculate"><CalcIcon size={18}/></button>
+                    <button
+                      type="button"
+                      onClick={calculateBurn}
+                      aria-label="Auto-calculate calories"
+                      className="bg-slate-900 text-white px-4 rounded-[20px] hover:bg-emerald-500 transition-colors flex items-center justify-center shrink-0 focus-visible:ring-2 ring-emerald-500/50 outline-none"
+                      title="Auto-Calculate"
+                    >
+                      <CalcIcon size={18}/>
+                    </button>
                   </div>
                 </div>
               </div>
