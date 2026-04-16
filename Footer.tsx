@@ -30,7 +30,14 @@ const LegalModal = ({ title, content, onClose }: { title: string, content: strin
           {title === 'Privacy Policy' ? <Lock size={20} className="text-emerald-500"/> : title === 'About Us' ? <Users size={20} className="text-emerald-500"/> : <FileText size={20} className="text-emerald-500"/>}
           {title}
         </h3>
-        <button onClick={onClose} className="p-2 hover:bg-slate-800 rounded-full transition-colors text-slate-400 hover:text-white"><X size={20}/></button>
+        <button
+          type="button"
+          onClick={onClose}
+          aria-label="Close modal"
+          className="p-2 hover:bg-slate-800 rounded-full transition-colors text-slate-400 hover:text-white"
+        >
+          <X size={20}/>
+        </button>
       </div>
       <div className="p-8 overflow-y-auto custom-scrollbar bg-slate-900">
         <div className="prose prose-invert prose-sm max-w-none font-sans leading-relaxed text-slate-300 whitespace-pre-line">
@@ -38,7 +45,11 @@ const LegalModal = ({ title, content, onClose }: { title: string, content: strin
         </div>
       </div>
       <div className="p-6 border-t border-slate-800 bg-black flex justify-end">
-        <button onClick={onClose} className="px-8 py-3 bg-white text-black rounded-full font-black uppercase text-[10px] tracking-widest hover:bg-emerald-400 transition-colors">
+        <button
+          type="button"
+          onClick={onClose}
+          className="px-8 py-3 bg-white text-black rounded-full font-black uppercase text-[10px] tracking-widest hover:bg-emerald-400 transition-colors"
+        >
           Close Document
         </button>
       </div>
