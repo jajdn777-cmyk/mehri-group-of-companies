@@ -1,6 +1,7 @@
 
 import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
+import { motion } from 'framer-motion';
 import { Plus, ArrowRight, Brain, Zap, Trash2, Search, ChevronDown, MapPin, Calculator as CalcIcon, X, Dumbbell, Target, Footprints, Timer, Flame, Activity, ToggleLeft, ToggleRight, Info, Calendar, RefreshCw, CheckCircle2, Lock, Heart, Moon, Waves, Mountain, Weight, ChevronLeft, ChevronRight, BarChart } from 'lucide-react';
 import { getLocalTodayStr, ROUTE_APPLICABLE_TYPES, ACTIVITY_CATEGORIES } from './constants.ts';
 import { formatDuration, parseDurationToHours, isStrengthActivity, calculateEstimatedCalories, calculateBMR, calculateAge, convertDist, convertWeight, getDistUnit, getWeightUnit, getDistVal, calculateStreak, api } from './utils.ts';
@@ -202,10 +203,16 @@ export const LogModal = ({ date, routes, userSpecs, userProfile, userPreferences
             <div className="space-y-2 relative z-[60]">
               <label className="text-xs md:text-[10px] font-black uppercase text-slate-400 ml-4">Activity Type</label>
               <div className="relative">
-                <div className="w-full bg-slate-50 p-5 rounded-[25px] font-bold text-base flex items-center justify-between cursor-pointer hover:bg-slate-100 transition-colors active:scale-[0.98]" onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
+                <button
+                  type="button"
+                  aria-haspopup="listbox"
+                  aria-expanded={isDropdownOpen}
+                  className="w-full bg-slate-50 p-5 rounded-[25px] font-bold text-base flex items-center justify-between cursor-pointer hover:bg-slate-100 transition-colors active:scale-[0.98]"
+                  onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                >
                   <span className="text-slate-900">{form.type || "Select Category..."}</span>
                   <ChevronDown size={20} className="text-slate-400" />
-                </div>
+                </button>
                 {isDropdownOpen && (
                   <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-slate-100 rounded-[25px] shadow-2xl z-[100] overflow-hidden h-64 flex flex-col">
                     <div className="p-3 border-b border-slate-50 bg-white">
@@ -234,10 +241,16 @@ export const LogModal = ({ date, routes, userSpecs, userProfile, userPreferences
               <div className="space-y-2 animate-fade-in relative z-[50]">
                 <label className="text-xs md:text-[10px] font-black uppercase text-slate-400 ml-4">Load Route</label>
                 <div className="relative">
-                  <div className={`w-full p-5 rounded-[25px] font-bold text-base flex items-center justify-between cursor-pointer border-2 transition-all ${routes.length > 0 ? 'bg-emerald-50 border-emerald-100 hover:border-emerald-200' : 'bg-slate-50 border-transparent opacity-50 cursor-not-allowed'}`} onClick={() => routes.length > 0 && setIsRouteDropdownOpen(!isRouteDropdownOpen)}>
+                  <button
+                    type="button"
+                    aria-haspopup="listbox"
+                    aria-expanded={isRouteDropdownOpen}
+                    className={`w-full p-5 rounded-[25px] font-bold text-base flex items-center justify-between cursor-pointer border-2 transition-all ${routes.length > 0 ? 'bg-emerald-50 border-emerald-100 hover:border-emerald-200' : 'bg-slate-50 border-transparent opacity-50 cursor-not-allowed'}`}
+                    onClick={() => routes.length > 0 && setIsRouteDropdownOpen(!isRouteDropdownOpen)}
+                  >
                     <span className="text-slate-900 flex items-center gap-2 truncate"><MapPin size={16}/> {routes.find((r:any) => getDistVal(r.distance, units, 2) === form.distance)?.name || (routes.length > 0 ? "Pick a Saved Route" : "No Saved Routes")}</span>
                     <ChevronDown size={20} className="text-slate-400" />
-                  </div>
+                  </button>
                   {isRouteDropdownOpen && routes.length > 0 && (
                     <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-slate-100 rounded-[25px] shadow-2xl z-[100] overflow-hidden p-2">
                       {routes.map((route: any) => (
@@ -286,7 +299,15 @@ export const LogModal = ({ date, routes, userSpecs, userProfile, userPreferences
                   <label className="text-xs md:text-[10px] font-black uppercase text-slate-400 ml-4">Calories</label>
                   <div className="relative flex gap-2">
                     <input type="number" className="w-full bg-slate-50 p-5 rounded-[25px] font-bold text-base" placeholder="0" value={form.calories} onChange={e=>setForm({...form, calories: e.target.value})} />
-                    <button onClick={calculateBurn} className="bg-slate-900 text-white px-4 rounded-[20px] hover:bg-emerald-500 transition-colors flex items-center justify-center shrink-0" title="Auto-Calculate"><CalcIcon size={18}/></button>
+                    <button
+                      type="button"
+                      onClick={calculateBurn}
+                      className="bg-slate-900 text-white px-4 rounded-[20px] hover:bg-emerald-500 transition-colors flex items-center justify-center shrink-0"
+                      title="Auto-Calculate"
+                      aria-label="Calculate estimated calorie burn"
+                    >
+                      <CalcIcon size={18}/>
+                    </button>
                   </div>
                 </div>
               </div>
@@ -711,9 +732,11 @@ export const DashboardView = ({ workouts, setWorkouts, userGoals, setUserGoals, 
   return (
     <div className="space-y-6 md:space-y-12 animate-fade-in pb-32 max-w-7xl mx-auto font-sans">
       {almaMessage && (
-        <div
+        <motion.button
+          type="button"
+          aria-label="View Alma Intelligence insight"
           onClick={handleMessageClick}
-          className="fixed top-32 left-1/2 -translate-x-1/2 z-[6000] w-[90%] max-w-xl bg-slate-900 text-white p-6 rounded-[30px] shadow-2xl cursor-pointer hover:scale-[1.02] transition-all group overflow-hidden border border-white/10"
+          className="fixed top-32 left-1/2 -translate-x-1/2 z-[6000] w-[90%] max-w-xl bg-slate-900 text-white p-6 rounded-[30px] shadow-2xl cursor-pointer hover:scale-[1.02] transition-all group overflow-hidden border border-white/10 text-left"
         >
             <div className="flex items-start gap-4">
                 <div className="w-10 h-10 bg-[#A7F3D0] rounded-full flex items-center justify-center text-slate-900 shrink-0">
@@ -728,7 +751,7 @@ export const DashboardView = ({ workouts, setWorkouts, userGoals, setUserGoals, 
                 </div>
             </div>
             <div className="absolute bottom-0 left-0 h-1 bg-[#A7F3D0] transition-all duration-100 linear" style={{ width: `${progress}%` }} />
-        </div>
+        </motion.button>
       )}
 
       {showStreakCelebration && (
