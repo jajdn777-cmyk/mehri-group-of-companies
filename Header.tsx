@@ -106,8 +106,10 @@ export const Header = ({ currentView, onNavigate, onSignOut, onShop, userProfile
             </motion.button>
 
             {/* LOGO (LEFT ALIGNED) - Pulled up with negative margin */}
-            <div 
-              className="relative flex items-center cursor-pointer hover:scale-[1.02] active:scale-95 transition-all z-50" 
+            <motion.button
+              type="button"
+              aria-label="Go to home"
+              className="relative flex items-center cursor-pointer hover:scale-[1.02] active:scale-95 transition-all z-50 focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:outline-none focus-visible:rounded-xl"
               onClick={() => {
                 if (userProfile?.username) {
                   onNavigate('dashboard');
@@ -122,10 +124,10 @@ export const Header = ({ currentView, onNavigate, onSignOut, onShop, userProfile
               {/* Direct IMG for precise size control - Fixed dimensions, pulled up via negative margin */}
               <img 
                  src="https://i.ibb.co/xqxm5rCT/logo-mehri-no-bg.png" 
-                 alt="Mehri Logo"
+                 alt=""
                  className="relative z-10 w-auto object-contain drop-shadow-sm h-40 md:h-64 -mt-10 md:-mt-20 -ml-2 md:-ml-6"
               />
-            </div>
+            </motion.button>
         </div>
         
         {/* MOBILE: PROFILE AVATAR (RIGHT) */}
@@ -150,8 +152,16 @@ export const Header = ({ currentView, onNavigate, onSignOut, onShop, userProfile
             <>
               {/* MAIN LINKS */}
               <div className="flex items-center gap-8 ml-6">
-                  <div className="relative py-4" onMouseEnter={() => setWorkoutsHover(true)} onMouseLeave={() => setWorkoutsHover(false)}>
-                    <button className={`text-sm font-black uppercase tracking-[0.2em] flex items-center gap-1 transition-colors whitespace-nowrap ${workoutsHover ? 'text-emerald-500' : 'text-slate-900'}`}>
+                  <div
+                    className="relative py-4"
+                    onMouseEnter={() => setWorkoutsHover(true)}
+                    onMouseLeave={() => setWorkoutsHover(false)}
+                    onFocusCapture={() => setWorkoutsHover(true)}
+                    onBlurCapture={(e) => {
+                      if (!e.currentTarget.contains(e.relatedTarget as Node)) setWorkoutsHover(false);
+                    }}
+                  >
+                    <button className={`text-sm font-black uppercase tracking-[0.2em] flex items-center gap-1 transition-colors whitespace-nowrap focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:outline-none focus-visible:rounded-full ${workoutsHover ? 'text-emerald-500' : 'text-slate-900'}`}>
                       Workouts <ChevronDown size={12} className={`transition-transform duration-500 ${workoutsHover ? 'rotate-180' : ''}`} />
                     </button>
                     <AnimatePresence>
@@ -173,14 +183,22 @@ export const Header = ({ currentView, onNavigate, onSignOut, onShop, userProfile
                     </AnimatePresence>
                   </div>
                   
-                  <button onClick={() => onNavigate('routes')} className="text-sm font-black uppercase tracking-[0.2em] text-slate-900 hover:text-emerald-500 transition-colors whitespace-nowrap">Routes</button>
-                  <button onClick={() => onNavigate('challenges')} className="text-sm font-black uppercase tracking-[0.2em] text-slate-900 hover:text-emerald-500 transition-colors whitespace-nowrap">Challenges</button>
-                  <button onClick={() => onNavigate('blogs')} className="text-sm font-black uppercase tracking-[0.2em] text-slate-900 hover:text-emerald-500 transition-colors flex items-center gap-1 whitespace-nowrap">Blogs</button>
+                  <button onClick={() => onNavigate('routes')} className="text-sm font-black uppercase tracking-[0.2em] text-slate-900 hover:text-emerald-500 transition-colors whitespace-nowrap focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:outline-none focus-visible:rounded-full">Routes</button>
+                  <button onClick={() => onNavigate('challenges')} className="text-sm font-black uppercase tracking-[0.2em] text-slate-900 hover:text-emerald-500 transition-colors whitespace-nowrap focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:outline-none focus-visible:rounded-full">Challenges</button>
+                  <button onClick={() => onNavigate('blogs')} className="text-sm font-black uppercase tracking-[0.2em] text-slate-900 hover:text-emerald-500 transition-colors flex items-center gap-1 whitespace-nowrap focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:outline-none focus-visible:rounded-full">Blogs</button>
                   
                   {/* ALMA HOVER MENU */}
-                  <div className="relative py-4" onMouseEnter={() => setAlmaHover(true)} onMouseLeave={() => setAlmaHover(false)}>
-                     <button onClick={() => onNavigate('alma')} className={`text-sm font-black uppercase tracking-[0.2em] flex items-center gap-1 transition-colors whitespace-nowrap relative ${almaHover ? 'text-emerald-500' : 'text-slate-900'}`}>
-                        <Brain size={12}/> Alma
+                  <div
+                    className="relative py-4"
+                    onMouseEnter={() => setAlmaHover(true)}
+                    onMouseLeave={() => setAlmaHover(false)}
+                    onFocusCapture={() => setAlmaHover(true)}
+                    onBlurCapture={(e) => {
+                      if (!e.currentTarget.contains(e.relatedTarget as Node)) setAlmaHover(false);
+                    }}
+                  >
+                     <button onClick={() => onNavigate('alma')} className={`text-sm font-black uppercase tracking-[0.2em] flex items-center gap-1 transition-colors whitespace-nowrap relative focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:outline-none focus-visible:rounded-full ${almaHover ? 'text-emerald-500' : 'text-slate-900'}`}>
+                        <Brain size={12}/> AI Coach
                         {hasAlmaNotification && (
                            <span className="absolute -top-1 -right-2 w-4 h-4 bg-red-500 text-white text-[8px] flex items-center justify-center rounded-full animate-pulse shadow-sm border border-white">1</span>
                         )}
@@ -195,15 +213,15 @@ export const Header = ({ currentView, onNavigate, onSignOut, onShop, userProfile
                           className="absolute top-10 -left-10 pt-4"
                         >
                           <div className="w-72 bg-white/90 backdrop-blur-xl rounded-[40px] shadow-2xl border border-slate-100 p-6 flex flex-col gap-3">
-                             <button onClick={() => {onNavigate('alma'); setAlmaHover(false);}} className="w-full text-left px-6 py-4 rounded-[25px] hover:bg-slate-50 flex items-center gap-4 group transition-all">
+                             <button onClick={() => {onNavigate('alma'); setAlmaHover(false);}} className="w-full text-left px-6 py-4 rounded-[25px] hover:bg-slate-50 flex items-center gap-4 group transition-all focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:outline-none focus-visible:rounded-[25px]">
                                 <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-400 group-hover:bg-[#A7F3D0] group-hover:text-slate-900 transition-colors"><MessageSquare size={14}/></div>
-                                <span className="text-[10px] font-black uppercase tracking-widest text-slate-500 group-hover:text-slate-900">Ask Alma</span>
+                                <span className="text-[10px] font-black uppercase tracking-widest text-slate-500 group-hover:text-slate-900">Ask AI</span>
                              </button>
-                             <button onClick={() => {onNavigate('alma-meals'); setAlmaHover(false);}} className="w-full text-left px-6 py-4 rounded-[25px] hover:bg-slate-50 flex items-center gap-4 group transition-all">
+                             <button onClick={() => {onNavigate('alma-meals'); setAlmaHover(false);}} className="w-full text-left px-6 py-4 rounded-[25px] hover:bg-slate-50 flex items-center gap-4 group transition-all focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:outline-none focus-visible:rounded-[25px]">
                                 <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-400 group-hover:bg-[#A7F3D0] group-hover:text-slate-900 transition-colors"><Utensils size={14}/></div>
                                 <span className="text-[10px] font-black uppercase tracking-widest text-slate-500 group-hover:text-slate-900">Meal Tracker</span>
                              </button>
-                             <button onClick={() => {onNavigate('alma'); setAlmaHover(false);}} className="w-full text-left px-6 py-4 rounded-[25px] hover:bg-slate-50 flex items-center gap-4 group transition-all">
+                             <button onClick={() => {onNavigate('alma'); setAlmaHover(false);}} className="w-full text-left px-6 py-4 rounded-[25px] hover:bg-slate-50 flex items-center gap-4 group transition-all focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:outline-none focus-visible:rounded-[25px]">
                                 <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-400 group-hover:bg-[#A7F3D0] group-hover:text-slate-900 transition-colors"><Zap size={14}/></div>
                                 <span className="text-[10px] font-black uppercase tracking-widest text-slate-500 group-hover:text-slate-900">Daily Insights</span>
                              </button>
@@ -216,7 +234,7 @@ export const Header = ({ currentView, onNavigate, onSignOut, onShop, userProfile
 
               {/* USER ACTIONS */}
               <div className="flex items-center gap-6 ml-auto shrink-0 pl-4">
-                  <motion.button whileHover={{ scale: 1.05 }} onClick={onShop} className="text-sm font-black uppercase tracking-[0.2em] text-slate-900 hover:text-emerald-500 transition-colors flex items-center gap-1 whitespace-nowrap"><ShoppingBag size={14} className="w-4 h-4"/> Shop</motion.button>
+                  <motion.button whileHover={{ scale: 1.05 }} onClick={onShop} className="text-sm font-black uppercase tracking-[0.2em] text-slate-900 hover:text-emerald-500 transition-colors flex items-center gap-1 whitespace-nowrap focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:outline-none focus-visible:rounded-full"><ShoppingBag size={14} className="w-4 h-4"/> Shop</motion.button>
                   
                   <div className="relative flex items-center gap-3" ref={profileMenuRef}>
                     {streak > 0 && (
@@ -231,7 +249,7 @@ export const Header = ({ currentView, onNavigate, onSignOut, onShop, userProfile
                       whileHover={{ scale: 1.1 }}
                       onClick={() => setShowProfileMenu(!showProfileMenu)}
                       aria-label="Toggle profile menu"
-                      className={`w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-900 font-bold text-xs cursor-pointer hover:bg-slate-200 transition-all select-none ${userProfile?.hasWatch ? 'ring-2 ring-[#A7F3D0] ring-offset-2' : ''}`}
+                      className={`w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-900 font-bold text-xs cursor-pointer hover:bg-slate-200 transition-all select-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:outline-none focus-visible:ring-offset-2 ${userProfile?.hasWatch ? 'ring-2 ring-[#A7F3D0] ring-offset-2' : ''}`}
                     >
                       {getInitials(userName || userProfile?.firstName)}
                     </motion.button>
@@ -301,7 +319,12 @@ export const Header = ({ currentView, onNavigate, onSignOut, onShop, userProfile
             {/* Drawer Header */}
             <div className="px-6 py-6 border-b border-slate-50 flex items-center justify-between bg-[#FCFCFC]/80">
                 {/* User Info */}
-                <div className="flex items-center gap-3" onClick={() => onNavigate('settings')}>
+                <button
+                  type="button"
+                  aria-label="View settings"
+                  className="flex items-center gap-3 text-left focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:outline-none focus-visible:rounded-2xl p-1"
+                  onClick={() => { onNavigate('settings'); setMobileMenuOpen(false); }}
+                >
                    <div className={`w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-900 font-bold text-sm shadow-sm ${userProfile?.hasWatch ? 'ring-2 ring-[#A7F3D0] ring-offset-2' : ''}`}>
                       {getInitials(userName || userProfile?.firstName)}
                    </div>
@@ -309,7 +332,7 @@ export const Header = ({ currentView, onNavigate, onSignOut, onShop, userProfile
                       <span className="text-sm font-black text-slate-900 truncate max-w-[140px]">{userName || 'Athlete'}</span>
                       <span className="text-[10px] font-bold text-emerald-500 flex items-center gap-1"><Flame size={10}/> {streak} Day Streak</span>
                    </div>
-                </div>
+                </button>
                 {/* Close Button */}
                 <button
                   onClick={() => setMobileMenuOpen(false)}
@@ -351,11 +374,11 @@ export const Header = ({ currentView, onNavigate, onSignOut, onShop, userProfile
 
                     {/* ALMA ACCORDION */}
                     <MobileMenuSection 
-                       label="Alma Intelligence" 
+                       label="AI Coach"
                        isOpen={expandedSections['alma']} 
                        onToggle={() => toggleSection('alma')}
                     >
-                       <MobileSubLink onClick={() => onNavigate('alma')} label="Ask Alma" icon={Brain} badge={hasAlmaNotification} />
+                       <MobileSubLink onClick={() => onNavigate('alma')} label="Ask AI" icon={Brain} badge={hasAlmaNotification} />
                        <MobileSubLink onClick={() => onNavigate('alma-meals')} label="Meal Tracker" icon={Utensils} />
                     </MobileMenuSection>
 

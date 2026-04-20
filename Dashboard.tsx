@@ -447,7 +447,7 @@ export const DashboardView = ({ workouts, setWorkouts, userGoals, setUserGoals, 
 
     let activeChat = almaChats[0];
     if (!activeChat) {
-        activeChat = { id: Date.now(), title: 'Alma Coach', messages: [newMessage] };
+        activeChat = { id: Date.now(), title: 'AI Coach', messages: [newMessage] };
         if (setAlmaChats) setAlmaChats([activeChat, ...almaChats]);
     } else {
         const updatedChat = { ...activeChat, messages: [...activeChat.messages, newMessage] };
@@ -720,7 +720,7 @@ export const DashboardView = ({ workouts, setWorkouts, userGoals, setUserGoals, 
                     <Brain size={20} />
                 </div>
                 <div className="flex-1 space-y-1">
-                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#A7F3D0]">Alma Intelligence</p>
+                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#A7F3D0]">AI Intelligence</p>
                     <p className="text-sm font-bold leading-relaxed">{almaMessage.text}</p>
                 </div>
                 <div className="text-white/20 group-hover:text-white transition-colors">
