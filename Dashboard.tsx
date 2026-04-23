@@ -184,9 +184,10 @@ export const LogModal = ({ date, routes, userSpecs, userProfile, userPreferences
               <p className="text-xs md:text-[10px] font-black uppercase text-slate-400 tracking-[0.2em] mt-1">Target Date: {date}</p>
            </div>
            <button
+             type="button"
              onClick={onClose}
              aria-label="Close modal"
-             className="p-2 -mr-2 text-slate-300 hover:text-red-500 transition-colors"
+             className="p-2 -mr-2 text-slate-300 hover:text-red-500 transition-colors focus-visible:ring-2 focus-visible:ring-emerald-500 outline-none rounded-full"
            >
              <X size={28}/>
            </button>
@@ -196,21 +197,27 @@ export const LogModal = ({ date, routes, userSpecs, userProfile, userPreferences
           <div className="space-y-6">
             <div className="space-y-2">
               <label className="text-xs md:text-[10px] font-black uppercase text-slate-400 ml-4">Activity Name</label>
-              <input className="w-full bg-slate-50 p-5 rounded-[25px] font-bold border-none text-base focus:ring-2 ring-emerald-500/20" placeholder={isStrength ? "e.g. Chest Day" : "e.g. Morning Run"} value={form.name} onChange={e=>setForm({...form, name: e.target.value})} autoFocus />
+              <input className="w-full bg-slate-50 p-5 rounded-[25px] font-bold border-none text-base focus-visible:ring-2 focus-visible:ring-emerald-500 outline-none" placeholder={isStrength ? "e.g. Chest Day" : "e.g. Morning Run"} value={form.name} onChange={e=>setForm({...form, name: e.target.value})} autoFocus />
             </div>
 
             <div className="space-y-2 relative z-[60]">
               <label className="text-xs md:text-[10px] font-black uppercase text-slate-400 ml-4">Activity Type</label>
               <div className="relative">
-                <div className="w-full bg-slate-50 p-5 rounded-[25px] font-bold text-base flex items-center justify-between cursor-pointer hover:bg-slate-100 transition-colors active:scale-[0.98]" onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
+                <button
+                  type="button"
+                  aria-haspopup="listbox"
+                  aria-expanded={isDropdownOpen}
+                  className="w-full bg-slate-50 p-5 rounded-[25px] font-bold text-base flex items-center justify-between cursor-pointer hover:bg-slate-100 transition-colors active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-emerald-500 outline-none"
+                  onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                >
                   <span className="text-slate-900">{form.type || "Select Category..."}</span>
                   <ChevronDown size={20} className="text-slate-400" />
-                </div>
+                </button>
                 {isDropdownOpen && (
                   <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-slate-100 rounded-[25px] shadow-2xl z-[100] overflow-hidden h-64 flex flex-col">
                     <div className="p-3 border-b border-slate-50 bg-white">
-                      <div className="flex items-center bg-slate-50 rounded-xl px-3 py-2">
-                        <Search size={14} className="text-slate-400 mr-2"/><input className="bg-transparent w-full font-bold text-base md:text-xs outline-none" placeholder="Search..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} onClick={(e) => e.stopPropagation()}/>
+                      <div className="flex items-center bg-slate-50 rounded-xl px-3 py-2 focus-within:ring-2 focus-within:ring-emerald-500/20">
+                        <Search size={14} className="text-slate-400 mr-2"/><input autoFocus className="bg-transparent w-full font-bold text-base md:text-xs outline-none" placeholder="Search..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} onClick={(e) => e.stopPropagation()}/>
                       </div>
                     </div>
                     <div className="overflow-y-auto custom-scrollbar p-2 flex-1 bg-white">
@@ -234,10 +241,17 @@ export const LogModal = ({ date, routes, userSpecs, userProfile, userPreferences
               <div className="space-y-2 animate-fade-in relative z-[50]">
                 <label className="text-xs md:text-[10px] font-black uppercase text-slate-400 ml-4">Load Route</label>
                 <div className="relative">
-                  <div className={`w-full p-5 rounded-[25px] font-bold text-base flex items-center justify-between cursor-pointer border-2 transition-all ${routes.length > 0 ? 'bg-emerald-50 border-emerald-100 hover:border-emerald-200' : 'bg-slate-50 border-transparent opacity-50 cursor-not-allowed'}`} onClick={() => routes.length > 0 && setIsRouteDropdownOpen(!isRouteDropdownOpen)}>
+                  <button
+                    type="button"
+                    aria-haspopup="listbox"
+                    aria-expanded={isRouteDropdownOpen}
+                    disabled={routes.length === 0}
+                    className={`w-full p-5 rounded-[25px] font-bold text-base flex items-center justify-between cursor-pointer border-2 transition-all focus-visible:ring-2 focus-visible:ring-emerald-500 outline-none ${routes.length > 0 ? 'bg-emerald-50 border-emerald-100 hover:border-emerald-200' : 'bg-slate-50 border-transparent opacity-50 cursor-not-allowed'}`}
+                    onClick={() => routes.length > 0 && setIsRouteDropdownOpen(!isRouteDropdownOpen)}
+                  >
                     <span className="text-slate-900 flex items-center gap-2 truncate"><MapPin size={16}/> {routes.find((r:any) => getDistVal(r.distance, units, 2) === form.distance)?.name || (routes.length > 0 ? "Pick a Saved Route" : "No Saved Routes")}</span>
                     <ChevronDown size={20} className="text-slate-400" />
-                  </div>
+                  </button>
                   {isRouteDropdownOpen && routes.length > 0 && (
                     <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-slate-100 rounded-[25px] shadow-2xl z-[100] overflow-hidden p-2">
                       {routes.map((route: any) => (
@@ -327,7 +341,7 @@ export const LogModal = ({ date, routes, userSpecs, userProfile, userPreferences
               </div>
             </div>
 
-            <button onClick={handleFinalSubmit} disabled={!form.name || !form.type || isSaving} className="w-full py-6 bg-slate-900 text-white rounded-[25px] font-black uppercase text-xs md:text-[11px] tracking-[0.4em] shadow-xl transition-all active:scale-95 hover:scale-[1.02] disabled:opacity-50 hover:bg-emerald-500 flex items-center justify-center sticky bottom-0 md:relative">
+            <button type="button" onClick={handleFinalSubmit} disabled={!form.name || !form.type || isSaving} className="w-full py-6 bg-slate-900 text-white rounded-[25px] font-black uppercase text-xs md:text-[11px] tracking-[0.4em] shadow-xl transition-all active:scale-95 hover:scale-[1.02] disabled:opacity-50 hover:bg-emerald-500 flex items-center justify-center sticky bottom-0 md:relative focus-visible:ring-2 focus-visible:ring-emerald-500 outline-none">
                {isSaving ? "Saving..." : "Log Activity"}
             </button>
           </div>
@@ -447,7 +461,7 @@ export const DashboardView = ({ workouts, setWorkouts, userGoals, setUserGoals, 
 
     let activeChat = almaChats[0];
     if (!activeChat) {
-        activeChat = { id: Date.now(), title: 'Alma Coach', messages: [newMessage] };
+        activeChat = { id: Date.now(), title: 'AI Coach', messages: [newMessage] };
         if (setAlmaChats) setAlmaChats([activeChat, ...almaChats]);
     } else {
         const updatedChat = { ...activeChat, messages: [...activeChat.messages, newMessage] };
@@ -720,7 +734,7 @@ export const DashboardView = ({ workouts, setWorkouts, userGoals, setUserGoals, 
                     <Brain size={20} />
                 </div>
                 <div className="flex-1 space-y-1">
-                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#A7F3D0]">Alma Intelligence</p>
+                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#A7F3D0]">AI Insights</p>
                     <p className="text-sm font-bold leading-relaxed">{almaMessage.text}</p>
                 </div>
                 <div className="text-white/20 group-hover:text-white transition-colors">
