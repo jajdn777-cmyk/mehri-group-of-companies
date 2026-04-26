@@ -56,6 +56,7 @@ export const Header = ({ currentView, onNavigate, onSignOut, onShop, userProfile
     <div className="border-b border-slate-50 last:border-0">
       <button 
         onClick={onToggle}
+        aria-expanded={isOpen}
         className="w-full flex items-center justify-between px-6 py-5 text-left active:bg-slate-50 transition-colors"
       >
         <span className="text-sm font-black uppercase tracking-widest text-slate-900">{label}</span>
@@ -152,8 +153,18 @@ export const Header = ({ currentView, onNavigate, onSignOut, onShop, userProfile
             <>
               {/* MAIN LINKS */}
               <div className="flex items-center gap-8 ml-6">
-                  <div className="relative py-4" onMouseEnter={() => setWorkoutsHover(true)} onMouseLeave={() => setWorkoutsHover(false)}>
-                    <button className={`text-sm font-black uppercase tracking-[0.2em] flex items-center gap-1 transition-colors whitespace-nowrap ${workoutsHover ? 'text-emerald-500' : 'text-slate-900'}`}>
+                  <div
+                    className="relative py-4"
+                    onMouseEnter={() => setWorkoutsHover(true)}
+                    onMouseLeave={() => setWorkoutsHover(false)}
+                    onFocusCapture={() => setWorkoutsHover(true)}
+                    onBlurCapture={() => setWorkoutsHover(false)}
+                  >
+                    <button
+                      aria-haspopup="true"
+                      aria-expanded={workoutsHover}
+                      className={`text-sm font-black uppercase tracking-[0.2em] flex items-center gap-1 transition-colors whitespace-nowrap ${workoutsHover ? 'text-emerald-500' : 'text-slate-900'}`}
+                    >
                       Workouts <ChevronDown size={12} className={`transition-transform duration-500 ${workoutsHover ? 'rotate-180' : ''}`} />
                     </button>
                     <AnimatePresence>
@@ -180,8 +191,19 @@ export const Header = ({ currentView, onNavigate, onSignOut, onShop, userProfile
                   <button onClick={() => onNavigate('blogs')} className="text-sm font-black uppercase tracking-[0.2em] text-slate-900 hover:text-emerald-500 transition-colors flex items-center gap-1 whitespace-nowrap">Blogs</button>
                   
                   {/* ALMA HOVER MENU */}
-                  <div className="relative py-4" onMouseEnter={() => setAlmaHover(true)} onMouseLeave={() => setAlmaHover(false)}>
-                     <button onClick={() => onNavigate('alma')} className={`text-sm font-black uppercase tracking-[0.2em] flex items-center gap-1 transition-colors whitespace-nowrap relative ${almaHover ? 'text-emerald-500' : 'text-slate-900'}`}>
+                  <div
+                    className="relative py-4"
+                    onMouseEnter={() => setAlmaHover(true)}
+                    onMouseLeave={() => setAlmaHover(false)}
+                    onFocusCapture={() => setAlmaHover(true)}
+                    onBlurCapture={() => setAlmaHover(false)}
+                  >
+                     <button
+                        onClick={() => onNavigate('alma')}
+                        aria-haspopup="true"
+                        aria-expanded={almaHover}
+                        className={`text-sm font-black uppercase tracking-[0.2em] flex items-center gap-1 transition-colors whitespace-nowrap relative ${almaHover ? 'text-emerald-500' : 'text-slate-900'}`}
+                      >
                         <Brain size={12}/> Alma
                         {hasAlmaNotification && (
                            <span className="absolute -top-1 -right-2 w-4 h-4 bg-red-500 text-white text-[8px] flex items-center justify-center rounded-full animate-pulse shadow-sm border border-white">1</span>
