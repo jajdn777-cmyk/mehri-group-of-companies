@@ -51,12 +51,12 @@ export const ShopModal = ({ onClose, onBuy }: any) => {
     <div className="fixed inset-0 z-[6000] flex items-end md:items-center justify-center bg-slate-900/95 backdrop-blur-xl animate-fade-in overflow-hidden">
        <SEO
          title="Shop Mehri Fitness Tracker"
-         description="Get the Mehri Fitness Tracker for a special price. 24/7 Heart Rate, SpO2, and Sleep tracking. Lightweight and high-performance."
+         description="Get the Mehri Fitness Tracker at a cheap price. 24/7 Heart Rate, SpO2, and Sleep tracking. Lightweight and high-performance."
          product={{
            name: "Mehri Fitness Tracker",
            description: "Elite performance tracking with 24/7 biometric monitoring.",
            image: PRODUCT_IMAGES[1],
-           price: "Special Offer",
+           price: "Cheap",
            currency: "USD",
            availability: "InStock",
            url: AMAZON_URL
@@ -258,10 +258,10 @@ export const ShopModal = ({ onClose, onBuy }: any) => {
                 <div className="flex justify-between items-center">
                    <div className="space-y-1">
                       <div className="flex items-center gap-3">
-                         <p className="text-3xl lg:text-5xl font-black text-slate-900 tracking-tighter">Special Offer</p>
-                         <span className="bg-emerald-100 text-emerald-700 px-3 py-1.5 rounded-xl text-[10px] font-black uppercase shadow-sm">Save 28%</span>
+                         <p className="text-3xl lg:text-5xl font-black text-slate-900 tracking-tighter">Cheap</p>
+                         <span className="bg-emerald-100 text-emerald-700 px-3 py-1.5 rounded-xl text-[10px] font-black uppercase shadow-sm">Cheap</span>
                       </div>
-                      <p className="text-sm font-bold text-slate-300 line-through tracking-wide pl-1">Massive Savings</p>
+                      <p className="text-sm font-bold text-slate-300 tracking-wide pl-1">Best Value</p>
                    </div>
                    <div className="flex flex-col items-end gap-1">
                       <div className="flex items-center gap-2 text-emerald-600 font-black uppercase text-[10px] tracking-widest">

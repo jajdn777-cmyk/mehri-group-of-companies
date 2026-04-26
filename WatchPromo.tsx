@@ -35,8 +35,8 @@ export const WatchPromo = ({ onClose }: { onClose: () => void }) => {
               </div>
               
               <div className="flex items-baseline gap-2">
-                 <span className="text-xl font-black text-emerald-500">Best Value</span>
-                 <span className="text-[10px] font-bold text-slate-300 line-through">Huge Savings</span>
+                 <span className="text-xl font-black text-emerald-500">Cheap</span>
+                 <span className="text-[10px] font-bold text-slate-300 ">Massive Value</span>
               </div>
 
               <a 
