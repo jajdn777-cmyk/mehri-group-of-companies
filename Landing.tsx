@@ -174,7 +174,7 @@ const WhatWeDoSection = () => (
      >
        <span className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 mb-6 block">What We Do</span>
        <h2 className="text-2xl md:text-4xl font-medium text-slate-900 leading-relaxed font-serif">
-          Mehri Fitness builds the bridge between raw biometric data and actionable human performance. We provide the hardware, the AI, and the ecosystem to help you track workouts, recovery, and health trends across all your devices.
+          Mehri Fitness builds the bridge between raw biometric data and actionable human performance. We provide the hardware and the ecosystem to help you track workouts, recovery, and health trends across all your devices.
        </h2>
        <p className="mt-8 text-slate-500 text-lg font-medium max-w-2xl mx-auto">
           Whether you use just your phone or pair it with our flagship Mehri fitness tracker, you get a personalized roadmap to your physical potential.

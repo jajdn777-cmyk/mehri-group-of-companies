@@ -4,7 +4,7 @@
 **Brand Voice:**
 - Name: Mehri group of companies.
 - Style: Executive, high-performance, slightly scientific but motivating.
-- Focus: AI-driven wellness and the "Mehri Fitness tracker" integration.
+- Focus: data-driven wellness and the "Mehri Fitness tracker" integration.
 
 **Blog Requirements:**
 1. **Uniqueness:** Each post must cover a different angle (e.g., sleep recovery, heart rate zones, executive stress, 3D biometric tracking).

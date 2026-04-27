@@ -93,7 +93,7 @@ We warrant that the Mehri fitness tracker shall be free from defects in material
 
 3. MEDICAL DISCLAIMER AND SAFETY WARNINGS
 THE MEHRI FITNESS TRACKER AND MEHRI GROUP PLATFORM ARE NOT MEDICAL DEVICES.
-- No Medical Advice: The data, insights, text, graphics, and suggestions provided by the AI coach are for informational and recreational purposes only. They are not intended to diagnose, treat, cure, or prevent any disease.
+- No Medical Advice: The data, insights, text, graphics, and suggestions provided by the coach are for informational and recreational purposes only. They are not intended to diagnose, treat, cure, or prevent any disease.
 - Consultation Required: Always consult with a qualified physician before starting any new exercise regime, especially if you have a history of heart disease, high blood pressure, or other chronic conditions.
 - Emergency Situations: Do not rely on the Mehri fitness tracker for emergency monitoring. The optical heart rate sensor may be affected by motion artifacts and should not be used as a clinical vital signs monitor.
 
@@ -124,7 +124,7 @@ We reserve the right to modify or discontinue, temporarily or permanently, the S
 
 export const FAQ_DATA = [
   {
-    question: "Are AI fitness trackers like the Mehri fitness tracker as accurate as medical devices?",
+    question: "Are fitness trackers like the Mehri fitness tracker as accurate as medical devices?",
     answer: "While the Mehri fitness tracker provides high-precision biometric data—including heart rate variability (HRV) and SpO2—it is designed for wellness trends, not medical diagnosis. Its value lies in identifying long-term patterns in your recovery and stress levels, allowing for proactive health management rather than reactive treatment."
   },
   {
@@ -133,15 +133,15 @@ export const FAQ_DATA = [
   },
   {
     question: "What makes the Mehri fitness tracker different from a standard Apple Watch or Garmin?",
-    answer: "The Mehri fitness tracker bridges the gap between a rugged sports watch and an executive accessory. It features AI Coaching, which doesn't just show you steps—it analyzes your sleep and strain to tell you exactly when to work out and when to rest for peak performance."
+    answer: "The Mehri fitness tracker bridges the gap between a rugged sports watch and an executive accessory. It features Advanced Coaching, which doesn't just show you steps—it analyzes your sleep and strain to tell you exactly when to work out and when to rest for peak performance."
   },
   {
-    question: "Does the Mehri fitness tracker require a monthly subscription for AI features?",
-    answer: "No. Unlike many 2026 wearables that paywall your own data, the Mehri fitness tracker offers all core AI health insights, sleep analytics, and the  dashboard with no hidden monthly fees. You own the hardware and the insights for life."
+    question: "Does the Mehri fitness tracker require a monthly subscription for advanced features?",
+    answer: "No. Unlike many 2026 wearables that paywall your own data, the Mehri fitness tracker offers all core health insights, sleep analytics, and the  dashboard with no hidden monthly fees. You own the hardware and the insights for life."
   },
   {
-    question: "How does the AI coaching actually work?",
-    answer: "Our AI uses a proprietary machine learning model to correlate your heart rate, sleep stages, and daily activity. It builds a \"Digital Twin\" of your physiology to predict fatigue before you feel it, providing actionable notifications like \"Your recovery is low; prioritize 20 more minutes of REM sleep tonight.\""
+    question: "How does the coaching actually work?",
+    answer: "Our systems use a proprietary machine learning model to correlate your heart rate, sleep stages, and daily activity. It builds a \"Digital Twin\" of your physiology to predict fatigue before you feel it, providing actionable notifications like \"Your recovery is low; prioritize 20 more minutes of REM sleep tonight.\""
   },
   {
     question: "Can I use the Mehri fitness tracker for contactless payments and smart home control?",

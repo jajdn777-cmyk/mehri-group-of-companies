@@ -8,7 +8,7 @@ const ABOUT_US_CONTENT = `
 ABOUT SHAMSULLAH MEHRI GROUP
 
 SHAMSULLAH MEHRI: ARCHITECTING HUMAN VITALITY
-Shamsullah Mehri is dedicated to democratizing high-level health data. We believe that elite performance analytics shouldn't be restricted to professional laboratories. By combining precision hardware with AI-driven insights, we empower individuals to move beyond basic tracking and start architecting their own physiology. Our mission is accuracy, accessibility, and absolute privacy.
+Shamsullah Mehri is dedicated to democratizing high-level health data. We believe that elite performance analytics shouldn't be restricted to professional laboratories. By combining precision hardware with data-driven insights, we empower individuals to move beyond basic tracking and start architecting their own physiology. Our mission is accuracy, accessibility, and absolute privacy.
 
 THE MEHRI VISION
 We envision a future where technology doesn't just track you—it understands you. From our Silicon Valley headquarters to our global user base, we are building an ecosystem where every heartbeat, every step, and every night of sleep contributes to a clearer picture of your potential. We are building the operating system for the human body.

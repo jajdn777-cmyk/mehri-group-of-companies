@@ -41,7 +41,7 @@ export const SEO: React.FC<SEOProps> = ({
   faq
 }) => {
   const brandName = "Mehri";
-  const defaultTitle = `${brandName} | Executive Wellness & AI Fitness`;
+  const defaultTitle = `${brandName} | Executive Wellness & Performance`;
   const finalTitle = title || defaultTitle;
 
   useEffect(() => {
