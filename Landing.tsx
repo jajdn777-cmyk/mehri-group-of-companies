@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Target, Users, Brain, Eraser, LineChart, MessageSquare, ArrowRight, HelpCircle, ChevronDown, Trophy, Activity, Check, Shield, Zap, TrendingUp } from 'lucide-react';
+import { Target, Users, ArrowRight, HelpCircle, ChevronDown, Trophy, Activity, Check, Shield, Zap, TrendingUp } from 'lucide-react';
 import { FAQ_DATA } from './constants';
 import { Footer } from './Footer.tsx';
 import { motion, useScroll, useTransform, useInView, AnimatePresence } from 'framer-motion';
@@ -164,138 +164,6 @@ const CountUpStat = ({ end, suffix = "", duration = 2 }: { end: number, suffix?:
   return <span ref={ref}>0{suffix}</span>;
 };
 
-// --- ALMA LIVE DEMO COMPONENTS ---
-
-const TypingIndicator = () => (
-  <div className="flex gap-1 px-2 py-1 items-center h-5">
-    {[0, 1, 2].map((i) => (
-      <motion.div 
-        key={i}
-        className="w-1.5 h-1.5 bg-slate-400/50 rounded-full"
-        animate={{ y: [0, -4, 0] }}
-        transition={{ duration: 0.6, repeat: Infinity, delay: i * 0.2 }}
-      />
-    ))}
-  </div>
-);
-
-const TypewriterText = ({ text, onComplete }: { text: string, onComplete?: () => void }) => {
-  const [display, setDisplay] = useState('');
-  
-  useEffect(() => {
-    let i = 0;
-    const timer = setInterval(() => {
-      if (i < text.length) {
-        setDisplay(text.substring(0, i + 1));
-        i++;
-      } else {
-        clearInterval(timer);
-        onComplete?.();
-      }
-    }, 25);
-    return () => clearInterval(timer);
-  }, [text]);
-
-  return <span>{display}</span>;
-};
-
-const AlmaLiveDemo = () => {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-20% 0px -20% 0px" });
-  const [step, setStep] = useState(0); 
-
-  useEffect(() => {
-    if (isInView && step === 0) {
-      const t = setTimeout(() => setStep(1), 600);
-      return () => clearTimeout(t);
-    }
-  }, [isInView, step]);
-
-  useEffect(() => {
-    if (step === 1) {
-      const t = setTimeout(() => setStep(2), 1200);
-      return () => clearTimeout(t);
-    }
-    if (step === 3) {
-      const t = setTimeout(() => setStep(4), 1000);
-      return () => clearTimeout(t);
-    }
-  }, [step]);
-
-  return (
-    <div ref={ref} className="relative w-full max-w-md bg-slate-800 rounded-[40px] border border-slate-700/50 p-6 shadow-2xl transform rotate-3 hover:rotate-0 transition-transform duration-700 group cursor-default">
-       <div className="flex items-center gap-4 mb-8 border-b border-slate-700/50 pb-6">
-          <div className="w-12 h-12 rounded-full bg-slate-700 overflow-hidden border-2 border-emerald-400 shadow-lg shadow-emerald-400/20 relative">
-             <img src="https://images.unsplash.com/photo-1594381898411-846e7d193883?auto=format&fit=crop&w=200" className="w-full h-full object-cover" />
-             <div className="absolute inset-0 bg-emerald-500/10 animate-pulse" />
-          </div>
-          <div>
-             <p className="text-white font-bold">Alma</p>
-             <p className="text-emerald-400 text-xs uppercase font-black tracking-widest flex items-center gap-2">
-               <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse shadow-[0_0_8px_#34D399]"/> Online
-             </p>
-          </div>
-       </div>
-       
-       <div className="space-y-4 min-h-[180px] flex flex-col justify-end pb-4">
-          <AnimatePresence mode="wait">
-            {step === 1 && (
-               <motion.div 
-                 key="typing1"
-                 initial={{ opacity: 0, y: 10, scale: 0.9 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.1 } }}
-                 className="bg-slate-700/50 rounded-2xl rounded-tl-sm p-4 w-fit self-start"
-               >
-                 <TypingIndicator />
-               </motion.div>
-            )}
-            
-            {step >= 2 && (
-               <motion.div 
-                 key="msg1"
-                 initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
-                 className="bg-slate-700/50 rounded-2xl rounded-tl-sm p-4 text-sm text-slate-300 self-start"
-               >
-                 <TypewriterText 
-                    text="Hey there. I noticed your HRV dropped 12% after yesterday's 10k run." 
-                    onComplete={() => step === 2 && setTimeout(() => setStep(3), 800)}
-                 />
-               </motion.div>
-            )}
-          </AnimatePresence>
-
-          <AnimatePresence mode="wait">
-            {step === 3 && (
-               <motion.div 
-                 key="typing2"
-                 initial={{ opacity: 0, y: 10, scale: 0.9 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.1 } }}
-                 className="bg-emerald-500/10 border border-emerald-500/20 rounded-2xl rounded-tl-sm p-4 w-fit self-start mt-2"
-               >
-                 <TypingIndicator />
-               </motion.div>
-            )}
-
-            {step >= 4 && (
-               <motion.div 
-                 key="msg2"
-                 initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
-                 className="bg-emerald-500/10 border border-emerald-500/20 rounded-2xl rounded-tl-sm p-4 text-sm text-emerald-100 self-start mt-2 shadow-[0_0_30px_-5px_rgba(16,185,129,0.1)]"
-               >
-                 <TypewriterText 
-                    text="Recommendation: Focus on zone 2 recovery today. Want me to schedule a light 20min yoga session?" 
-                    onComplete={() => setStep(5)}
-                 />
-               </motion.div>
-            )}
-          </AnimatePresence>
-       </div>
-       
-       <div className="absolute -top-4 -right-4 w-20 h-20 bg-emerald-500 rounded-full blur-[40px] opacity-10 animate-pulse pointer-events-none" />
-    </div>
-  );
-};
-
-// --- SECTION COMPONENTS ---
-
 const WhatWeDoSection = () => (
   <section className="max-w-4xl mx-auto px-6 md:px-8 py-24 text-center bg-white">
      <motion.div
@@ -373,7 +241,7 @@ const ServicesSection = () => (
      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {[
            { icon: Activity, title: "Biometric Architecture", desc: "Advanced physiological tracking and analysis of your core vitals like HRV, SpO2, and resting heart rate." },
-           { icon: Brain, title: "Alma AI Coaching", desc: "Real-time, context-aware health and performance optimization through our proprietary neural engine." },
+
            { icon: Target, title: "Precision Training", desc: "Custom-built workout protocols that adapt dynamically to your daily readiness and recovery scores." },
            { icon: Trophy, title: "Global Challenges", desc: "Compete in community challenges to push your boundaries and stay motivated with like-minded achievers." }
         ].map((service, i) => (
@@ -763,63 +631,7 @@ export const LandingSection = ({ onStart, onNavigate, onShop }: { onStart: () =>
       {/* 5. OUR SERVICES */}
       <ServicesSection />
 
-      {/* 6. ALMA AI SECTION */}
-      <ScrollReveal className="max-w-7xl mx-auto px-6 md:px-8 py-20">
-        <div className="bg-slate-900 rounded-[40px] md:rounded-[80px] p-8 md:p-24 flex flex-col-reverse lg:flex-row items-center gap-12 md:gap-20 relative overflow-hidden shadow-2xl">
-           <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-slate-800 via-slate-900 to-slate-900 pointer-events-none" />
-           
-           <div className="flex-1 space-y-8 md:space-y-10 z-10 relative text-center lg:text-left">
-              <div className="flex items-center gap-3 justify-center lg:justify-start">
-                 <div className="w-10 h-10 bg-emerald-400 rounded-xl flex items-center justify-center text-slate-900 shadow-lg shadow-emerald-400/20">
-                    <Brain size={20} />
-                 </div>
-                 <span className="text-emerald-400 font-black uppercase tracking-[0.3em] text-xs">AI Intelligence</span>
-              </div>
-              
-              <h2 className="text-4xl md:text-6xl font-black text-white uppercase tracking-tighter leading-none">
-                 COMMAND YOUR DATA <br/>
-                 <span className="text-emerald-400">WITH ALMA</span>
-              </h2>
-              
-              <p className="text-slate-400 text-base md:text-xl font-medium leading-relaxed max-w-xl mx-auto lg:mx-0">
-                 Your personal AI coach that does the work for you. Command Alma to log new sessions, analyze trends, or optimize your recovery through a simple conversational interface.
-              </p>
 
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 md:gap-8 pt-4">
-                 {[
-                   { icon: MessageSquare, title: "Smart Logging", desc: "Just say it, she logs it." },
-                   { icon: Eraser, title: "Data Cleanup", desc: "Edit history instantly." },
-                   { icon: LineChart, title: "Lifetime Insights", desc: "View your stats on demand." }
-                 ].map((feat, i) => (
-                    <motion.div whileHover={{ scale: 1.05 }} key={i} className="space-y-3 group cursor-default">
-                       <div className="w-12 h-12 rounded-2xl bg-slate-800 flex items-center justify-center group-hover:bg-emerald-400 group-hover:text-slate-900 text-emerald-400 transition-all duration-300 mx-auto lg:mx-0">
-                          <feat.icon size={20} />
-                       </div>
-                       <div>
-                         <h4 className="text-white font-black uppercase text-xs tracking-wider mb-1">{feat.title}</h4>
-                         <p className="text-slate-500 text-[11px] font-bold leading-tight">{feat.desc}</p>
-                       </div>
-                    </motion.div>
-                 ))}
-              </div>
-
-              <div className="flex justify-center lg:justify-start">
-                <motion.button 
-                  onClick={createRipple}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="px-12 py-6 bg-emerald-400 text-slate-900 rounded-full font-black uppercase text-xs tracking-[0.4em] hover:bg-white transition-colors shadow-lg relative overflow-hidden flex items-center gap-3 group"
-                >
-                   Talk to Alma <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
-                </motion.button>
-              </div>
-           </div>
-
-           <div className="flex-1 w-full relative z-10 flex justify-center mt-8 lg:mt-0">
-              <AlmaLiveDemo />
-           </div>
-        </div>
-      </ScrollReveal>
 
       {/* 7. STRONG COMMUNITY */}
       <StrongCommunitySection />

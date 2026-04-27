@@ -1,12 +1,12 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import { ChevronDown, ChevronRight, Brain, ShoppingBag, X, Newspaper, User, Settings, LogOut, MessageSquare, Utensils, Zap, Flame, Menu, Map as MapIcon, Trophy, Target, BarChart2, LayoutDashboard } from 'lucide-react';
+import { ChevronDown, ChevronRight, ShoppingBag, X, Newspaper, User, Settings, LogOut, Flame, Menu, Map as MapIcon, Trophy, Target, BarChart2, LayoutDashboard } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-export const Header = ({ currentView, onNavigate, onSignOut, onShop, userProfile, userName, streak = 0, hasAlmaNotification }: any) => {
+export const Header = ({ currentView, onNavigate, onSignOut, onShop, userProfile, userName, streak = 0 }: any) => {
   const [scrolled, setScrolled] = useState(false);
   const [workoutsHover, setWorkoutsHover] = useState(false);
-  const [almaHover, setAlmaHover] = useState(false);
+
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   
   // Mobile Menu State
@@ -14,7 +14,7 @@ export const Header = ({ currentView, onNavigate, onSignOut, onShop, userProfile
   const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({
     'workouts': true, // Default open for convenience
     'community': false,
-    'alma': false
+
   });
 
   const profileMenuRef = useRef<HTMLDivElement>(null);
@@ -37,7 +37,7 @@ export const Header = ({ currentView, onNavigate, onSignOut, onShop, userProfile
     };
   }, []);
 
-  const isDashboard = ['dashboard', 'stats', 'goals', 'routes', 'challenges', 'alma', 'alma-meals', 'blogs', 'settings'].includes(currentView);
+  const isDashboard = ['dashboard', 'stats', 'goals', 'routes', 'challenges', 'blogs', 'settings'].includes(currentView);
   const isTransparent = !scrolled && !isDashboard && currentView !== 'auth';
 
   // Helper to get initials
@@ -145,6 +145,8 @@ export const Header = ({ currentView, onNavigate, onSignOut, onShop, userProfile
         </div>
 
         {/* DESKTOP NAVIGATION (HIDDEN ON MOBILE) - Pushed down to center relative to header height */}
+
+
         <nav className="hidden md:flex items-center flex-1 w-full pl-6 mt-4 md:mt-6">
           {isDashboard || currentView === 'main' ? (
             <>
@@ -176,42 +178,6 @@ export const Header = ({ currentView, onNavigate, onSignOut, onShop, userProfile
                   <button onClick={() => onNavigate('routes')} className="text-sm font-black uppercase tracking-[0.2em] text-slate-900 hover:text-emerald-500 transition-colors whitespace-nowrap">Routes</button>
                   <button onClick={() => onNavigate('challenges')} className="text-sm font-black uppercase tracking-[0.2em] text-slate-900 hover:text-emerald-500 transition-colors whitespace-nowrap">Challenges</button>
                   <button onClick={() => onNavigate('blogs')} className="text-sm font-black uppercase tracking-[0.2em] text-slate-900 hover:text-emerald-500 transition-colors flex items-center gap-1 whitespace-nowrap">Blogs</button>
-                  
-                  {/* ALMA HOVER MENU */}
-                  <div className="relative py-4" onMouseEnter={() => setAlmaHover(true)} onMouseLeave={() => setAlmaHover(false)}>
-                     <button onClick={() => onNavigate('alma')} className={`text-sm font-black uppercase tracking-[0.2em] flex items-center gap-1 transition-colors whitespace-nowrap relative ${almaHover ? 'text-emerald-500' : 'text-slate-900'}`}>
-                        <Brain size={12}/> Alma
-                        {hasAlmaNotification && (
-                           <span className="absolute -top-1 -right-2 w-4 h-4 bg-red-500 text-white text-[8px] flex items-center justify-center rounded-full animate-pulse shadow-sm border border-white">1</span>
-                        )}
-                     </button>
-                     <AnimatePresence>
-                     {almaHover && (
-                        <motion.div 
-                          initial={{ opacity: 0, y: 10 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          exit={{ opacity: 0, y: 10 }}
-                          transition={{ duration: 0.2 }}
-                          className="absolute top-10 -left-10 pt-4"
-                        >
-                          <div className="w-72 bg-white/90 backdrop-blur-xl rounded-[40px] shadow-2xl border border-slate-100 p-6 flex flex-col gap-3">
-                             <button onClick={() => {onNavigate('alma'); setAlmaHover(false);}} className="w-full text-left px-6 py-4 rounded-[25px] hover:bg-slate-50 flex items-center gap-4 group transition-all">
-                                <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-400 group-hover:bg-[#A7F3D0] group-hover:text-slate-900 transition-colors"><MessageSquare size={14}/></div>
-                                <span className="text-[10px] font-black uppercase tracking-widest text-slate-500 group-hover:text-slate-900">Ask Alma</span>
-                             </button>
-                             <button onClick={() => {onNavigate('alma-meals'); setAlmaHover(false);}} className="w-full text-left px-6 py-4 rounded-[25px] hover:bg-slate-50 flex items-center gap-4 group transition-all">
-                                <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-400 group-hover:bg-[#A7F3D0] group-hover:text-slate-900 transition-colors"><Utensils size={14}/></div>
-                                <span className="text-[10px] font-black uppercase tracking-widest text-slate-500 group-hover:text-slate-900">Meal Tracker</span>
-                             </button>
-                             <button onClick={() => {onNavigate('alma'); setAlmaHover(false);}} className="w-full text-left px-6 py-4 rounded-[25px] hover:bg-slate-50 flex items-center gap-4 group transition-all">
-                                <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-400 group-hover:bg-[#A7F3D0] group-hover:text-slate-900 transition-colors"><Zap size={14}/></div>
-                                <span className="text-[10px] font-black uppercase tracking-widest text-slate-500 group-hover:text-slate-900">Daily Insights</span>
-                             </button>
-                          </div>
-                        </motion.div>
-                     )}
-                     </AnimatePresence>
-                  </div>
               </div>
 
               {/* USER ACTIONS */}
@@ -275,6 +241,8 @@ export const Header = ({ currentView, onNavigate, onSignOut, onShop, userProfile
             </div>
           )}
         </nav>
+
+
       </header>
 
       {/* MOBILE DRAWER NAVIGATION (SLIDE-IN FROM LEFT) */}
@@ -349,15 +317,7 @@ export const Header = ({ currentView, onNavigate, onSignOut, onShop, userProfile
                        <MobileSubLink onClick={() => onNavigate('blogs')} label="Blogs" icon={Newspaper} />
                     </MobileMenuSection>
 
-                    {/* ALMA ACCORDION */}
-                    <MobileMenuSection 
-                       label="Alma Intelligence" 
-                       isOpen={expandedSections['alma']} 
-                       onToggle={() => toggleSection('alma')}
-                    >
-                       <MobileSubLink onClick={() => onNavigate('alma')} label="Ask Alma" icon={Brain} badge={hasAlmaNotification} />
-                       <MobileSubLink onClick={() => onNavigate('alma-meals')} label="Meal Tracker" icon={Utensils} />
-                    </MobileMenuSection>
+
 
                     <MobileDirectLink onClick={onShop} label="Shop Gear" />
                     <MobileDirectLink onClick={() => onNavigate('settings')} label="Settings" />

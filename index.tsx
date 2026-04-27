@@ -7,8 +7,6 @@ import { getLocalTodayStr, ADMIN_EMAIL, FAQ_DATA } from './constants.ts';
 import { Header } from './Header.tsx';
 import { ShopModal } from './ShopModal.tsx';
 import { AdInterstitial } from './AdInterstitial.tsx';
-import { AlmaView } from './Alma.tsx';
-import { AlmaMealsView } from './AlmaMeals.tsx';
 import { DashboardView } from './Dashboard.tsx';
 import { StatsView } from './Stats.tsx';
 import { RoutesView } from './Routes.tsx';
@@ -148,8 +146,6 @@ const VALID_ROUTES: Record<string, { view: string, dashView?: string }> = {
   '/goals': { view: 'main', dashView: 'goals' },
   '/routes': { view: 'main', dashView: 'routes' },
   '/challenges': { view: 'main', dashView: 'challenges' },
-  '/alma': { view: 'main', dashView: 'alma' },
-  '/alma-meals': { view: 'main', dashView: 'alma-meals' },
   '/blogs': { view: 'main', dashView: 'blogs' },
   '/write': { view: 'main', dashView: 'write' }, 
 };
@@ -181,7 +177,7 @@ const App = () => {
   const initialState = getInitialState();
 
   const [view, setView] = useState<'landing' | 'auth' | 'specs' | 'goal' | 'main' | 'settings' | 'privacy' | 'terms' | 'notfound'>(initialState.view as any);
-  const [dashView, setDashView] = useState<'dashboard' | 'stats' | 'goals' | 'routes' | 'challenges' | 'alma' | 'alma-meals' | 'blogs' | 'write'>(initialState.dashView as any);
+  const [dashView, setDashView] = useState<'dashboard' | 'stats' | 'goals' | 'routes' | 'challenges' | 'blogs' | 'write'>(initialState.dashView as any);
   const [authMode, setAuthMode] = useState<'login' | 'signup'>('login');
   
   // GLOBAL LOADING SHIELD
@@ -210,10 +206,6 @@ const App = () => {
   const [blogs, setBlogs] = useState<any[]>(() => safeParse('mehri_blogs', []));
   const [userChallenges, setUserChallenges] = useState<any[]>(() => safeParse('mehri_challenges', []));
   
-  // Alma State
-  const [almaMemories, setAlmaMemories] = useState<string[]>([]);
-  const [almaChats, setAlmaChats] = useState<any[]>([]);
-  const [almaNotification, setAlmaNotification] = useState<boolean>(false);
 
   // Profile State
   const [userSpecs, setUserSpecs] = useState(() => safeParse('mehri_specs', { weight: '70', height: '175' }));
@@ -441,7 +433,7 @@ const App = () => {
            if (d.meals) setUserMeals(d.meals.map((m: any) => ({ ...m, date: fixDate(m) })));
            if (d.blogs) setBlogs(d.blogs || []);
            if (d.challenges) setUserChallenges(d.challenges || []);
-           if (d.alma) { setAlmaMemories(d.alma.memories || []); setAlmaChats(d.alma.chats || []); }
+
         }
     } catch (e) { console.error("Sync Error:", e); }
   };
@@ -450,7 +442,7 @@ const App = () => {
 
   const handleTransition = (
     nextView: 'landing' | 'auth' | 'specs' | 'goal' | 'main' | 'shop' | 'settings' | 'privacy' | 'terms', 
-    nextDashView?: 'dashboard' | 'stats' | 'goals' | 'routes' | 'challenges' | 'alma' | 'alma-meals' | 'blogs' | 'write',
+    nextDashView?: 'dashboard' | 'stats' | 'goals' | 'routes' | 'challenges' | 'blogs' | 'write',
     customText?: string,
     skipLoader?: boolean
   ) => {
@@ -493,8 +485,7 @@ const App = () => {
   const navigateTo = (v: string) => {
     if (v === 'auth-login') { setAuthMode('login'); handleTransition('auth'); return; }
     if (v === 'auth-signup') { setAuthMode('signup'); handleTransition('auth'); return; }
-    if (v === 'alma') setAlmaNotification(false);
-    if (['dashboard', 'stats', 'goals', 'routes', 'challenges', 'alma', 'alma-meals', 'blogs', 'write'].includes(v)) {
+    if (['dashboard', 'stats', 'goals', 'routes', 'challenges', 'blogs', 'write'].includes(v)) {
       handleTransition('main', v as any);
     } else { 
       handleTransition(v as any); 
@@ -607,7 +598,6 @@ const App = () => {
           userProfile={userProfile}
           userName={userName}
           streak={currentStreak}
-          hasAlmaNotification={almaNotification}
         />
       )}
       
@@ -657,9 +647,6 @@ const App = () => {
                         userPreferences={userPreferences} userHandle={userHandle}
                         onForceSync={() => loadUserData(userHandle)}
                         userMeals={userMeals}
-                        almaChats={almaChats}
-                        setAlmaChats={setAlmaChats}
-                        setAlmaNotification={setAlmaNotification}
                         onNavigate={navigateTo}
                       />
                     )}
@@ -680,23 +667,6 @@ const App = () => {
                     {dashView === 'blogs' && <BlogList blogs={blogs} setBlogs={setBlogs} userProfile={userProfile} onNavigate={navigateTo} onDelete={handleDeleteBlog} />}
                     {dashView === 'write' && <BlogWriting onClose={() => navigateTo('blogs')} onPublish={handlePublishBlog} userName={userName} userProfile={userProfile} />}
 
-                    {dashView === 'alma' && (
-                      <div className="px-2 md:px-0">
-                        <AlmaView 
-                          workouts={workouts} setWorkouts={setWorkouts} userSpecs={userSpecs} userName={userName}
-                          memories={almaMemories} setMemories={setAlmaMemories} chats={almaChats} setChats={setAlmaChats}
-                          routes={routes} userPreferences={userPreferences} userProfile={userProfile} userHandle={userHandle}
-                        />
-                      </div>
-                    )}
-                    {dashView === 'alma-meals' && (
-                      <div className="px-4 md:px-0">
-                        <AlmaMealsView 
-                          onNavigate={navigateTo} userMeals={userMeals} setUserMeals={setUserMeals}
-                          userSpecs={userSpecs} userProfile={userProfile} workouts={workouts} userHandle={userHandle}
-                        />
-                      </div>
-                    )}
                     {dashView === 'goals' && <GoalsView userGoals={userGoals} setUserGoals={setUserGoals} onNavigate={navigateTo} userPreferences={userPreferences} userProfile={userProfile} userHandle={userHandle} workouts={workouts} />}
                   </div>
                 )}
