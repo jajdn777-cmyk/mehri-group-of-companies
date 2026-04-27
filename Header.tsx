@@ -56,7 +56,8 @@ export const Header = ({ currentView, onNavigate, onSignOut, onShop, userProfile
     <div className="border-b border-slate-50 last:border-0">
       <button 
         onClick={onToggle}
-        className="w-full flex items-center justify-between px-6 py-5 text-left active:bg-slate-50 transition-colors"
+        aria-expanded={isOpen}
+        className="w-full flex items-center justify-between px-6 py-5 text-left active:bg-slate-50 transition-colors focus-visible:ring-2 ring-emerald-500 outline-none"
       >
         <span className="text-sm font-black uppercase tracking-widest text-slate-900">{label}</span>
         <ChevronRight size={16} className={`text-slate-400 transition-transform duration-300 ${isOpen ? 'rotate-90' : ''}`} />
@@ -99,7 +100,7 @@ export const Header = ({ currentView, onNavigate, onSignOut, onShop, userProfile
             <motion.button 
               whileTap={{ scale: 0.9 }}
               aria-label="Open navigation menu"
-              className={`md:hidden p-2 -ml-2 mt-3 rounded-full transition-colors z-[5050] ${isTransparent && !mobileMenuOpen ? 'text-white' : 'text-slate-900 hover:bg-slate-100'}`}
+              className={`md:hidden p-2 -ml-2 mt-3 rounded-full transition-colors z-[5050] focus-visible:ring-2 ring-emerald-500 outline-none ${isTransparent && !mobileMenuOpen ? 'text-white' : 'text-slate-900 hover:bg-slate-100'}`}
               onClick={() => setMobileMenuOpen(true)}
             >
               <Menu size={24} />
@@ -137,7 +138,7 @@ export const Header = ({ currentView, onNavigate, onSignOut, onShop, userProfile
                 type="button"
                 onClick={() => setMobileMenuOpen(true)}
                 aria-label="Open navigation menu"
-                className={`w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center text-slate-900 font-bold text-xs border border-slate-200 shadow-sm ${userProfile?.hasWatch ? 'ring-2 ring-[#A7F3D0] ring-offset-1' : ''}`}
+                className={`w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center text-slate-900 font-bold text-xs border border-slate-200 shadow-sm focus-visible:ring-2 ring-emerald-500 outline-none ${userProfile?.hasWatch ? 'ring-2 ring-[#A7F3D0] ring-offset-1' : ''}`}
              >
                 {getInitials(userName || userProfile?.firstName)}
              </button>
@@ -154,8 +155,18 @@ export const Header = ({ currentView, onNavigate, onSignOut, onShop, userProfile
             <>
               {/* MAIN LINKS */}
               <div className="flex items-center gap-8 ml-6">
-                  <div className="relative py-4" onMouseEnter={() => setWorkoutsHover(true)} onMouseLeave={() => setWorkoutsHover(false)}>
-                    <button className={`text-sm font-black uppercase tracking-[0.2em] flex items-center gap-1 transition-colors whitespace-nowrap ${workoutsHover ? 'text-emerald-500' : 'text-slate-900'}`}>
+                  <div
+                    className="relative py-4"
+                    onMouseEnter={() => setWorkoutsHover(true)}
+                    onMouseLeave={() => setWorkoutsHover(false)}
+                    onFocusCapture={() => setWorkoutsHover(true)}
+                    onBlurCapture={() => setWorkoutsHover(false)}
+                  >
+                    <button
+                      aria-haspopup="menu"
+                      aria-expanded={workoutsHover}
+                      className={`text-sm font-black uppercase tracking-[0.2em] flex items-center gap-1 transition-colors whitespace-nowrap focus-visible:ring-2 ring-emerald-500 outline-none rounded-lg ${workoutsHover ? 'text-emerald-500' : 'text-slate-900'}`}
+                    >
                       Workouts <ChevronDown size={12} className={`transition-transform duration-500 ${workoutsHover ? 'rotate-180' : ''}`} />
                     </button>
                     <AnimatePresence>
@@ -168,23 +179,23 @@ export const Header = ({ currentView, onNavigate, onSignOut, onShop, userProfile
                         className="absolute top-10 -left-10 pt-4"
                       >
                         <div className="w-64 bg-white/90 backdrop-blur-xl rounded-[40px] shadow-2xl border border-slate-100 p-6 flex flex-col gap-3">
-                          <button onClick={() => {onNavigate('dashboard'); setWorkoutsHover(false);}} className="w-full text-left px-8 py-4 rounded-[25px] hover:bg-slate-50 text-[10px] font-black uppercase tracking-widest text-slate-500 hover:text-slate-900 transition-all">Dashboard</button>
-                          <button onClick={() => {onNavigate('stats'); setWorkoutsHover(false);}} className="w-full text-left px-8 py-4 rounded-[25px] hover:bg-slate-50 text-[10px] font-black uppercase tracking-widest text-slate-500 hover:text-slate-900 transition-all">Stats</button>
-                          <button onClick={() => {onNavigate('goals'); setWorkoutsHover(false);}} className="w-full text-left px-8 py-4 rounded-[25px] hover:bg-slate-50 text-[10px] font-black uppercase tracking-widest text-slate-500 hover:text-slate-900 transition-all">Goals</button>
+                          <button onClick={() => {onNavigate('dashboard'); setWorkoutsHover(false);}} className="w-full text-left px-8 py-4 rounded-[25px] hover:bg-slate-50 text-[10px] font-black uppercase tracking-widest text-slate-500 hover:text-slate-900 transition-all focus-visible:ring-2 ring-emerald-500 outline-none">Dashboard</button>
+                          <button onClick={() => {onNavigate('stats'); setWorkoutsHover(false);}} className="w-full text-left px-8 py-4 rounded-[25px] hover:bg-slate-50 text-[10px] font-black uppercase tracking-widest text-slate-500 hover:text-slate-900 transition-all focus-visible:ring-2 ring-emerald-500 outline-none">Stats</button>
+                          <button onClick={() => {onNavigate('goals'); setWorkoutsHover(false);}} className="w-full text-left px-8 py-4 rounded-[25px] hover:bg-slate-50 text-[10px] font-black uppercase tracking-widest text-slate-500 hover:text-slate-900 transition-all focus-visible:ring-2 ring-emerald-500 outline-none">Goals</button>
                         </div>
                       </motion.div>
                     )}
                     </AnimatePresence>
                   </div>
                   
-                  <button onClick={() => onNavigate('routes')} className="text-sm font-black uppercase tracking-[0.2em] text-slate-900 hover:text-emerald-500 transition-colors whitespace-nowrap">Routes</button>
-                  <button onClick={() => onNavigate('challenges')} className="text-sm font-black uppercase tracking-[0.2em] text-slate-900 hover:text-emerald-500 transition-colors whitespace-nowrap">Challenges</button>
-                  <button onClick={() => onNavigate('blogs')} className="text-sm font-black uppercase tracking-[0.2em] text-slate-900 hover:text-emerald-500 transition-colors flex items-center gap-1 whitespace-nowrap">Blogs</button>
+                  <button onClick={() => onNavigate('routes')} className="text-sm font-black uppercase tracking-[0.2em] text-slate-900 hover:text-emerald-500 transition-colors whitespace-nowrap focus-visible:ring-2 ring-emerald-500 outline-none rounded-lg">Routes</button>
+                  <button onClick={() => onNavigate('challenges')} className="text-sm font-black uppercase tracking-[0.2em] text-slate-900 hover:text-emerald-500 transition-colors whitespace-nowrap focus-visible:ring-2 ring-emerald-500 outline-none rounded-lg">Challenges</button>
+                  <button onClick={() => onNavigate('blogs')} className="text-sm font-black uppercase tracking-[0.2em] text-slate-900 hover:text-emerald-500 transition-colors flex items-center gap-1 whitespace-nowrap focus-visible:ring-2 ring-emerald-500 outline-none rounded-lg">Blogs</button>
               </div>
 
               {/* USER ACTIONS */}
               <div className="flex items-center gap-6 ml-auto shrink-0 pl-4">
-                  <motion.button whileHover={{ scale: 1.05 }} onClick={onShop} className="text-sm font-black uppercase tracking-[0.2em] text-slate-900 hover:text-emerald-500 transition-colors flex items-center gap-1 whitespace-nowrap"><ShoppingBag size={14} className="w-4 h-4"/> Shop</motion.button>
+                  <motion.button whileHover={{ scale: 1.05 }} onClick={onShop} className="text-sm font-black uppercase tracking-[0.2em] text-slate-900 hover:text-emerald-500 transition-colors flex items-center gap-1 whitespace-nowrap focus-visible:ring-2 ring-emerald-500 outline-none rounded-lg"><ShoppingBag size={14} className="w-4 h-4"/> Shop</motion.button>
                   
                   <div className="relative flex items-center gap-3" ref={profileMenuRef}>
                     {streak > 0 && (
@@ -199,7 +210,9 @@ export const Header = ({ currentView, onNavigate, onSignOut, onShop, userProfile
                       whileHover={{ scale: 1.1 }}
                       onClick={() => setShowProfileMenu(!showProfileMenu)}
                       aria-label="Toggle profile menu"
-                      className={`w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-900 font-bold text-xs cursor-pointer hover:bg-slate-200 transition-all select-none ${userProfile?.hasWatch ? 'ring-2 ring-[#A7F3D0] ring-offset-2' : ''}`}
+                      aria-haspopup="menu"
+                      aria-expanded={showProfileMenu}
+                      className={`w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-900 font-bold text-xs cursor-pointer hover:bg-slate-200 transition-all select-none focus-visible:ring-2 ring-emerald-500 outline-none ${userProfile?.hasWatch ? 'ring-2 ring-[#A7F3D0] ring-offset-2' : ''}`}
                     >
                       {getInitials(userName || userProfile?.firstName)}
                     </motion.button>
@@ -216,14 +229,14 @@ export const Header = ({ currentView, onNavigate, onSignOut, onShop, userProfile
                             <p className="text-white text-xs font-bold truncate">{userName}</p>
                             <p className="text-slate-500 text-[10px] truncate">{userProfile?.username}</p>
                          </div>
-                         <button onClick={() => { setShowProfileMenu(false); onNavigate('settings'); }} className="w-full text-left px-4 py-3 rounded-xl hover:bg-slate-800 text-slate-300 hover:text-white text-xs font-bold transition-colors flex items-center gap-3">
+                         <button onClick={() => { setShowProfileMenu(false); onNavigate('settings'); }} className="w-full text-left px-4 py-3 rounded-xl hover:bg-slate-800 text-slate-300 hover:text-white text-xs font-bold transition-colors flex items-center gap-3 focus-visible:ring-2 ring-emerald-500 outline-none">
                             <User size={14}/> View Profile
                          </button>
-                         <button onClick={() => { setShowProfileMenu(false); onNavigate('settings'); }} className="w-full text-left px-4 py-3 rounded-xl hover:bg-slate-800 text-slate-300 hover:text-white text-xs font-bold transition-colors flex items-center gap-3">
+                         <button onClick={() => { setShowProfileMenu(false); onNavigate('settings'); }} className="w-full text-left px-4 py-3 rounded-xl hover:bg-slate-800 text-slate-300 hover:text-white text-xs font-bold transition-colors flex items-center gap-3 focus-visible:ring-2 ring-emerald-500 outline-none">
                             <Settings size={14}/> Settings
                          </button>
                          <div className="h-px bg-slate-800 my-1"/>
-                         <button onClick={() => { setShowProfileMenu(false); onSignOut(); }} className="w-full text-left px-4 py-3 rounded-xl hover:bg-red-500/10 text-red-400 hover:text-red-300 text-xs font-bold transition-colors flex items-center gap-3">
+                         <button onClick={() => { setShowProfileMenu(false); onSignOut(); }} className="w-full text-left px-4 py-3 rounded-xl hover:bg-red-500/10 text-red-400 hover:text-red-300 text-xs font-bold transition-colors flex items-center gap-3 focus-visible:ring-2 ring-emerald-500 outline-none">
                             <LogOut size={14}/> Sign Out
                          </button>
                       </motion.div>
@@ -234,12 +247,12 @@ export const Header = ({ currentView, onNavigate, onSignOut, onShop, userProfile
             </>
           ) : (
             <div className="ml-auto flex items-center gap-6">
-              <motion.button whileHover={{ scale: 1.05 }} onClick={onShop} className={`text-xs font-black uppercase tracking-[0.2em] transition-colors flex items-center gap-1 ${isTransparent ? 'text-white hover:text-emerald-400' : 'text-slate-900 hover:text-emerald-500'}`}>
+              <motion.button whileHover={{ scale: 1.05 }} onClick={onShop} className={`text-xs font-black uppercase tracking-[0.2em] transition-colors flex items-center gap-1 focus-visible:ring-2 ring-emerald-500 outline-none rounded-lg ${isTransparent ? 'text-white hover:text-emerald-400' : 'text-slate-900 hover:text-emerald-500'}`}>
                 <ShoppingBag size={14}/> Shop
               </motion.button>
               <div className={`w-px h-4 ${isTransparent ? 'bg-white/20' : 'bg-slate-200'}`} />
-              <motion.button whileHover={{ scale: 1.05 }} onClick={() => onNavigate('auth-login')} className={`text-xs font-black uppercase tracking-[0.4em] transition-colors ${isTransparent ? 'text-white hover:text-emerald-400' : 'text-slate-900 hover:text-emerald-500'}`}>Sign In</motion.button>
-              <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => onNavigate('auth-signup')} className="bg-slate-900 text-white px-10 py-5 rounded-full text-xs font-black uppercase tracking-[0.5em] shadow-2xl transition-all">Get Started</motion.button>
+              <motion.button whileHover={{ scale: 1.05 }} onClick={() => onNavigate('auth-login')} className={`text-xs font-black uppercase tracking-[0.4em] transition-colors focus-visible:ring-2 ring-emerald-500 outline-none rounded-lg ${isTransparent ? 'text-white hover:text-emerald-400' : 'text-slate-900 hover:text-emerald-500'}`}>Sign In</motion.button>
+              <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => onNavigate('auth-signup')} className="bg-slate-900 text-white px-10 py-5 rounded-full text-xs font-black uppercase tracking-[0.5em] shadow-2xl transition-all focus-visible:ring-2 ring-emerald-500 outline-none">Get Started</motion.button>
             </div>
           )}
         </nav>
@@ -271,7 +284,12 @@ export const Header = ({ currentView, onNavigate, onSignOut, onShop, userProfile
             {/* Drawer Header */}
             <div className="px-6 py-6 border-b border-slate-50 flex items-center justify-between bg-[#FCFCFC]/80">
                 {/* User Info */}
-                <div className="flex items-center gap-3" onClick={() => onNavigate('settings')}>
+                <button
+                  type="button"
+                  aria-label="View settings"
+                  className="flex items-center gap-3 text-left focus-visible:ring-2 ring-emerald-500 outline-none rounded-xl p-1"
+                  onClick={() => onNavigate('settings')}
+                >
                    <div className={`w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-900 font-bold text-sm shadow-sm ${userProfile?.hasWatch ? 'ring-2 ring-[#A7F3D0] ring-offset-2' : ''}`}>
                       {getInitials(userName || userProfile?.firstName)}
                    </div>
@@ -279,7 +297,7 @@ export const Header = ({ currentView, onNavigate, onSignOut, onShop, userProfile
                       <span className="text-sm font-black text-slate-900 truncate max-w-[140px]">{userName || 'Athlete'}</span>
                       <span className="text-[10px] font-bold text-emerald-500 flex items-center gap-1"><Flame size={10}/> {streak} Day Streak</span>
                    </div>
-                </div>
+                </button>
                 {/* Close Button */}
                 <button
                   onClick={() => setMobileMenuOpen(false)}
