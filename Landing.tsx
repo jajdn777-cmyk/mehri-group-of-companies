@@ -628,7 +628,7 @@ export const LandingSection = ({ onStart, onNavigate, onShop }: { onStart: () =>
                 <div className="space-y-6">
                   <div className="flex flex-col md:flex-row items-center gap-4 justify-center lg:justify-start">
                      <span className="bg-emerald-400 text-slate-900 px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-[0.3em] shadow-[0_0_20px_rgba(52,211,153,0.4)]">Mehri Tracker</span>
-                     <span className="text-emerald-400 text-[10px] font-bold uppercase tracking-widest flex items-center gap-2">Limited Time Special Offer</span>
+                     <span className="text-emerald-400 text-[10px] font-bold uppercase tracking-widest flex items-center gap-2">Limited Time - It's Cheap</span>
                   </div>
                   <h2 className="text-4xl md:text-7xl font-black text-white uppercase tracking-tighter leading-[0.9]">
                     Meet the <br/> <span className="text-emerald-400 drop-shadow-[0_0_15px_rgba(52,211,153,0.3)]">Mehri Fitness Tracker</span>
