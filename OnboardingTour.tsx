@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { ArrowRight, X, Smartphone, Map, Brain, LayoutDashboard, Check, Download } from 'lucide-react';
+import { ArrowRight, X, Smartphone, Map, LayoutDashboard, Check, Download } from 'lucide-react';
 
 export const OnboardingTour = ({ onComplete, onNavigate }: any) => {
   const [step, setStep] = useState(0);
@@ -38,26 +38,25 @@ export const OnboardingTour = ({ onComplete, onNavigate }: any) => {
     };
   }, []);
 
+
   const handleNext = async () => {
     const nextStep = step + 1;
-    const maxSteps = isStandalone ? 3 : 4;
+    const maxSteps = isStandalone ? 2 : 3;
     
     if (nextStep === 1) {
         onNavigate('routes');
         setStep(1);
     } else if (nextStep === 2) {
-        onNavigate('alma');
-        setStep(2);
-    } else if (nextStep === 3) {
         if (isStandalone) {
             finish();
         } else {
-            setStep(3);
+            setStep(2);
         }
     } else {
         finish();
     }
   };
+
 
   const handleInstallClick = async () => {
       if (deferredPrompt) {
@@ -74,6 +73,7 @@ export const OnboardingTour = ({ onComplete, onNavigate }: any) => {
       onComplete();
   };
 
+
   const steps = [
       {
           title: "Command Center",
@@ -86,11 +86,6 @@ export const OnboardingTour = ({ onComplete, onNavigate }: any) => {
           icon: Map,
       },
       {
-          title: "Alma Intelligence",
-          text: "Your AI coach. Ask her about recovery, nutrition, or log workouts via chat.",
-          icon: Brain,
-      },
-      {
           title: "Install MEHRI",
           text: deviceType === 'ios' 
             ? "Apple requires a manual step to add the app to your home screen."
@@ -99,8 +94,9 @@ export const OnboardingTour = ({ onComplete, onNavigate }: any) => {
       }
   ];
 
+
   const currentContent = steps[step];
-  const maxStepsDisplay = isStandalone ? 3 : 4;
+  const maxStepsDisplay = isStandalone ? 2 : 3;
 
   return (
     <div className="fixed inset-0 z-[9999] flex flex-col justify-end pb-8 px-4 bg-slate-900/30 backdrop-blur-[2px]">
@@ -123,7 +119,7 @@ export const OnboardingTour = ({ onComplete, onNavigate }: any) => {
                             {currentContent.text}
                         </p>
 
-                        {step === 3 && !isStandalone && (
+                        {step === 2 && !isStandalone && (
                             <div className="mt-4 bg-white/5 rounded-xl p-5 border border-white/5 space-y-4">
                                 {deviceType === 'ios' ? (
                                     <div className="space-y-3">
@@ -172,7 +168,7 @@ export const OnboardingTour = ({ onComplete, onNavigate }: any) => {
                     </div>
                     
                     <div className="flex gap-3">
-                        {step === 3 && (
+                        {step === 2 && (
                             <button 
                                 onClick={finish}
                                 className="px-5 py-3 border border-white/10 rounded-full text-slate-500 font-black uppercase text-[9px] tracking-widest hover:text-white hover:border-white/30 transition-all"
@@ -184,8 +180,8 @@ export const OnboardingTour = ({ onComplete, onNavigate }: any) => {
                             onClick={handleNext} 
                             className="flex items-center gap-2 bg-white text-slate-900 px-6 py-3 rounded-full font-black uppercase text-[10px] tracking-[0.2em] hover:bg-[#A7F3D0] transition-colors shadow-lg group"
                         >
-                            {step >= 3 || (isStandalone && step === 2) ? "Finish" : "Next"} 
-                            {step >= 3 || (isStandalone && step === 2) ? <Check size={14}/> : <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform"/>}
+                            {step >= 2 || (isStandalone && step === 1) ? "Finish" : "Next"}
+                            {step >= 2 || (isStandalone && step === 1) ? <Check size={14}/> : <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform"/>}
                         </button>
                     </div>
                 </div>

@@ -39,7 +39,7 @@ export const TermsOfService = ({ onNavigate }: any) => {
          <div className="mb-16 border-l-4 border-emerald-500 pl-6">
             <h1 className="text-4xl md:text-6xl font-black text-white uppercase tracking-tighter mb-4">Terms of Service</h1>
             <p className="text-lg md:text-xl text-slate-400 font-medium leading-relaxed max-w-2xl">
-               Governing usage of the MEHRI ecosystem, GTL-1 hardware, and Alma Intelligence.
+               Governing usage of the MEHRI ecosystem, GTL-1 hardware, .
             </p>
          </div>
 

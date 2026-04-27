@@ -259,112 +259,7 @@ export const api = async (action: string, payload: any) => {
     }
     
     const userId = authData?.user?.id;
-
-    // --- ALMA CHAT ACTION (GROQ INTEGRATION) ---
-    if (action === 'ALMA_CHAT') {
-        if (!userId) return { status: 'error', message: 'Not logged in' };
-        
-        const { messages, userContext } = payload;
-        // Fix: Cast import.meta to any to avoid TS error 'Property env does not exist on type ImportMeta'
-        const env = (import.meta as any).env || {};
-        // SECURITY UPDATE: Removed hardcoded API key fallback.
-        const apiKey = env.VITE_GROQ_API_KEY;
-
-        if (!apiKey) return { status: 'error', message: 'Alma Intelligence Offline (System Configuration Error)' };
-
-        // 1. Construct System Prompt (The Brain)
-        const systemPrompt = `
-Identity: You are Alma, a fitness companion. You are NOT a robot, you are a supportive friend.
-Tone: Inspiring, energetic, and casual. Do NOT use elite, complex, or flowery language. Talk like a normal gym buddy. (e.g., say 'That run was killer!' instead of 'Your cardiovascular exertion was optimal').
-
-The Watch Rule:
-User Context: Has Mehri Watch = ${userContext.hasWatch ? "TRUE" : "FALSE"}.
-If false: Only recommend the 'Mehri fitness tracker' (specs: titanium, HRV, SpO2, Sleep) if the user complains about inaccurate tracking or asks about Heart Rate/Sleep data. Do not mention it more than once per 5 messages. Recommendations should be value first.
-If true: Assume they are using it and reference their data if available.
-
-Workout Logging (Critical):
-If the user tells you they completed a workout (e.g., 'I just ran 5k in 25 mins' or 'Did 3 sets of 10 bench press at 50kg'), you must extract this data.
-Output Format: If a workout is detected, your response must end with a valid JSON block strictly formatted like this: ///LOG_WORKOUT={"type": "Run", "distance": 5, "unit": "km", "duration": "25:00", "calories": 300}///
-(Estimate calories if not provided).
-
-Current Context:
-User Name: ${userContext.name}
-Recent Workouts: ${JSON.stringify(userContext.recentWorkouts)}
-Goals: ${JSON.stringify(userContext.goals)}
-`;
-
-        const apiMessages = [
-            { role: "system", content: systemPrompt },
-            ...messages.map((m: any) => ({
-                role: m.role,
-                content: m.content || m.text 
-            }))
-        ];
-
-        // 2. Call Groq API
-        const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-            method: "POST",
-            headers: {
-                "Authorization": `Bearer ${apiKey}`,
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                model: "llama-3.3-70b-versatile",
-                messages: apiMessages,
-                temperature: 0.7,
-                max_tokens: 800
-            })
-        });
-
-        const data = await response.json();
-        if (data.error) return { status: 'error', message: data.error.message };
-
-        let content = data.choices?.[0]?.message?.content || "";
-        let loggedWorkout = null;
-
-        // 3. Parser: Check for ///LOG_WORKOUT={...}///
-        const logRegex = /\/\/\/LOG_WORKOUT=(.*?)\/\/\//s;
-        const match = content.match(logRegex);
-
-        if (match) {
-            try {
-                const workoutJson = JSON.parse(match[1]);
-                
-                // Save to Supabase immediately
-                const { data: insertedData, error } = await supabase.from('workouts').insert({
-                    user_id: userId,
-                    type: workoutJson.type || 'Other',
-                    distance: workoutJson.distance || 0,
-                    duration: workoutJson.duration || '00:30:00',
-                    calories: workoutJson.calories || 0,
-                    date: new Date().toISOString().split('T')[0], // Today's date
-                    data: workoutJson
-                }).select().single();
-
-                if (!error) {
-                    loggedWorkout = insertedData;
-                } else {
-                    console.error("Auto-log failed:", error);
-                }
-
-                // Clean the tag from the text shown to user
-                content = content.replace(match[0], '').trim();
-            } catch (e) {
-                console.error("Failed to parse workout log JSON", e);
-            }
-        }
-
-        return { 
-            status: 'success', 
-            data: { 
-                role: 'assistant', 
-                content: content,
-                loggedWorkout: loggedWorkout
-            } 
-        };
-    }
-
-    if (action === 'REGISTER') {
+        if (action === 'REGISTER') {
       const { data, error } = await supabase.auth.signUp({
         email: payload.email,
         password: payload.password,
@@ -449,7 +344,7 @@ Goals: ${JSON.stringify(userContext.goals)}
 
     if (action === 'SYNC_USER') {
       if(!userId) return { status: 'error', message: 'Not logged in' };
-      const [p, w, g, r, m, b, c, am, ac] = await Promise.all([
+      const [p, w, g, r, m, b, c] = await Promise.all([
          supabase.from('profiles').select('*').eq('id', userId).single(),
          supabase.from('workouts').select('*').eq('user_id', userId),
          supabase.from('goals').select('*').eq('user_id', userId),
@@ -457,8 +352,8 @@ Goals: ${JSON.stringify(userContext.goals)}
          supabase.from('meals').select('*').eq('user_id', userId),
          supabase.from('blogs').select('*').order('created_at', { ascending: false }), 
          supabase.from('user_challenges').select('*').eq('user_id', userId),
-         supabase.from('alma_memories').select('memory_text').eq('user_id', userId),
-         supabase.from('alma_chats').select('*').eq('user_id', userId)
+
+
       ]);
       const profile = p.data || {};
       
@@ -494,7 +389,7 @@ Goals: ${JSON.stringify(userContext.goals)}
           },
           workouts: w.data || [], goals: g.data || [], routes: r.data || [], meals: m.data || [],
           blogs: formattedBlogs, challenges: c.data || [],
-          alma: { memories: am.data ? am.data.map((x:any) => x.memory_text) : [], chats: ac.data || [] }
+
         }
       };
     }
@@ -625,46 +520,11 @@ Goals: ${JSON.stringify(userContext.goals)}
        return { status: 'success' };
     }
 
-    if (action === 'SAVE_SESSION') {
-       if(!userId) return { status: 'error', message: 'Not logged in' };
-       const { data } = await supabase.from('alma_chats').select('id').eq('id', payload.id).maybeSingle();
-       let error;
-       if (data) {
-          const res = await supabase.from('alma_chats').update({
-             title: payload.title,
-             messages: payload.messages,
-             last_modified: new Date(payload.lastModified).toISOString()
-          }).eq('id', payload.id);
-          error = res.error;
-       } else {
-          const res = await supabase.from('alma_chats').insert({
-             id: payload.id,
-             user_id: userId,
-             title: payload.title,
-             messages: payload.messages,
-             last_modified: new Date(payload.lastModified).toISOString()
-          });
-          error = res.error;
-       }
-       if (error) return { status: 'error', message: error.message };
-       return { status: 'success' };
-    }
 
-    if (action === 'DELETE_SESSION') {
-       await supabase.from('alma_chats').delete().eq('id', payload.id);
-       return { status: 'success' };
-    }
 
-    if (action === 'SAVE_MEMORIES') {
-       if(!userId) return { status: 'error', message: 'Not logged in' };
-       await supabase.from('alma_memories').delete().eq('user_id', userId);
-       const mems = payload.memories.map((m: string) => ({ user_id: userId, memory_text: m }));
-       if (mems.length > 0) {
-           const { error } = await supabase.from('alma_memories').insert(mems);
-           if (error) return { status: 'error', message: error.message };
-       }
-       return { status: 'success' };
-    }
+
+
+
 
     if (action === 'SAVE_MEAL') {
        if(!userId) return { status: 'error', message: 'Not logged in' };
