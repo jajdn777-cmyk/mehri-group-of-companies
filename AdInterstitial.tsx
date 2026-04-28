@@ -122,7 +122,7 @@ export const AdInterstitial = ({ isOpen, onClose }: AdInterstitialProps) => {
                    transition={{ delay: 0.7 }}
                    className="text-3xl md:text-5xl font-serif text-[#1E3A8A] font-bold tracking-tight uppercase"
                 >
-                  Affordable Executive Offer
+                  Affordable Professional Offer
                 </motion.h2>
                 <motion.p 
                    initial={{ opacity: 0, y: 10 }}

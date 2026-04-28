@@ -975,7 +975,7 @@ export const DashboardView = ({ workouts, setWorkouts, userGoals, setUserGoals, 
               
               <div className="bg-slate-900 p-8 md:p-10 rounded-[30px] md:rounded-[50px] text-white shadow-2xl relative overflow-hidden group">
                 <Zap size={60} className="absolute -bottom-6 -right-6 opacity-10 group-hover:rotate-12 transition-transform duration-700" />
-                <h4 className="text-lg font-black uppercase text-emerald-400 mb-2 tracking-wide">Sync Ecosystem</h4>
+                <h4 className="text-lg font-black uppercase text-emerald-400 mb-2 tracking-wide">Sync Platform</h4>
                 <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-6">Mehri fitness tracker detected</p>
                 <button className="w-full py-4 bg-white/10 rounded-2xl font-black uppercase text-[10px] tracking-widest border border-white/10 hover:bg-white/20 transition-all magnetic-btn">Check Connection</button>
               </div>

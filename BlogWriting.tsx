@@ -49,7 +49,7 @@ export const BlogWriting = ({ onClose, userName, userProfile }: any) => {
       <div className="flex h-screen items-center justify-center bg-white text-slate-900">
         <div className="text-center">
           <h1 className="text-4xl font-black uppercase tracking-tighter">Restricted Access</h1>
-          <p className="mt-2 text-slate-500 font-bold uppercase tracking-widest text-xs">Executive Clearance Required</p>
+          <p className="mt-2 text-slate-500 font-bold uppercase tracking-widest text-xs">Access Restricted</p>
           <button onClick={onClose} className="mt-8 px-8 py-3 bg-slate-900 text-white rounded-full font-bold uppercase text-xs tracking-widest">Return to Feed</button>
         </div>
       </div>
