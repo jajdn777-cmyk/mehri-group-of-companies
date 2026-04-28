@@ -54,7 +54,7 @@ export const ShopModal = ({ onClose, onBuy }: any) => {
          description="Get the Mehri Fitness Tracker at a cheap price. 24/7 Heart Rate, SpO2, and Sleep tracking. Lightweight and high-performance."
          product={{
            name: "Mehri Fitness Tracker",
-           description: "Elite performance tracking with 24/7 biometric monitoring.",
+           description: "High-performance tracking with 24/7 biometric monitoring.",
            image: PRODUCT_IMAGES[1],
            price: "Cheap",
            currency: "USD",

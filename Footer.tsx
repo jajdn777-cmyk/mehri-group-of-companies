@@ -8,14 +8,14 @@ const ABOUT_US_CONTENT = `
 ABOUT SHAMSULLAH MEHRI GROUP
 
 SHAMSULLAH MEHRI: ARCHITECTING HUMAN VITALITY
-Shamsullah Mehri is dedicated to democratizing high-level health data. We believe that elite performance analytics shouldn't be restricted to professional laboratories. By combining precision hardware with AI-driven insights, we empower individuals to move beyond basic tracking and start architecting their own physiology. Our mission is accuracy, accessibility, and absolute privacy.
+Shamsullah Mehri is dedicated to democratizing high-level health data. We believe that high-performance performance analytics shouldn't be restricted to professional laboratories. By combining precision hardware with AI-driven insights, we empower individuals to move beyond basic tracking and start architecting their own physiology. Our mission is accuracy, accessibility, and absolute privacy.
 
 THE MEHRI VISION
-We envision a future where technology doesn't just track you—it understands you. From our Silicon Valley headquarters to our global user base, we are building an ecosystem where every heartbeat, every step, and every night of sleep contributes to a clearer picture of your potential. We are building the operating system for the human body.
+We envision a future where technology doesn't just track you—it understands you. From our Silicon Valley headquarters to our global user base, we are building an platform where every heartbeat, every step, and every night of sleep contributes to a clearer picture of your potential. We are building the operating system for the human body.
 
 WHAT WE DO
 - Hardware Engineering: Creating robust, aerospace-grade wearables like the Mehri fitness tracker, milled from titanium and sapphire.
-- AI Development: Training "Alma", our neural coaching engine, to provide context-aware health advice that adapts to your specific metabolic profile.
+- AI Development: Training "AI", our neural coaching engine, to provide context-aware health advice that adapts to your specific metabolic profile.
 - Community Building: Fostering a worldwide network of athletes, bio-hackers, and everyday achievers committed to self-improvement.
 
 LOCATION & ORIGIN
@@ -134,7 +134,7 @@ export const Footer = ({ onNavigate }: any) => {
                    <MehriLogo size="lg" className="brightness-0 invert" />
                 </div>
                 <p className="text-slate-500 text-sm leading-relaxed max-w-xs">
-                   Mehri is the premier ecosystem for elite performance tracking. Powered by the Mehri fitness tracker hardware kernel.
+                   Mehri is the premier platform for high-performance performance tracking. Powered by the Mehri fitness tracker hardware kernel.
                 </p>
                 <div className="space-y-4 pt-2">
                    <a 

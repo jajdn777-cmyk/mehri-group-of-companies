@@ -293,7 +293,7 @@ export const AuthSection = ({ onComplete, initialView = 'login', onNavigate }: a
           </div>
           <div className="flex-1">
              <p className="text-[10px] font-black uppercase text-slate-400 group-hover:text-slate-900 flex items-center gap-2"><Mail size={12}/> Weekly Newsletter</p>
-             <p className="text-[9px] text-slate-300 mt-0.5">Elite training tips straight to your inbox.</p>
+             <p className="text-[9px] text-slate-300 mt-0.5">High-performance training tips straight to your inbox.</p>
           </div>
        </label>
 
@@ -309,7 +309,7 @@ export const AuthSection = ({ onComplete, initialView = 'login', onNavigate }: a
           </div>
           <div className="flex-1">
              <p className="text-[10px] font-black uppercase text-slate-400 group-hover:text-slate-900 flex items-center gap-2"><Newspaper size={12}/> Fitness News</p>
-             <p className="text-[9px] text-slate-300 mt-0.5">Updates on MEHRI ecosystem.</p>
+             <p className="text-[9px] text-slate-300 mt-0.5">Updates on MEHRI platform.</p>
           </div>
        </label>
 
@@ -335,13 +335,13 @@ export const AuthSection = ({ onComplete, initialView = 'login', onNavigate }: a
         <div className="absolute bottom-12 left-12 right-12">
             <div className="bg-white/80 backdrop-blur-md p-6 rounded-3xl border border-white/20 shadow-xl">
                 <p className="text-slate-900 font-serif italic text-lg leading-relaxed">
-                    "The future of executive wellness isn't just data—it's architecture. MEHRI provides the blueprint for your peak state."
+                    "At Mehri Group, we believe in making health data accessible to everyone. Our platform provides the insights you need to reach your goals."
                 </p>
                 <div className="mt-4 flex items-center gap-3">
                     <div className="w-10 h-10 rounded-full bg-[#A7F3D0]" />
                     <div>
                         <p className="text-xs font-black uppercase tracking-widest text-slate-900">Mehri Leadership</p>
-                        <p className="text-[10px] text-slate-400 font-bold uppercase">Executive Performance</p>
+                        <p className="text-[10px] text-slate-400 font-bold uppercase">Personal Performance</p>
                     </div>
                 </div>
             </div>

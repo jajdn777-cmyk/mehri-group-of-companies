@@ -134,7 +134,7 @@ export const BlogList = ({ userProfile, onNavigate, onDelete }: any) => {
       }
 
       const { data, error } = await query
-        .order('likes_count', { ascending: false })
+
         .order('created_at', { ascending: false })
         .range(start, end);
 
@@ -202,7 +202,7 @@ export const BlogList = ({ userProfile, onNavigate, onDelete }: any) => {
              <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tighter text-slate-900">The Insights</h2>
              <p className="text-slate-400 font-bold uppercase tracking-widest text-xs flex items-center gap-2">
                 <TrendingUp size={14} className="text-emerald-500" />
-                Algorithmic Feed for the elite
+                Insights for your journey
              </p>
           </div>
           

@@ -357,7 +357,7 @@ export const LogModal = ({ date, routes, userSpecs, userProfile, userPreferences
   );
 };
 
-export const DashboardView = ({ workouts, setWorkouts, userGoals, setUserGoals, routes, userSpecs, userProfile, userPreferences, userHandle, onForceSync, userMeals = [], almaChats = [], setAlmaChats, setAlmaNotification, onNavigate }: any) => {
+export const DashboardView = ({ workouts, setWorkouts, userGoals, setUserGoals, routes, userSpecs, userProfile, userPreferences, userHandle, onForceSync, userMeals = [], aiChats = [], setAIChats, setAINotification, onNavigate }: any) => {
   // --- RESILIENCE CHECK ---
   // If we don't have a user profile yet, we are likely in a hydration/auth transition.
   // Show a "Warm up" state instead of crashing or showing default empty data.
@@ -385,13 +385,13 @@ export const DashboardView = ({ workouts, setWorkouts, userGoals, setUserGoals, 
   const [showStreakCelebration, setShowStreakCelebration] = useState(false);
   const [celebratingGoal, setCelebratingGoal] = useState<any>(null);
   const [isSyncing, setIsSyncing] = useState(false);
-  const [almaMessage, setAlmaMessage] = useState<any>(null);
+  const [aiMessage, setAIMessage] = useState<any>(null);
   const [progress, setProgress] = useState(100);
 
   useEffect(() => {
     // 1. Morning Brief Logic
     const today = getLocalTodayStr();
-    const lastBrief = localStorage.getItem('lastAlmaBrief');
+    const lastBrief = localStorage.getItem('lastAIBrief');
 
     if (lastBrief !== today) {
         const yesterday = new Date();
@@ -422,9 +422,9 @@ export const DashboardView = ({ workouts, setWorkouts, userGoals, setUserGoals, 
 
         message += `I recommend ${yesterdayCalories > 500 ? 'a recovery session' : 'pushing your limits'} today.`;
 
-        setAlmaMessage({ type: 'morning', text: message });
-        if (setAlmaNotification) setAlmaNotification(true);
-        localStorage.setItem('lastAlmaBrief', today);
+        setAIMessage({ type: 'morning', text: message });
+        if (setAINotification) setAINotification(true);
+        localStorage.setItem('lastAIBrief', today);
     }
   }, []);
 
@@ -433,14 +433,14 @@ export const DashboardView = ({ workouts, setWorkouts, userGoals, setUserGoals, 
     if (workouts.length > prevWorkoutCount.current) {
         const lastWorkout = workouts[0];
         const message = `Post-Workout Insight: Great ${lastWorkout.type} session! You burned ${lastWorkout.calories}kcal. That effort is moving you closer to your goals!`;
-        setAlmaMessage({ type: 'workout', text: message });
-        if (setAlmaNotification) setAlmaNotification(true);
+        setAIMessage({ type: 'workout', text: message });
+        if (setAINotification) setAINotification(true);
     }
     prevWorkoutCount.current = workouts.length;
   }, [workouts]);
 
   useEffect(() => {
-    if (almaMessage) {
+    if (aiMessage) {
         setProgress(100);
         const duration = 10000;
         const interval = 100;
@@ -450,7 +450,7 @@ export const DashboardView = ({ workouts, setWorkouts, userGoals, setUserGoals, 
             setProgress(prev => {
                 if (prev <= 0) {
                     clearInterval(timer);
-                    setAlmaMessage(null);
+                    setAIMessage(null);
                     return 0;
                 }
                 return prev - step;
@@ -459,24 +459,24 @@ export const DashboardView = ({ workouts, setWorkouts, userGoals, setUserGoals, 
 
         return () => clearInterval(timer);
     }
-  }, [almaMessage]);
+  }, [aiMessage]);
 
   const handleMessageClick = () => {
-    if (!almaMessage) return;
-    const newMessage = { role: 'model', text: almaMessage.text, timestamp: new Date().toISOString() };
+    if (!aiMessage) return;
+    const newMessage = { role: 'model', text: aiMessage.text, timestamp: new Date().toISOString() };
 
-    let activeChat = almaChats[0];
+    let activeChat = aiChats[0];
     if (!activeChat) {
-        activeChat = { id: Date.now(), title: 'Alma Coach', messages: [newMessage] };
-        if (setAlmaChats) setAlmaChats([activeChat, ...almaChats]);
+        activeChat = { id: Date.now(), title: 'AI Coach', messages: [newMessage] };
+        if (setAIChats) setAIChats([activeChat, ...aiChats]);
     } else {
         const updatedChat = { ...activeChat, messages: [...activeChat.messages, newMessage] };
-        if (setAlmaChats) setAlmaChats([updatedChat, ...almaChats.filter((c: any) => c.id !== activeChat.id)]);
+        if (setAIChats) setAIChats([updatedChat, ...aiChats.filter((c: any) => c.id !== activeChat.id)]);
     }
 
-    if (onNavigate) onNavigate('alma');
-    setAlmaMessage(null);
-    if (setAlmaNotification) setAlmaNotification(false);
+    if (onNavigate) onNavigate('ai-coach');
+    setAIMessage(null);
+    if (setAINotification) setAINotification(false);
   };
 
   
@@ -730,7 +730,7 @@ export const DashboardView = ({ workouts, setWorkouts, userGoals, setUserGoals, 
 
   return (
     <div className="space-y-6 md:space-y-12 animate-fade-in pb-32 max-w-7xl mx-auto font-sans">
-      {almaMessage && (
+      {aiMessage && (
         <div
           onClick={handleMessageClick}
           className="fixed top-32 left-1/2 -translate-x-1/2 z-[6000] w-[90%] max-w-xl bg-slate-900 text-white p-6 rounded-[30px] shadow-2xl cursor-pointer hover:scale-[1.02] transition-all group overflow-hidden border border-white/10"
@@ -740,8 +740,8 @@ export const DashboardView = ({ workouts, setWorkouts, userGoals, setUserGoals, 
                     <Brain size={20} />
                 </div>
                 <div className="flex-1 space-y-1">
-                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#A7F3D0]">Alma Intelligence</p>
-                    <p className="text-sm font-bold leading-relaxed">{almaMessage.text}</p>
+                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#A7F3D0]">AI Insights</p>
+                    <p className="text-sm font-bold leading-relaxed">{aiMessage.text}</p>
                 </div>
                 <div className="text-white/20 group-hover:text-white transition-colors">
                     <ArrowRight size={20} />
@@ -1077,7 +1077,7 @@ export const DashboardView = ({ workouts, setWorkouts, userGoals, setUserGoals, 
               
               <div className="bg-slate-900 p-8 md:p-10 rounded-[30px] md:rounded-[50px] text-white shadow-2xl relative overflow-hidden group">
                 <Zap size={60} className="absolute -bottom-6 -right-6 opacity-10 group-hover:rotate-12 transition-transform duration-700" />
-                <h4 className="text-lg font-black uppercase text-emerald-400 mb-2 tracking-wide">Sync Ecosystem</h4>
+                <h4 className="text-lg font-black uppercase text-emerald-400 mb-2 tracking-wide">Sync Platform</h4>
                 <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-6">Mehri fitness tracker detected</p>
                 <button className="w-full py-4 bg-white/10 rounded-2xl font-black uppercase text-[10px] tracking-widest border border-white/10 hover:bg-white/20 transition-all magnetic-btn">Check Connection</button>
               </div>

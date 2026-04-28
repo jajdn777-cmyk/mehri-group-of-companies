@@ -30,18 +30,18 @@ interface SEOProps {
 /**
  * SEO Component
  * Manages document head metadata and JSON-LD structured data dynamically.
- * Optimized for: Professional Wellness & Executive Fitness keywords.
+ * Optimized for: Professional Wellness & Personal Fitness keywords.
  */
 export const SEO: React.FC<SEOProps> = ({ 
   title, 
-  description = "Elite performance tracking and biometric architecture. Mehri delivers executive fitness via Mehri fitness tracker hardware and Alma AI coaching.",
+  description = "High-performance tracking and biometric blueprint. Mehri delivers personal fitness via Mehri fitness tracker hardware and AI coaching.",
   view,
   article,
   product,
   faq
 }) => {
   const brandName = "Mehri";
-  const defaultTitle = `${brandName} | Executive Wellness & AI Fitness`;
+  const defaultTitle = `${brandName} | Personal Wellness & AI Fitness`;
   const finalTitle = title || defaultTitle;
 
   useEffect(() => {

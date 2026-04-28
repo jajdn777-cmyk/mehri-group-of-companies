@@ -4,7 +4,7 @@ import { Upload, Camera, Check, X, ArrowRight, Activity, Zap, Info, AlertTriangl
 import { calculateBMR, calculateAge, api } from './utils.ts';
 import { getLocalTodayStr } from './constants.ts';
 
-const AlmaScanner = ({ isScanning }: { isScanning: boolean }) => (
+const AIScanner = ({ isScanning }: { isScanning: boolean }) => (
   <div className={`relative w-full h-full flex items-center justify-center transition-all duration-500 ${isScanning ? 'opacity-100' : 'opacity-0 pointer-events-none absolute inset-0'}`}>
      <div className="relative w-64 h-64">
         {/* Scanning Line */}
@@ -52,7 +52,7 @@ const ConfirmationModal = ({ data, onConfirm, onCancel }: any) => (
         </div>
         <div>
            <h3 className="text-xl font-black uppercase text-slate-900">Value Alert</h3>
-           <p className="text-sm text-slate-500 mt-2 font-medium">Alma detected an unusual calorie count for a single meal.</p>
+           <p className="text-sm text-slate-500 mt-2 font-medium">AI detected an unusual calorie count for a single meal.</p>
         </div>
         <div className="bg-slate-50 p-4 rounded-xl">
            <p className="text-3xl font-black text-slate-900">{data.calories} <span className="text-xs text-slate-400 uppercase">kcal</span></p>
@@ -65,7 +65,7 @@ const ConfirmationModal = ({ data, onConfirm, onCancel }: any) => (
   </div>
 );
 
-export const AlmaMealsView = ({ onNavigate, userMeals, setUserMeals, userSpecs, userProfile, workouts, userHandle }: any) => {
+export const AIMealsView = ({ onNavigate, userMeals, setUserMeals, userSpecs, userProfile, workouts, userHandle }: any) => {
   const [image, setImage] = useState<string | null>(null);
   const [mealName, setMealName] = useState('');
   const [isScanning, setIsScanning] = useState(false);
@@ -167,7 +167,7 @@ export const AlmaMealsView = ({ onNavigate, userMeals, setUserMeals, userSpecs, 
 
     } catch (e) {
         console.error("Meal Analysis Error:", e);
-        alert("Alma couldn't process this. Please try again with a different image or shorter name.");
+        alert("AI couldn't process this. Please try again with a different image or shorter name.");
     } finally {
         setIsScanning(false);
     }
@@ -224,8 +224,8 @@ export const AlmaMealsView = ({ onNavigate, userMeals, setUserMeals, userSpecs, 
              </div>
              <p className="text-slate-400 font-bold uppercase tracking-widest text-xs">AI-Powered Nutrition Analysis</p>
           </div>
-          <button onClick={() => onNavigate('alma')} className="text-slate-400 hover:text-slate-900 font-bold text-xs uppercase tracking-widest transition-colors flex items-center gap-2">
-             Chat with Alma <ArrowRight size={14}/>
+          <button onClick={() => onNavigate('ai-coach')} className="text-slate-400 hover:text-slate-900 font-bold text-xs uppercase tracking-widest transition-colors flex items-center gap-2">
+             Chat with AI <ArrowRight size={14}/>
           </button>
        </div>
 
@@ -261,7 +261,7 @@ export const AlmaMealsView = ({ onNavigate, userMeals, setUserMeals, userSpecs, 
                 
                 {isScanning && (
                    <div className="absolute inset-0 bg-slate-900/80 backdrop-blur-sm z-10">
-                      <AlmaScanner isScanning={isScanning} />
+                      <AIScanner isScanning={isScanning} />
                    </div>
                 )}
              </div>
@@ -291,7 +291,7 @@ export const AlmaMealsView = ({ onNavigate, userMeals, setUserMeals, userSpecs, 
                    <div className="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center text-slate-400"><Activity size={32}/></div>
                    <div>
                       <h3 className="text-2xl font-black uppercase text-slate-900 tracking-tight">Awaiting Input</h3>
-                      <p className="text-slate-500 font-medium mt-2 max-w-xs mx-auto">Upload a photo or enter a meal name to let Alma analyze your nutrition.</p>
+                      <p className="text-slate-500 font-medium mt-2 max-w-xs mx-auto">Upload a photo or enter a meal name to let AI analyze your nutrition.</p>
                    </div>
                 </div>
              ) : (
@@ -349,7 +349,7 @@ export const AlmaMealsView = ({ onNavigate, userMeals, setUserMeals, userSpecs, 
                             <Zap size={20} fill="#A7F3D0" />
                          </div>
                          <div className="space-y-2">
-                            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Coach Alma says</p>
+                            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Coach AI says</p>
                             <p className="text-lg font-serif text-slate-800 leading-relaxed italic">
                                "{result.contextualAdvice}"
                             </p>

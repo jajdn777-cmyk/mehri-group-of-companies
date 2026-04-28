@@ -232,7 +232,7 @@ export const SettingsView = ({
           {activeTab === 'subscription' && (
             <div className="space-y-12 animate-fade-in flex flex-col items-center text-center py-10">
                <div className="w-24 h-24 bg-slate-900 rounded-full flex items-center justify-center text-[#A7F3D0] shadow-2xl mb-4"><CreditCard size={40} /></div>
-               <div className="space-y-4 max-w-lg"><h3 className="text-3xl font-black uppercase tracking-tighter text-slate-900 font-serif">Tracker Access</h3><p className="text-lg text-slate-500 font-medium leading-relaxed font-sans">Your tracker experience begins with the watch. Unlock real-time bio-metric synchronization and elite coaching analysis.</p></div>
+               <div className="space-y-4 max-w-lg"><h3 className="text-3xl font-black uppercase tracking-tighter text-slate-900 font-serif">Tracker Access</h3><p className="text-lg text-slate-500 font-medium leading-relaxed font-sans">Your tracker experience begins with the watch. Unlock real-time bio-metric synchronization and high-performance coaching analysis.</p></div>
                <div className="bg-slate-50 p-8 rounded-[30px] border border-slate-100 w-full max-w-xl">
                   <div className="flex justify-between items-center mb-6"><span className="text-xs font-black uppercase tracking-widest text-slate-400">Current Plan</span><span className="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest">Free Tier</span></div>
                   <div className="h-px bg-slate-200 w-full mb-6" />

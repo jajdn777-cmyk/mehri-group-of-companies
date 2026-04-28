@@ -18,7 +18,7 @@ interface ChatSession {
   lastModified: number;
 }
 
-export const AlmaView = ({ 
+export const AIView = ({
   workouts, setWorkouts, userSpecs, userName, 
   memories, setMemories, chats, setChats, routes, userPreferences, userProfile, userHandle, userGoals 
 }: any) => {
@@ -80,7 +80,7 @@ export const AlmaView = ({
     setViewMode('chat');
     setShowSidebar(false);
     
-    if(usernameToSave) api("SAVE_SESSION", { ...newChat, username: usernameToSave });
+    if(usernameToSave) api("AI_SAVE_SESSION", { ...newChat, username: usernameToSave });
   };
 
   const deleteChat = (e: React.MouseEvent, id: string) => {
@@ -92,7 +92,7 @@ export const AlmaView = ({
     if (activeChatId === id) {
         setActiveChatId(newChats.length > 0 ? newChats[0].id : null);
     }
-    api("DELETE_SESSION", { id });
+    api("AI_DELETE_SESSION", { id });
   };
 
   const speak = (text: string) => {
@@ -167,7 +167,7 @@ export const AlmaView = ({
       }));
 
       // --- CALL CENTRAL API ---
-      const response = await api("ALMA_CHAT", {
+      const response = await api("AI_CHAT", {
           messages: apiHistory,
           userContext: userContext
       });
@@ -190,7 +190,7 @@ export const AlmaView = ({
           };
           
           setChats(prev => prev.map(c => c.id === activeChatId ? finalChatState : c));
-          if (usernameToSave) api("SAVE_SESSION", { ...finalChatState, username: usernameToSave });
+          if (usernameToSave) api("AI_SAVE_SESSION", { ...finalChatState, username: usernameToSave });
 
       } else {
           throw new Error(response.message || "Unknown error");
@@ -210,7 +210,7 @@ export const AlmaView = ({
     if (!newMemoryInput.trim()) return;
     const newMems = [...memories, newMemoryInput];
     setMemories(newMems);
-    if(usernameToSave) api("SAVE_MEMORIES", { username: usernameToSave, memories: newMems });
+    if(usernameToSave) api("AI_SAVE_MEMORIES", { username: usernameToSave, memories: newMems });
     setNewMemoryInput('');
   };
 
@@ -219,7 +219,7 @@ export const AlmaView = ({
     const newMems = [...memories];
     newMems.splice(index, 1);
     setMemories(newMems);
-    if(usernameToSave) api("SAVE_MEMORIES", { username: usernameToSave, memories: newMems });
+    if(usernameToSave) api("AI_SAVE_MEMORIES", { username: usernameToSave, memories: newMems });
   };
 
   return (
@@ -232,7 +232,7 @@ export const AlmaView = ({
             >
               <Menu size={24}/>
             </button>
-            <span className="font-black uppercase tracking-widest text-sm text-slate-900">Alma Chat</span>
+            <span className="font-black uppercase tracking-widest text-sm text-slate-900">AI Chat</span>
          </div>
       </div>
 
@@ -291,7 +291,7 @@ export const AlmaView = ({
         {viewMode === 'settings' ? (
           <div className="flex-1 overflow-y-auto p-6 md:p-12">
              <div className="max-w-2xl mx-auto space-y-8 md:space-y-12 animate-fade-in">
-                <div><h2 className="text-2xl md:text-3xl font-bold text-slate-900 mb-2">Alma Memory</h2><p className="text-slate-500 text-sm">Manage what your coach remembers about you.</p></div>
+                <div><h2 className="text-2xl md:text-3xl font-bold text-slate-900 mb-2">AI Memory</h2><p className="text-slate-500 text-sm">Manage what your coach remembers about you.</p></div>
                 <div className="space-y-4">
                    <div className="flex gap-2"><input className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-base md:text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-slate-400 transition-colors" placeholder="Add a specific memory..." value={newMemoryInput} onChange={e => setNewMemoryInput(e.target.value)} onKeyDown={e => e.key === 'Enter' && addManualMemory()} /><button onClick={addManualMemory} className="bg-slate-900 text-white px-5 rounded-xl text-sm font-medium hover:bg-emerald-500 transition-colors">Add</button></div>
                    <div className="space-y-2">{memories.length === 0 ? (<p className="text-sm text-slate-400 italic py-4">No memories saved yet.</p>) : (memories.map((mem: string, i: number) => (<div key={i} className="flex justify-between items-center p-4 bg-slate-50 rounded-xl border border-slate-100 group"><span className="text-sm text-slate-700">{mem}</span><button onClick={() => removeMemory(i)} className="text-slate-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all"><X size={16}/></button></div>)))}</div>
@@ -309,7 +309,7 @@ export const AlmaView = ({
                      </div>
                      <div className="flex-1 pt-1 space-y-1">
                         <div className="font-bold text-xs text-slate-900 mb-1 flex items-center gap-2">
-                          {(m.role === 'model' || m.role === 'assistant') ? 'Alma' : 'You'}
+                          {(m.role === 'model' || m.role === 'assistant') ? 'AI' : 'You'}
                           {(m.role === 'model' || m.role === 'assistant') && m.text && (
                             <button onClick={() => speak(m.text)} className="text-slate-300 hover:text-emerald-500 transition-colors opacity-0 group-hover:opacity-100" title="Read Aloud">
                               <Volume2 size={14}/>
@@ -332,7 +332,7 @@ export const AlmaView = ({
                <div className="max-w-[850px] mx-auto relative">
                   {showMemorySaveTick && (<div className="absolute -top-10 left-1/2 -translate-x-1/2 bg-slate-900 text-[#A7F3D0] px-4 py-2 rounded-full text-xs font-bold flex items-center gap-2 shadow-lg animate-fade-in"><Check size={14}/> Memory Updated</div>)}
                   <div className="relative flex items-center bg-[#f4f4f5] rounded-[26px] shadow-sm border border-transparent focus-within:border-slate-300 focus-within:bg-white focus-within:ring-4 focus-within:ring-slate-100 transition-all duration-300">
-                     <input className="w-full bg-transparent border-none py-4 pl-6 pr-14 text-base md:text-[15px] placeholder:text-slate-400 focus:ring-0 outline-none text-slate-900" placeholder="Message Alma..." value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && handleSend()} disabled={isLoading} />
+                     <input className="w-full bg-transparent border-none py-4 pl-6 pr-14 text-base md:text-[15px] placeholder:text-slate-400 focus:ring-0 outline-none text-slate-900" placeholder="Message AI..." value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && handleSend()} disabled={isLoading} />
                      <button onClick={handleSend} disabled={isLoading || !input.trim()} className="absolute right-2 p-2 bg-[#A7F3D0] rounded-full text-slate-900 disabled:opacity-30 disabled:cursor-not-allowed hover:brightness-105 transition-all shadow-sm"><Send size={18} /></button>
                   </div>
                </div>

@@ -1,1 +1,1 @@
-// Distributed to individual files (Logo.tsx, Header.tsx, ShopModal.tsx, Alma.tsx)
+// Distributed to individual files (Logo.tsx, Header.tsx, ShopModal.tsx, AI.tsx)

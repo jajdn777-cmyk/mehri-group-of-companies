@@ -505,7 +505,7 @@ const AuthTabs = memo(function AuthTabs({
       <div className='w-full flex flex-col justify-center items-center'>
         <AnimatedForm
           header={isLogin ? "Welcome Back" : "Join MEHRI"}
-          subHeader={isLogin ? "Elite biometric tracking awaits." : "Start your executive wellness journey."}
+          subHeader={isLogin ? "Personalized tracking awaits." : "Start your personal wellness journey."}
           fields={fields}
           submitButton={isLogin ? "Sign In" : "Create Account"}
           isLogin={isLogin}

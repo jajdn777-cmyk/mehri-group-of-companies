@@ -260,8 +260,8 @@ export const api = async (action: string, payload: any) => {
     
     const userId = authData?.user?.id;
 
-    // --- ALMA CHAT ACTION (GROQ INTEGRATION) ---
-    if (action === 'ALMA_CHAT') {
+    // --- AI CHAT ACTION (GROQ INTEGRATION) ---
+    if (action === 'AI_CHAT') {
         if (!userId) return { status: 'error', message: 'Not logged in' };
         
         const { messages, userContext } = payload;
@@ -270,12 +270,12 @@ export const api = async (action: string, payload: any) => {
         // SECURITY UPDATE: Removed hardcoded API key fallback.
         const apiKey = env.VITE_GROQ_API_KEY;
 
-        if (!apiKey) return { status: 'error', message: 'Alma Intelligence Offline (System Configuration Error)' };
+        if (!apiKey) return { status: 'error', message: 'AI Insights Offline (System Configuration Error)' };
 
         // 1. Construct System Prompt (The Brain)
         const systemPrompt = `
-Identity: You are Alma, a fitness companion. You are NOT a robot, you are a supportive friend.
-Tone: Inspiring, energetic, and casual. Do NOT use elite, complex, or flowery language. Talk like a normal gym buddy. (e.g., say 'That run was killer!' instead of 'Your cardiovascular exertion was optimal').
+Identity: You are AI, a fitness companion. You are NOT a robot, you are a supportive friend.
+Tone: Inspiring, energetic, and casual. Do NOT use high-performance, complex, or flowery language. Talk like a normal gym buddy. (e.g., say 'That run was killer!' instead of 'Your cardiovascular exertion was optimal').
 
 The Watch Rule:
 User Context: Has Mehri Watch = ${userContext.hasWatch ? "TRUE" : "FALSE"}.
@@ -494,7 +494,7 @@ Goals: ${JSON.stringify(userContext.goals)}
           },
           workouts: w.data || [], goals: g.data || [], routes: r.data || [], meals: m.data || [],
           blogs: formattedBlogs, challenges: c.data || [],
-          alma: { memories: am.data ? am.data.map((x:any) => x.memory_text) : [], chats: ac.data || [] }
+          ai: { memories: am.data ? am.data.map((x:any) => x.memory_text) : [], chats: ac.data || [] }
         }
       };
     }
@@ -625,7 +625,7 @@ Goals: ${JSON.stringify(userContext.goals)}
        return { status: 'success' };
     }
 
-    if (action === 'SAVE_SESSION') {
+    if (action === 'AI_SAVE_SESSION') {
        if(!userId) return { status: 'error', message: 'Not logged in' };
        const { data } = await supabase.from('alma_chats').select('id').eq('id', payload.id).maybeSingle();
        let error;
@@ -650,12 +650,12 @@ Goals: ${JSON.stringify(userContext.goals)}
        return { status: 'success' };
     }
 
-    if (action === 'DELETE_SESSION') {
+    if (action === 'AI_DELETE_SESSION') {
        await supabase.from('alma_chats').delete().eq('id', payload.id);
        return { status: 'success' };
     }
 
-    if (action === 'SAVE_MEMORIES') {
+    if (action === 'AI_SAVE_MEMORIES') {
        if(!userId) return { status: 'error', message: 'Not logged in' };
        await supabase.from('alma_memories').delete().eq('user_id', userId);
        const mems = payload.memories.map((m: string) => ({ user_id: userId, memory_text: m }));

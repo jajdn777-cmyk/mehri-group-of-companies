@@ -164,7 +164,7 @@ const CountUpStat = ({ end, suffix = "", duration = 2 }: { end: number, suffix?:
   return <span ref={ref}>0{suffix}</span>;
 };
 
-// --- ALMA LIVE DEMO COMPONENTS ---
+// --- AI LIVE DEMO COMPONENTS ---
 
 const TypingIndicator = () => (
   <div className="flex gap-1 px-2 py-1 items-center h-5">
@@ -199,7 +199,7 @@ const TypewriterText = ({ text, onComplete }: { text: string, onComplete?: () =>
   return <span>{display}</span>;
 };
 
-const AlmaLiveDemo = () => {
+const AILiveDemo = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-20% 0px -20% 0px" });
   const [step, setStep] = useState(0); 
@@ -230,7 +230,7 @@ const AlmaLiveDemo = () => {
              <div className="absolute inset-0 bg-emerald-500/10 animate-pulse" />
           </div>
           <div>
-             <p className="text-white font-bold">Alma</p>
+             <p className="text-white font-bold">AI</p>
              <p className="text-emerald-400 text-xs uppercase font-black tracking-widest flex items-center gap-2">
                <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse shadow-[0_0_8px_#34D399]"/> Online
              </p>
@@ -306,7 +306,7 @@ const WhatWeDoSection = () => (
      >
        <span className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 mb-6 block">What We Do</span>
        <h2 className="text-2xl md:text-4xl font-medium text-slate-900 leading-relaxed font-serif">
-          Mehri Fitness builds the bridge between raw biometric data and actionable human performance. We provide the hardware, the AI, and the ecosystem to help you track workouts, recovery, and health trends across all your devices.
+          Mehri Fitness builds the bridge between raw biometric data and actionable human performance. We provide the hardware, the AI, and the platform to help you track workouts, recovery, and health trends across all your devices.
        </h2>
        <p className="mt-8 text-slate-500 text-lg font-medium max-w-2xl mx-auto">
           Whether you use just your phone or pair it with our flagship Mehri fitness tracker, you get a personalized roadmap to your physical potential.
@@ -319,12 +319,12 @@ const WhoItIsForSection = () => (
   <section className="max-w-7xl mx-auto px-6 md:px-8 py-20 bg-slate-50 rounded-[40px] md:rounded-[60px] my-12 border border-slate-100">
      <div className="text-center mb-16">
         <span className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 mb-4 block">Who It Is For</span>
-        <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tighter text-slate-900">Built for the <span className="text-emerald-500">Relentless</span></h2>
+        <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tighter text-slate-900">Built for the <span className="text-emerald-500">Dedicated</span></h2>
      </div>
      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {[
            {
-             title: "The Executive",
+             title: "The Personal",
              desc: "High-performance individuals who need data-driven insights to manage stress, recovery, and peak cognitive function.",
              img: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=800"
            },
@@ -364,7 +364,7 @@ const ServicesSection = () => (
      <div className="flex flex-col md:flex-row justify-between items-end gap-6 mb-16">
         <div className="space-y-3">
            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 block">Our Services</span>
-           <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tighter text-slate-900">Ecosystem of <span className="text-emerald-500">Excellence</span></h2>
+           <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tighter text-slate-900">Platform of <span className="text-emerald-500">Excellence</span></h2>
         </div>
         <p className="text-slate-500 font-medium max-w-sm text-right hidden md:block">
            A comprehensive suite of tools designed to optimize every aspect of your physical and mental well-being.
@@ -372,8 +372,8 @@ const ServicesSection = () => (
      </div>
      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {[
-           { icon: Activity, title: "Biometric Architecture", desc: "Advanced physiological tracking and analysis of your core vitals like HRV, SpO2, and resting heart rate." },
-           { icon: Brain, title: "Alma AI Coaching", desc: "Real-time, context-aware health and performance optimization through our proprietary neural engine." },
+           { icon: Activity, title: "Biometric Blueprint", desc: "Advanced physiological tracking and analysis of your core vitals like HRV, SpO2, and resting heart rate." },
+           { icon: Brain, title: "AI Coach Coaching", desc: "Real-time, context-aware health and performance optimization through our proprietary neural engine." },
            { icon: Target, title: "Precision Training", desc: "Custom-built workout protocols that adapt dynamically to your daily readiness and recovery scores." },
            { icon: Trophy, title: "Global Challenges", desc: "Compete in community challenges to push your boundaries and stay motivated with like-minded achievers." }
         ].map((service, i) => (
@@ -532,7 +532,7 @@ const GoalsCTASection = ({ onAction }: { onAction: () => void }) => (
               READY TO <br/> <span className="text-emerald-400">EVOLVE?</span>
            </h2>
            <p className="text-xl md:text-3xl text-slate-300 font-medium max-w-3xl mx-auto leading-relaxed">
-              Stop guessing. Start knowing. Join the ecosystem designed for peak human performance.
+              Stop guessing. Start knowing. Join the platform designed for peak human performance.
            </p>
            <button onClick={onAction} className="bg-[#A7F3D0] text-slate-900 px-12 py-6 rounded-full font-black uppercase text-xs md:text-sm tracking-[0.3em] hover:bg-white transition-all shadow-[0_0_40px_rgba(167,243,208,0.4)] hover:scale-105 active:scale-95">
               Get Started Now
@@ -583,7 +583,7 @@ export const LandingSection = ({ onStart, onNavigate, onShop }: { onStart: () =>
               </div>
             </div>
             <p className="text-xl md:text-2xl text-white/90 mb-10 font-light tracking-wide">
-              Train smarter with Mehri. The ecosystem designed for peak performance.
+              Train smarter with Mehri. The platform designed for peak performance.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               <button
@@ -763,7 +763,7 @@ export const LandingSection = ({ onStart, onNavigate, onShop }: { onStart: () =>
       {/* 5. OUR SERVICES */}
       <ServicesSection />
 
-      {/* 6. ALMA AI SECTION */}
+      {/* 6. AI SECTION */}
       <ScrollReveal className="max-w-7xl mx-auto px-6 md:px-8 py-20">
         <div className="bg-slate-900 rounded-[40px] md:rounded-[80px] p-8 md:p-24 flex flex-col-reverse lg:flex-row items-center gap-12 md:gap-20 relative overflow-hidden shadow-2xl">
            <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-slate-800 via-slate-900 to-slate-900 pointer-events-none" />
@@ -778,11 +778,11 @@ export const LandingSection = ({ onStart, onNavigate, onShop }: { onStart: () =>
               
               <h2 className="text-4xl md:text-6xl font-black text-white uppercase tracking-tighter leading-none">
                  COMMAND YOUR DATA <br/>
-                 <span className="text-emerald-400">WITH ALMA</span>
+                 <span className="text-emerald-400">WITH AI</span>
               </h2>
               
               <p className="text-slate-400 text-base md:text-xl font-medium leading-relaxed max-w-xl mx-auto lg:mx-0">
-                 Your personal AI coach that does the work for you. Command Alma to log new sessions, analyze trends, or optimize your recovery through a simple conversational interface.
+                 Your personal AI coach that does the work for you. Command AI to log new sessions, analyze trends, or optimize your recovery through a simple conversational interface.
               </p>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 md:gap-8 pt-4">
@@ -810,13 +810,13 @@ export const LandingSection = ({ onStart, onNavigate, onShop }: { onStart: () =>
                   whileTap={{ scale: 0.95 }}
                   className="px-12 py-6 bg-emerald-400 text-slate-900 rounded-full font-black uppercase text-xs tracking-[0.4em] hover:bg-white transition-colors shadow-lg relative overflow-hidden flex items-center gap-3 group"
                 >
-                   Talk to Alma <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
+                   Talk to AI <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
                 </motion.button>
               </div>
            </div>
 
            <div className="flex-1 w-full relative z-10 flex justify-center mt-8 lg:mt-0">
-              <AlmaLiveDemo />
+              <AILiveDemo />
            </div>
         </div>
       </ScrollReveal>
