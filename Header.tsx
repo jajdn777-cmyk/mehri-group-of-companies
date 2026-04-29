@@ -55,8 +55,10 @@ export const Header = ({ currentView, onNavigate, onSignOut, onShop, userProfile
   const MobileMenuSection = ({ label, isOpen, onToggle, children }: any) => (
     <div className="border-b border-slate-50 last:border-0">
       <button 
+        type="button"
         onClick={onToggle}
-        className="w-full flex items-center justify-between px-6 py-5 text-left active:bg-slate-50 transition-colors"
+        aria-expanded={isOpen}
+        className="w-full flex items-center justify-between px-6 py-5 text-left active:bg-slate-50 transition-colors focus-visible:ring-2 ring-emerald-500 outline-none"
       >
         <span className="text-sm font-black uppercase tracking-widest text-slate-900">{label}</span>
         <ChevronRight size={16} className={`text-slate-400 transition-transform duration-300 ${isOpen ? 'rotate-90' : ''}`} />
@@ -154,8 +156,23 @@ export const Header = ({ currentView, onNavigate, onSignOut, onShop, userProfile
             <>
               {/* MAIN LINKS */}
               <div className="flex items-center gap-8 ml-6">
-                  <div className="relative py-4" onMouseEnter={() => setWorkoutsHover(true)} onMouseLeave={() => setWorkoutsHover(false)}>
-                    <button className={`text-sm font-black uppercase tracking-[0.2em] flex items-center gap-1 transition-colors whitespace-nowrap ${workoutsHover ? 'text-emerald-500' : 'text-slate-900'}`}>
+                  <div
+                    className="relative py-4"
+                    onMouseEnter={() => setWorkoutsHover(true)}
+                    onMouseLeave={() => setWorkoutsHover(false)}
+                    onFocusCapture={() => setWorkoutsHover(true)}
+                    onBlurCapture={(e) => {
+                      if (!e.currentTarget.contains(e.relatedTarget as Node)) {
+                        setWorkoutsHover(false);
+                      }
+                    }}
+                  >
+                    <button
+                      type="button"
+                      aria-haspopup="menu"
+                      aria-expanded={workoutsHover}
+                      className={`text-sm font-black uppercase tracking-[0.2em] flex items-center gap-1 transition-colors whitespace-nowrap focus-visible:ring-2 ring-emerald-500 outline-none rounded-xl px-2 -mx-2 ${workoutsHover ? 'text-emerald-500' : 'text-slate-900'}`}
+                    >
                       Workouts <ChevronDown size={12} className={`transition-transform duration-500 ${workoutsHover ? 'rotate-180' : ''}`} />
                     </button>
                     <AnimatePresence>
@@ -177,9 +194,9 @@ export const Header = ({ currentView, onNavigate, onSignOut, onShop, userProfile
                     </AnimatePresence>
                   </div>
                   
-                  <button onClick={() => onNavigate('routes')} className="text-sm font-black uppercase tracking-[0.2em] text-slate-900 hover:text-emerald-500 transition-colors whitespace-nowrap">Routes</button>
-                  <button onClick={() => onNavigate('challenges')} className="text-sm font-black uppercase tracking-[0.2em] text-slate-900 hover:text-emerald-500 transition-colors whitespace-nowrap">Challenges</button>
-                  <button onClick={() => onNavigate('blogs')} className="text-sm font-black uppercase tracking-[0.2em] text-slate-900 hover:text-emerald-500 transition-colors flex items-center gap-1 whitespace-nowrap">Blogs</button>
+                  <button type="button" onClick={() => onNavigate('routes')} className="text-sm font-black uppercase tracking-[0.2em] text-slate-900 hover:text-emerald-500 transition-colors whitespace-nowrap focus-visible:ring-2 ring-emerald-500 outline-none rounded-xl px-2 -mx-2">Routes</button>
+                  <button type="button" onClick={() => onNavigate('challenges')} className="text-sm font-black uppercase tracking-[0.2em] text-slate-900 hover:text-emerald-500 transition-colors whitespace-nowrap focus-visible:ring-2 ring-emerald-500 outline-none rounded-xl px-2 -mx-2">Challenges</button>
+                  <button type="button" onClick={() => onNavigate('blogs')} className="text-sm font-black uppercase tracking-[0.2em] text-slate-900 hover:text-emerald-500 transition-colors flex items-center gap-1 whitespace-nowrap focus-visible:ring-2 ring-emerald-500 outline-none rounded-xl px-2 -mx-2">Blogs</button>
               </div>
 
               {/* USER ACTIONS */}
@@ -234,12 +251,32 @@ export const Header = ({ currentView, onNavigate, onSignOut, onShop, userProfile
             </>
           ) : (
             <div className="ml-auto flex items-center gap-6">
-              <motion.button whileHover={{ scale: 1.05 }} onClick={onShop} className={`text-xs font-black uppercase tracking-[0.2em] transition-colors flex items-center gap-1 ${isTransparent ? 'text-white hover:text-emerald-400' : 'text-slate-900 hover:text-emerald-500'}`}>
+              <motion.button
+                type="button"
+                whileHover={{ scale: 1.05 }}
+                onClick={onShop}
+                className={`text-xs font-black uppercase tracking-[0.2em] transition-colors flex items-center gap-1 focus-visible:ring-2 ring-emerald-500 outline-none rounded-xl px-2 -mx-2 ${isTransparent ? 'text-white hover:text-emerald-400' : 'text-slate-900 hover:text-emerald-500'}`}
+              >
                 <ShoppingBag size={14}/> Shop
               </motion.button>
               <div className={`w-px h-4 ${isTransparent ? 'bg-white/20' : 'bg-slate-200'}`} />
-              <motion.button whileHover={{ scale: 1.05 }} onClick={() => onNavigate('auth-login')} className={`text-xs font-black uppercase tracking-[0.4em] transition-colors ${isTransparent ? 'text-white hover:text-emerald-400' : 'text-slate-900 hover:text-emerald-500'}`}>Sign In</motion.button>
-              <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => onNavigate('auth-signup')} className="bg-slate-900 text-white px-10 py-5 rounded-full text-xs font-black uppercase tracking-[0.5em] shadow-2xl transition-all">Get Started</motion.button>
+              <motion.button
+                type="button"
+                whileHover={{ scale: 1.05 }}
+                onClick={() => onNavigate('auth-login')}
+                className={`text-xs font-black uppercase tracking-[0.4em] transition-colors focus-visible:ring-2 ring-emerald-500 outline-none rounded-xl px-2 -mx-2 ${isTransparent ? 'text-white hover:text-emerald-400' : 'text-slate-900 hover:text-emerald-500'}`}
+              >
+                Sign In
+              </motion.button>
+              <motion.button
+                type="button"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => onNavigate('auth-signup')}
+                className="bg-slate-900 text-white px-10 py-5 rounded-full text-xs font-black uppercase tracking-[0.5em] shadow-2xl transition-all focus-visible:ring-2 ring-emerald-500 outline-none ring-offset-2"
+              >
+                Get Started
+              </motion.button>
             </div>
           )}
         </nav>
@@ -271,15 +308,20 @@ export const Header = ({ currentView, onNavigate, onSignOut, onShop, userProfile
             {/* Drawer Header */}
             <div className="px-6 py-6 border-b border-slate-50 flex items-center justify-between bg-[#FCFCFC]/80">
                 {/* User Info */}
-                <div className="flex items-center gap-3" onClick={() => onNavigate('settings')}>
-                   <div className={`w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-900 font-bold text-sm shadow-sm ${userProfile?.hasWatch ? 'ring-2 ring-[#A7F3D0] ring-offset-2' : ''}`}>
+                <button
+                  type="button"
+                  aria-label="View settings"
+                  className="flex items-center gap-3 text-left focus-visible:ring-2 ring-emerald-500 outline-none rounded-2xl p-1 -m-1"
+                  onClick={() => onNavigate('settings')}
+                >
+                   <span className={`w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-900 font-bold text-sm shadow-sm shrink-0 ${userProfile?.hasWatch ? 'ring-2 ring-[#A7F3D0] ring-offset-2' : ''}`}>
                       {getInitials(userName || userProfile?.firstName)}
-                   </div>
-                   <div className="flex flex-col">
+                   </span>
+                   <span className="flex flex-col">
                       <span className="text-sm font-black text-slate-900 truncate max-w-[140px]">{userName || 'Athlete'}</span>
                       <span className="text-[10px] font-bold text-emerald-500 flex items-center gap-1"><Flame size={10}/> {streak} Day Streak</span>
-                   </div>
-                </div>
+                   </span>
+                </button>
                 {/* Close Button */}
                 <button
                   onClick={() => setMobileMenuOpen(false)}
