@@ -24,7 +24,7 @@ export const PrivacyView = ({ onNavigate }: any) => {
          <div className="mb-16">
             <h1 className="text-5xl md:text-6xl font-black text-slate-900 uppercase tracking-tighter mb-6">Data & Privacy</h1>
             <p className="text-xl text-slate-500 font-medium leading-relaxed max-w-2xl">
-               At MEHRI Group, your biological data is treated as high-value currency. We don't sell it. We secure it.
+               At MEHRI Group, your biological data is treated as with the highest priority. We don't sell it. We secure it.
             </p>
          </div>
 

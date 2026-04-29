@@ -47,13 +47,13 @@ The MEHRI Group ("we," "us," or "our") operates at the intersection of biotechno
 
 2. BIOMETRIC DATA CONTROLLER & PROCESSING
 MEHRI Group acts as the Data Controller for your personal information.
-- Biometric Data Collection: When you use the Mehri fitness tracker, we collect high-frequency physiological telemetry including but not limited to: Heart Rate Variability (HRV), Blood Oxygen Saturation (SpO2), Accelerometer patterns (Gait Analysis), and Sleep Staging architecture (REM/Deep/Light cycles).
+- Biometric Data Collection: When you use the Mehri fitness tracker, we collect high-frequency physiological telemetry including but not limited to: Heart Rate Variability (HRV), Blood Oxygen Saturation (SpO2), Accelerometer patterns (Gait Analysis), and Sleep Staging system (REM/Deep/Light cycles).
 - Purpose of Processing: This data is processed strictly to provide: (a) Real-time performance analytics; (b) ; and (c) Long-term health trend visualization.
 - No Sale of Biometric Data: We do NOT sell, rent, or trade your physiological data to third-party advertisers or data brokers. Your biological signature is yours alone.
 
 3. DATA SOVEREIGNTY AND ENCRYPTION STANDARDS
-We employ military-grade security architectures to protect your digital biological profile.
-- Edge Encryption: All sensor data is encrypted locally on the Mehri fitness tracker Cortex-M processor using AES-256 hardware encryption before transmission via Bluetooth 5.3.
+We employ strong security systems to protect your digital biological profile.
+- Edge Encryption: All sensor data is encrypted locally on the Mehri fitness tracker Cortex-M processor using AES-256 hardware encryption before sync via Bluetooth 5.3.
 - Transit Security: Data synchronization occurs exclusively over TLS 1.3 encrypted channels.
 - At-Rest Encryption: User databases are sharded and encrypted using XChaCha20-Poly1305 algorithms.
 - Anonymization: For the purpose of improving the neural engine, data is stripped of all Personally Identifiable Information (PII) before being used in aggregate training sets.
@@ -84,7 +84,7 @@ MEHRI GROUP TERMS OF SERVICE & USER AGREEMENT
 Last Updated: January 27, 2026
 
 1. ACCEPTANCE OF AGREEMENT
-By accessing the Mehri Group of Companies website, downloading our mobile application, or activating a Mehri fitness tracker, you enter into a binding legal agreement with MEHRI Group ("Company", "we", "us"). If you do not agree to these terms, you must immediately discontinue use of our ecosystem and return any hardware within the applicable return window.
+By accessing the Mehri Group of Companies website, downloading our mobile application, or activating a Mehri fitness tracker, you enter into a binding legal agreement with MEHRI Group ("Company", "we", "us"). If you do not agree to these terms, you must immediately discontinue use of our platform and return any hardware within the applicable return window.
 
 2. HARDWARE LIMITED WARRANTY (MEHRI FITNESS TRACKER SERIES)
 We warrant that the Mehri fitness tracker shall be free from defects in materials and workmanship under normal use for a period of one (1) year from the date of retail purchase.
@@ -100,7 +100,7 @@ THE MEHRI FITNESS TRACKER AND MEHRI GROUP PLATFORM ARE NOT MEDICAL DEVICES.
 4. USER CONDUCT AND ACCOUNT SECURITY
 You are responsible for maintaining the confidentiality of your account credentials. You agree not to:
 - Reverse engineer, decompile, or disassemble the Mehri fitness tracker firmware or Mehri Group source code.
-- Use the ecosystem to harass, abuse, or harm another person or group.
+- Use the platform to harass, abuse, or harm another person or group.
 - Upload invalid data or use automation tools (bots) to manipulate leaderboard standings or challenges.
 Violation of these rules may result in immediate termination of your account without refund.
 
@@ -133,7 +133,7 @@ export const FAQ_DATA = [
   },
   {
     question: "What makes the Mehri fitness tracker different from a standard Apple Watch or Garmin?",
-    answer: "The Mehri fitness tracker bridges the gap between a rugged sports watch and an executive accessory. It features AI Coaching, which doesn't just show you steps—it analyzes your sleep and strain to tell you exactly when to work out and when to rest for peak performance."
+    answer: "The Mehri fitness tracker bridges the gap between a rugged sports watch and a premium accessory. It features AI Coaching, which doesn't just show you steps—it analyzes your sleep and strain to tell you exactly when to work out and when to rest for better results."
   },
   {
     question: "Does the Mehri fitness tracker require a monthly subscription for AI features?",

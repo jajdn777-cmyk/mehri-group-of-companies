@@ -515,7 +515,7 @@ const App = () => {
     setUserProfile(newProfile);
     api("UPDATE_PROFILE", { username: userHandle, profile: { hasWatch: true } });
     setShowShop(false);
-    alert("MEHRI Watch V1 Linked successfully. Profile Status: Elite.");
+    alert("MEHRI Watch V1 Linked successfully. Profile Status: Active.");
   };
 
   const handleSignOut = async (remoteLogout = true) => {
@@ -530,7 +530,7 @@ const App = () => {
     } finally {
         localStorage.clear();
         sessionStorage.clear();
-        window.location.replace("/");
+        window.location.href = "/";
     }
   };
 

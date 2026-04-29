@@ -7,15 +7,15 @@ import { MehriLogo } from './Logo.tsx';
 const ABOUT_US_CONTENT = `
 ABOUT SHAMSULLAH MEHRI GROUP
 
-SHAMSULLAH MEHRI: ARCHITECTING HUMAN VITALITY
-Shamsullah Mehri is dedicated to democratizing high-level health data. We believe that elite performance analytics shouldn't be restricted to professional laboratories. By combining precision hardware with AI-driven insights, we empower individuals to move beyond basic tracking and start architecting their own physiology. Our mission is accuracy, accessibility, and absolute privacy.
+SHAMSULLAH MEHRI: BUILDING BETTER HEALTH
+Shamsullah Mehri is dedicated to democratizing high-level health data. We believe that detailed health analytics shouldn't be restricted to professional laboratories. By combining precision hardware with AI-driven insights, we empower individuals to move beyond basic tracking and start improving their health. Our mission is accuracy, accessibility, and absolute privacy.
 
 THE MEHRI VISION
-We envision a future where technology doesn't just track you—it understands you. From our Silicon Valley headquarters to our global user base, we are building an ecosystem where every heartbeat, every step, and every night of sleep contributes to a clearer picture of your potential. We are building the operating system for the human body.
+We envision a future where technology doesn't just track you—it understands you. From our our headquarters to our worldwide user base, we are building an platform where every heartbeat, every step, and every night of sleep contributes to a clearer picture of your potential. We are building the tools you need to understand your body.
 
 WHAT WE DO
-- Hardware Engineering: Creating robust, aerospace-grade wearables like the Mehri fitness tracker, milled from titanium and sapphire.
-- Community Building: Fostering a worldwide network of athletes, bio-hackers, and everyday achievers committed to self-improvement.
+- Hardware Engineering: Creating robust, durable wearables like the Mehri fitness tracker, milled from titanium and sapphire.
+- Community Building: Fostering a worldwide network of athletes, health enthusiasts, and everyday achievers committed to self-improvement.
 
 LOCATION & ORIGIN
 Headquartered in the heart of San Francisco, CA, we operate at the intersection of biotech and consumer electronics. Born from a desire to close the gap between medical-grade diagnostics and consumer wearables.
@@ -90,7 +90,7 @@ export const Footer = ({ onNavigate }: any) => {
                 </div>
                 <h3 className="text-4xl font-black uppercase text-slate-900 mb-4 tracking-tighter">Thank You</h3>
                 <p className="text-slate-500 font-medium mb-10 leading-relaxed text-lg">
-                    Your message has been securely transmitted to the MEHRI development team. We will respond shortly.
+                    Your message has been sent to the MEHRI development team. We will respond shortly.
                 </p>
                 <button onClick={() => setFormStatus('idle')} className="w-full py-5 bg-slate-900 text-white rounded-2xl font-black uppercase text-xs tracking-[0.3em] hover:bg-emerald-500 hover:text-slate-900 transition-all shadow-xl active:scale-95">
                     Close Confirmation
@@ -133,7 +133,7 @@ export const Footer = ({ onNavigate }: any) => {
                    <MehriLogo size="lg" className="brightness-0 invert" />
                 </div>
                 <p className="text-slate-500 text-sm leading-relaxed max-w-xs">
-                   Mehri is the premier ecosystem for elite performance tracking. Powered by the Mehri fitness tracker hardware kernel.
+                   Mehri is the main platform for performance tracking. Powered by the Mehri fitness tracker technology.
                 </p>
                 <div className="space-y-4 pt-2">
                    <a 

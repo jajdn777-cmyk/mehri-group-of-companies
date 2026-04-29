@@ -91,7 +91,7 @@ const BlogEditor = ({ onClose, onPublish, userName }: any) => {
   };
 
   const insertImage = (url: string) => {
-    // Insert image with specific executive styling
+    // Insert image with specific styling
     const imgHtml = `<img src="${url}&auto=format&q=80" style="width:100%; border-radius:10px; margin: 20px 0; display:block; box-shadow: 0 4px 20px rgba(0,0,0,0.2);" />`;
     exec('insertHTML', imgHtml + '<p><br></p>');
   };
@@ -327,7 +327,7 @@ export const BlogsView = ({ blogs = [], setBlogs, userName, userPreferences, use
        {/* FEED HEADER */}
        <div className="flex flex-col lg:flex-row justify-between items-end gap-6 border-b border-slate-100 pb-12 pt-4 sticky top-0 bg-[#FCFCFC]/90 backdrop-blur-md z-30 px-2 md:px-0">
           <div className="space-y-3">
-             <p className="text-[10px] font-black uppercase text-slate-400 tracking-[0.4em]">Executive Narratives</p>
+             <p className="text-[10px] font-black uppercase text-slate-400 tracking-[0.4em]">Professional Narratives</p>
              <h2 className="text-4xl md:text-7xl font-black uppercase tracking-tighter text-slate-900 leading-none">The <span className="text-emerald-500">Insights.</span></h2>
           </div>
           <div className="flex items-center gap-4 w-full lg:w-auto">

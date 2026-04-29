@@ -327,7 +327,7 @@ export const Header = ({ currentView, onNavigate, onSignOut, onShop, userProfile
                  </div>
                ) : (
                  <div className="p-6 flex flex-col gap-4 mt-20">
-                    <p className="text-center text-slate-400 text-xs font-bold uppercase tracking-widest mb-4">Join the ecosystem</p>
+                    <p className="text-center text-slate-400 text-xs font-bold uppercase tracking-widest mb-4">Join the platform</p>
                     <button onClick={() => { onShop(); setMobileMenuOpen(false); }} className="w-full py-4 bg-emerald-500 text-slate-900 rounded-full font-black uppercase text-xs tracking-[0.2em] active:scale-95 transition-transform flex items-center justify-center gap-2">
                       <ShoppingBag size={14}/> Shop Gear
                     </button>

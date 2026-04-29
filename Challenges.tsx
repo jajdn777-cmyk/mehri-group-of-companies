@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Trophy, CheckCircle2, ArrowRight } from 'lucide-react';
 import { api } from './utils.ts';
@@ -40,31 +39,8 @@ export const ChallengesView = ({ userChallenges, setUserChallenges, userHandle }
       <div className="flex flex-col lg:flex-row justify-between items-end gap-8 border-b border-slate-100 pb-8">
          <div className="space-y-2">
             <h2 className="text-4xl font-black uppercase tracking-tighter text-slate-900">Challenges</h2>
-            <p className="text-slate-400 font-bold uppercase tracking-widest text-xs">Prove your elite status</p>
+            <p className="text-slate-400 font-bold uppercase tracking-widest text-xs">Push your limits</p>
          </div>
-      </div>
-
-      {/* Featured / Active Hero */}
-      <div className="relative h-[500px] rounded-[60px] overflow-hidden group shadow-2xl">
-        <img src="https://images.unsplash.com/photo-1552674605-46d536d0130c?q=80&w=1920&auto=format&fit=crop" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000" />
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/20 to-transparent" />
-        <div className="absolute inset-0 p-16 flex flex-col justify-end text-white max-w-4xl">
-          <p className="text-[10px] font-black uppercase tracking-[0.4em] text-emerald-400 mb-4 flex items-center gap-2">
-             <Trophy size={14}/> Global Event
-          </p>
-          <h2 className="text-6xl font-black uppercase tracking-tighter mb-4 leading-none">THE MEHRI 500</h2>
-          <p className="text-lg font-medium text-slate-200 mb-8 max-w-xl">Join 50,000 athletes in our annual endurance test. Complete 500km of activity before the year ends.</p>
-          
-          {userChallenges.some((c:any) => c.challenge_id === 'c_mehri500') ? (
-             <button className="px-10 py-4 bg-emerald-500 text-slate-900 rounded-full font-black uppercase text-[10px] tracking-[0.3em] flex items-center gap-2 w-fit">
-                <CheckCircle2 size={16}/> Joined
-             </button>
-          ) : (
-             <button onClick={() => handleJoin({ id: 'c_mehri500', title: 'The MEHRI 500' })} className="px-10 py-4 bg-white text-slate-900 rounded-full font-black uppercase text-[10px] tracking-[0.3em] shadow-xl hover:scale-105 transition-all w-fit">
-                Join Event
-             </button>
-          )}
-        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">

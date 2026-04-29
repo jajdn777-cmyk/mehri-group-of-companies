@@ -40,7 +40,7 @@ export const PrivacyPolicy = ({ onNavigate }: any) => {
          <div className="mb-16 border-l-4 border-emerald-500 pl-6">
             <h1 className="text-4xl md:text-6xl font-black text-white uppercase tracking-tighter mb-4">Privacy Policy</h1>
             <p className="text-lg md:text-xl text-slate-400 font-medium leading-relaxed max-w-2xl">
-               At MEHRI Group, your biological data is treated as high-value currency. We protect it with military-grade encryption and never sell it.
+               At MEHRI Group, your biological data is treated as with the highest priority. We protect it with strong encryption and never sell it.
             </p>
          </div>
 
