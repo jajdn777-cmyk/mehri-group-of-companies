@@ -174,7 +174,7 @@ const WhatWeDoSection = () => (
      >
        <span className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 mb-6 block">What We Do</span>
        <h2 className="text-2xl md:text-4xl font-medium text-slate-900 leading-relaxed font-serif">
-          Mehri Fitness builds the bridge between raw biometric data and actionable human performance. We provide the hardware, the AI, and the platform to help you track workouts, recovery, and health trends across all your devices.
+          Mehri Fitness builds the bridge between raw biometric data and actionable human performance. We provide the hardware and the tracker to help you track workouts, recovery, and health trends across all your devices.
        </h2>
        <p className="mt-8 text-slate-500 text-lg font-medium max-w-2xl mx-auto">
           Whether you use just your phone or pair it with our flagship Mehri fitness tracker, you get a personalized roadmap to your physical potential.
@@ -400,7 +400,7 @@ const GoalsCTASection = ({ onAction }: { onAction: () => void }) => (
               READY TO <br/> <span className="text-emerald-400">EVOLVE?</span>
            </h2>
            <p className="text-xl md:text-3xl text-slate-300 font-medium max-w-3xl mx-auto leading-relaxed">
-              Stop guessing. Start knowing. Join the app designed for your performance.
+              Stop guessing. Start knowing. Join the tracker designed for your performance.
            </p>
            <button onClick={onAction} className="bg-[#A7F3D0] text-slate-900 px-12 py-6 rounded-full font-black uppercase text-xs md:text-sm tracking-[0.3em] hover:bg-white transition-all shadow-[0_0_40px_rgba(167,243,208,0.4)] hover:scale-105 active:scale-95">
               Get Started Now
@@ -451,7 +451,7 @@ export const LandingSection = ({ onStart, onNavigate, onShop }: { onStart: () =>
               </div>
             </div>
             <p className="text-xl md:text-2xl text-white/90 mb-10 font-light tracking-wide">
-              Train smarter with Mehri. The app designed for your fitness.
+              Train smarter with Mehri. The tracker designed for your fitness.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               <button

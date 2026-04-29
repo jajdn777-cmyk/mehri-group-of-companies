@@ -84,7 +84,7 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundarySta
       const isLoggedIn = keys.some(key => key.includes("auth-token") && !!localStorage.getItem(key));
       window.location.href = isLoggedIn ? "/dashboard" : "/";
     } catch {
-      window.location.href = "/";
+      window.location.replace("/");
     }
   };
 
@@ -530,7 +530,7 @@ const App = () => {
     } finally {
         localStorage.clear();
         sessionStorage.clear();
-        window.location.href = "/";
+        window.location.replace("/");
     }
   };
 

@@ -39,7 +39,7 @@ export const TermsOfService = ({ onNavigate }: any) => {
          <div className="mb-16 border-l-4 border-emerald-500 pl-6">
             <h1 className="text-4xl md:text-6xl font-black text-white uppercase tracking-tighter mb-4">Terms of Service</h1>
             <p className="text-lg md:text-xl text-slate-400 font-medium leading-relaxed max-w-2xl">
-               Governing usage of the MEHRI platform, GTL-1 hardware, .
+               Governing the use of the MEHRI platform and the Mehri fitness tracker.
             </p>
          </div>
 
@@ -49,7 +49,7 @@ export const TermsOfService = ({ onNavigate }: any) => {
 
          <div className="mt-20 pt-10 border-t border-slate-800 text-center text-slate-500 text-xs font-bold uppercase tracking-widest">
             Last Updated: January 2026 • San Francisco, CA • MEHRI Legal Division<br/>
-            Inquiries: <a href="mailto:shamsullah.mehri@gmail.com" className="text-emerald-500 hover:text-emerald-400 transition-colors">shamsullah.mehri@gmail.com</a>
+            Inquiries: <a href="mailto:jajdn777@gmail.com" className="text-emerald-500 hover:text-emerald-400 transition-colors">jajdn777@gmail.com</a>
          </div>
       </div>
     </div>
