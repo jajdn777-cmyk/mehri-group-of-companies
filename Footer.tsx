@@ -5,13 +5,13 @@ import { ArrowRight, Shield, FileText, X, Lock, Users, BookOpen, Facebook as Fac
 import { MehriLogo } from './Logo.tsx';
 
 const ABOUT_US_CONTENT = `
-ABOUT SHAMSULLAH MEHRI GROUP
+ABOUT MEHRI GROUP
 
-SHAMSULLAH MEHRI: BUILDING BETTER HEALTH
-Shamsullah Mehri is dedicated to democratizing high-level health data. We believe that detailed health analytics shouldn't be restricted to professional laboratories. By combining precision hardware with AI-driven insights, we empower individuals to move beyond basic tracking and start improving their health. Our mission is accuracy, accessibility, and absolute privacy.
+BUILDING BETTER HEALTH
+MEHRI Group is dedicated to democratizing high-level health data. We believe that detailed health analytics shouldn't be restricted to professional laboratories. By combining precision hardware with data-driven insights, we empower individuals to move beyond basic tracking and start improving their health. Our mission is accuracy, accessibility, and absolute privacy.
 
 THE MEHRI VISION
-We envision a future where technology doesn't just track you—it understands you. From our our headquarters to our worldwide user base, we are building an platform where every heartbeat, every step, and every night of sleep contributes to a clearer picture of your potential. We are building the tools you need to understand your body.
+We envision a future where technology doesn't just track you—it understands you. From our headquarters to our worldwide user base, we are building a platform where every heartbeat, every step, and every night of sleep contributes to a clearer picture of your potential. We are building the tools you need to understand your body.
 
 WHAT WE DO
 - Hardware Engineering: Creating robust, durable wearables like the Mehri fitness tracker, milled from titanium and sapphire.
@@ -181,7 +181,7 @@ export const Footer = ({ onNavigate }: any) => {
                 <h4 className="text-sm font-black uppercase tracking-widest text-slate-600 pt-4">Support</h4>
                 <ul className="space-y-4">
                    <li><button onClick={() => setActiveModal('about')} className="text-slate-400 hover:text-emerald-400 text-sm font-medium transition-colors">About Us</button></li>
-                   <li><a href="mailto:shamsullah.mehri@gmail.com" className="text-slate-400 hover:text-emerald-400 text-sm font-medium transition-colors">Contact Support</a></li>
+                   <li><a href="mailto:jajdn777@gmail.com" className="text-slate-400 hover:text-emerald-400 text-sm font-medium transition-colors">Contact Support</a></li>
                 </ul>
              </div>
              <div className="lg:col-span-5 bg-slate-900/30 p-8 rounded-[30px] border border-slate-900/50 backdrop-blur-md">

@@ -34,14 +34,14 @@ interface SEOProps {
  */
 export const SEO: React.FC<SEOProps> = ({ 
   title, 
-  description = "Performance tracking and biometric system. Mehri delivers high-quality fitness via Mehri fitness tracker hardware .",
+  description = "Mehri: wellness and biometric performance tracking with a wearable fitness tracker",
   view,
   article,
   product,
   faq
 }) => {
   const brandName = "Mehri";
-  const defaultTitle = `${brandName} | Wellness & AI Fitness`;
+  const defaultTitle = `${brandName} | Wellness & Biometric Tracking`;
   const finalTitle = title || defaultTitle;
 
   useEffect(() => {
@@ -86,7 +86,7 @@ export const SEO: React.FC<SEOProps> = ({
           "logo": "https://i.ibb.co.com/xqxm5rCT/logo-mehri-no-bg.png",
           "contactPoint": {
             "@type": "ContactPoint",
-            "email": "shamsullah.mehri@gmail.com",
+            "email": "jajdn777@gmail.com",
             "contactType": "customer service"
           }
         },
@@ -110,7 +110,7 @@ export const SEO: React.FC<SEOProps> = ({
         "author": {
           "@type": "Person",
           "name": article.author,
-          "email": "shamsullah.mehri@gmail.com"
+          "email": "jajdn777@gmail.com"
         },
         "publisher": { "@id": "https://mehrigroupofcompanies.com/#organization" },
         "datePublished": article.datePublished,
