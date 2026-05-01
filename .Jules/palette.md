@@ -9,3 +9,7 @@
 ## 2026-04-28 - [Keyboard-Accessible Hover Menus & Valid Button Content]
 **Learning:** For hover-triggered menus, use `onFocusCapture` and a refined `onBlurCapture` that checks `e.currentTarget.contains(e.relatedTarget)` to ensure the menu stays open when focus moves between the trigger and its children. Additionally, always use `span` instead of `div` inside `button` elements to maintain HTML validity while achieving desired layout.
 **Action:** Implement robust focus management for all hover-based navigation and audit button children for invalid flow content.
+
+## 2024-05-13 - [Semantic Label Linking & Standardized Focus States]
+**Learning:** For complex forms like `Settings.tsx`, using React's `useId` hook ensures reliable and unique semantic association between labels and their respective inputs or selects. Additionally, standardizing on a high-contrast focus indicator (`ring-emerald-500`) with an offset (`ring-offset-2`) provides much better accessibility for keyboard users compared to low-contrast colors without offsets.
+**Action:** Always use `useId` for form fields and apply `focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none` to all interactive elements to maintain accessibility and design consistency.
