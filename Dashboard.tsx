@@ -57,7 +57,7 @@ const EmptyWorkoutState = ({ onAdd }: { onAdd: () => void }) => (
      </div>
      <button 
         onClick={onAdd}
-        className="px-10 py-4 bg-slate-900 text-white rounded-full font-black uppercase text-xs tracking-[0.3em] hover:bg-emerald-500 hover:text-slate-900 transition-all shadow-xl hover:-translate-y-1 flex items-center gap-3"
+        className="px-10 py-4 bg-slate-900 text-white rounded-full font-black uppercase text-xs tracking-[0.3em] hover:bg-emerald-500 hover:text-slate-900 transition-all shadow-xl hover:-translate-y-1 flex items-center gap-3 focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none"
      >
         <Plus size={16}/> Initialize Protocol
      </button>
@@ -186,7 +186,7 @@ export const LogModal = ({ date, routes, userSpecs, userProfile, userPreferences
            <button
              onClick={onClose}
              aria-label="Close modal"
-             className="p-2 -mr-2 text-slate-300 hover:text-red-500 transition-colors"
+             className="p-2 -mr-2 text-slate-300 hover:text-red-500 transition-colors focus-visible:ring-2 ring-emerald-500 outline-none rounded-full"
            >
              <X size={28}/>
            </button>
@@ -312,7 +312,7 @@ export const LogModal = ({ date, routes, userSpecs, userProfile, userPreferences
               </div>
 
               <div className="pt-2">
-                 <button onClick={() => setShowAdvanced(!showAdvanced)} className="text-xs md:text-[10px] font-black uppercase tracking-widest text-emerald-600 hover:text-emerald-500 flex items-center gap-1 mb-3">
+                 <button onClick={() => setShowAdvanced(!showAdvanced)} className="text-xs md:text-[10px] font-black uppercase tracking-widest text-emerald-600 hover:text-emerald-500 flex items-center gap-1 mb-3 focus-visible:ring-2 ring-emerald-500 outline-none rounded-lg px-1 -mx-1">
                     {showAdvanced ? "Hide Precision Factors" : "Show Precision Factors"} <ChevronDown size={12} className={`transition-transform ${showAdvanced ? 'rotate-180' : ''}`}/>
                  </button>
                  
@@ -347,7 +347,7 @@ export const LogModal = ({ date, routes, userSpecs, userProfile, userPreferences
               </div>
             </div>
 
-            <button onClick={handleFinalSubmit} disabled={!form.name || !form.type || isSaving} className="w-full py-6 bg-slate-900 text-white rounded-[25px] font-black uppercase text-xs md:text-[11px] tracking-[0.4em] shadow-xl transition-all active:scale-95 hover:scale-[1.02] disabled:opacity-50 hover:bg-emerald-500 flex items-center justify-center sticky bottom-0 md:relative">
+            <button onClick={handleFinalSubmit} disabled={!form.name || !form.type || isSaving} className="w-full py-6 bg-slate-900 text-white rounded-[25px] font-black uppercase text-xs md:text-[11px] tracking-[0.4em] shadow-xl transition-all active:scale-95 hover:scale-[1.02] disabled:opacity-50 hover:bg-emerald-500 flex items-center justify-center sticky bottom-0 md:relative focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none">
                {isSaving ? "Saving..." : "Log Activity"}
             </button>
           </div>
@@ -669,14 +669,14 @@ export const DashboardView = ({ workouts, setWorkouts, userGoals, setUserGoals, 
             onClick={handleManualSync}
             disabled={isSyncing}
             aria-label="Sync data"
-            className={`p-2 rounded-full hover:bg-slate-50 transition-all ${isSyncing ? 'animate-spin text-emerald-500' : 'text-slate-300'}`}
+            className={`p-2 rounded-full hover:bg-slate-50 transition-all focus-visible:ring-2 ring-emerald-500 outline-none ${isSyncing ? 'animate-spin text-emerald-500' : 'text-slate-300'}`}
             title="Force Sync Data"
           >
              <RefreshCw size={16}/>
           </button>
           <div className="flex gap-4 md:gap-8 border-l border-slate-100 pl-4">
-            <button onClick={() => setTab('monthly')} className={`text-[10px] md:text-[11px] font-black uppercase tracking-widest pb-2 md:pb-4 border-b-4 transition-all ${tab === 'monthly' ? 'border-[#A7F3D0] text-slate-900' : 'border-transparent text-slate-300 hover:text-slate-50'}`}>Monthly View</button>
-            <button onClick={() => setTab('stats')} className={`text-[10px] md:text-[11px] font-black uppercase tracking-widest pb-2 md:pb-4 border-b-4 transition-all ${tab === 'stats' ? 'border-[#A7F3D0] text-slate-900' : 'border-transparent text-slate-300 hover:text-slate-50'}`}>Detailed Stats</button>
+            <button onClick={() => setTab('monthly')} className={`text-[10px] md:text-[11px] font-black uppercase tracking-widest pb-2 md:pb-4 border-b-4 transition-all focus-visible:ring-2 ring-emerald-500 outline-none ${tab === 'monthly' ? 'border-[#A7F3D0] text-slate-900' : 'border-transparent text-slate-300 hover:text-slate-50'}`}>Monthly View</button>
+            <button onClick={() => setTab('stats')} className={`text-[10px] md:text-[11px] font-black uppercase tracking-widest pb-2 md:pb-4 border-b-4 transition-all focus-visible:ring-2 ring-emerald-500 outline-none ${tab === 'stats' ? 'border-[#A7F3D0] text-slate-900' : 'border-transparent text-slate-300 hover:text-slate-50'}`}>Detailed Stats</button>
           </div>
         </div>
       </div>
@@ -691,7 +691,7 @@ export const DashboardView = ({ workouts, setWorkouts, userGoals, setUserGoals, 
               <div className="flex flex-col md:flex-row justify-between items-start md:items-center relative z-10 gap-4">
                 <div className="flex items-center gap-4 w-full md:w-auto justify-between">
                    <p className="text-[10px] font-black uppercase text-slate-400 tracking-[0.2em] self-center">Activity: {selectedDay}</p>
-                   <button onClick={() => setPrecisionMode(!precisionMode)} className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-slate-300 hover:text-[#A7F3D0] transition-colors">
+                   <button onClick={() => setPrecisionMode(!precisionMode)} className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-slate-300 hover:text-[#A7F3D0] transition-colors focus-visible:ring-2 ring-emerald-500 outline-none rounded-lg px-2 -mx-2">
                       {precisionMode ? <ToggleRight size={24} className="text-[#A7F3D0]"/> : <ToggleLeft size={24}/>}
                       Precision View
                    </button>
@@ -699,13 +699,13 @@ export const DashboardView = ({ workouts, setWorkouts, userGoals, setUserGoals, 
                 
                 <div className="flex flex-col md:flex-row gap-4 w-full md:w-auto">
                   <div className="flex bg-slate-50/80 rounded-2xl p-1 backdrop-blur-sm border border-slate-100 w-full md:w-auto">
-                    <button onClick={() => setActivityFilter('All')} className={`flex-1 md:flex-none px-6 py-2 rounded-xl text-[10px] font-black uppercase transition-all ${activityFilter === 'All' ? 'bg-white shadow-sm text-slate-900' : 'text-slate-400'}`}>All</button>
-                    <button onClick={() => setActivityFilter('Run')} className={`flex-1 md:flex-none px-6 py-2 rounded-xl text-[10px] font-black uppercase transition-all ${activityFilter === 'Run' ? 'bg-white shadow-sm text-slate-900' : 'text-slate-400'}`}>Run</button>
+                    <button onClick={() => setActivityFilter('All')} className={`flex-1 md:flex-none px-6 py-2 rounded-xl text-[10px] font-black uppercase transition-all focus-visible:ring-2 ring-emerald-500 outline-none ${activityFilter === 'All' ? 'bg-white shadow-sm text-slate-900' : 'text-slate-400'}`}>All</button>
+                    <button onClick={() => setActivityFilter('Run')} className={`flex-1 md:flex-none px-6 py-2 rounded-xl text-[10px] font-black uppercase transition-all focus-visible:ring-2 ring-emerald-500 outline-none ${activityFilter === 'Run' ? 'bg-white shadow-sm text-slate-900' : 'text-slate-400'}`}>Run</button>
                   </div>
                   <button 
                     onClick={() => isLoggable && setShowLogModal(true)} 
                     disabled={!isLoggable}
-                    className="group bg-slate-900 text-white px-8 py-4 md:py-3 rounded-2xl text-xs md:text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-slate-800 transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 w-full md:w-auto active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="group bg-slate-900 text-white px-8 py-4 md:py-3 rounded-2xl text-xs md:text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-slate-800 transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 w-full md:w-auto active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none"
                   >
                     <Plus size={16} className="transition-transform group-hover:rotate-90" /> {isLoggable ? 'Add Workout' : (isPast ? 'Past (Locked)' : 'Future (Locked)')}
                   </button>
@@ -797,20 +797,20 @@ export const DashboardView = ({ workouts, setWorkouts, userGoals, setUserGoals, 
                 <div className="flex justify-between items-center mb-6 md:mb-10">
                   <div className="flex items-center gap-4">
                      <h3 className="text-lg md:text-2xl font-black uppercase text-slate-900 tracking-[0.02em]">{monthLabel}</h3>
-                     <button onClick={jumpToToday} className="text-[10px] font-black uppercase tracking-widest text-emerald-500 bg-emerald-50 px-3 py-1 rounded-full hover:bg-emerald-100 transition-colors" title="Jump to Current Month">Today</button>
+                     <button onClick={jumpToToday} className="text-[10px] font-black uppercase tracking-widest text-emerald-500 bg-emerald-50 px-3 py-1 rounded-full hover:bg-emerald-100 transition-colors focus-visible:ring-2 ring-emerald-500 outline-none" title="Jump to Current Month" aria-label="Jump to current month">Today</button>
                   </div>
                   <div className="hidden md:flex gap-4">
                     <button
                       onClick={prevMonth}
                       aria-label="Previous month"
-                      className="text-slate-300 hover:text-slate-900 transition-colors p-2 rounded-full hover:bg-slate-50"
+                      className="text-slate-300 hover:text-slate-900 transition-colors p-2 rounded-full hover:bg-slate-50 focus-visible:ring-2 ring-emerald-500 outline-none"
                     >
                       <ArrowRight className="rotate-180"/>
                     </button>
                     <button
                       onClick={nextMonth}
                       aria-label="Next month"
-                      className="text-slate-300 hover:text-slate-900 transition-colors p-2 rounded-full hover:bg-slate-50"
+                      className="text-slate-300 hover:text-slate-900 transition-colors p-2 rounded-full hover:bg-slate-50 focus-visible:ring-2 ring-emerald-500 outline-none"
                     >
                       <ArrowRight/>
                     </button>
@@ -819,11 +819,11 @@ export const DashboardView = ({ workouts, setWorkouts, userGoals, setUserGoals, 
 
                 <div className="md:hidden mb-4">
                     <div className="flex items-center justify-between mb-4">
-                        <button onClick={() => handleDayChange(-1)} className="p-2 bg-slate-50 rounded-full"><ChevronLeft size={20}/></button>
+                        <button onClick={() => handleDayChange(-1)} className="p-2 bg-slate-50 rounded-full focus-visible:ring-2 ring-emerald-500 outline-none" aria-label="Previous day"><ChevronLeft size={20}/></button>
                         <span className="text-sm font-black uppercase tracking-widest text-slate-500">
                             {new Date(selectedDay.replace(/-/g, '/')).toLocaleDateString('en-US', { weekday: 'long', day: 'numeric' })}
                         </span>
-                        <button onClick={() => handleDayChange(1)} className="p-2 bg-slate-50 rounded-full"><ChevronRight size={20}/></button>
+                        <button onClick={() => handleDayChange(1)} className="p-2 bg-slate-50 rounded-full focus-visible:ring-2 ring-emerald-500 outline-none" aria-label="Next day"><ChevronRight size={20}/></button>
                     </div>
                     <div className="bg-slate-900 text-white p-6 rounded-[30px] shadow-xl relative overflow-hidden">
                        <div className="absolute top-0 right-0 p-6 opacity-10"><Activity size={80}/></div>
@@ -844,7 +844,7 @@ export const DashboardView = ({ workouts, setWorkouts, userGoals, setUserGoals, 
                        <button 
                          onClick={() => isLoggable && setShowLogModal(true)} 
                          disabled={!isLoggable} 
-                         className={`mt-6 w-full py-3 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${!isLoggable ? 'bg-white/5 text-slate-500 cursor-not-allowed' : 'bg-white/10 hover:bg-white/20 text-white'}`}
+                         className={`mt-6 w-full py-3 rounded-xl text-xs font-black uppercase tracking-widest transition-all focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none ${!isLoggable ? 'bg-white/5 text-slate-500 cursor-not-allowed' : 'bg-white/10 hover:bg-white/20 text-white'}`}
                        >
                          {isLoggable ? 'Log Activity Here' : (isPast ? 'Locked (Past)' : 'Locked (Future)')}
                        </button>
@@ -904,7 +904,7 @@ export const DashboardView = ({ workouts, setWorkouts, userGoals, setUserGoals, 
                                    <button
                                       onClick={(e) => { e.stopPropagation(); handleDeleteWorkout(log.id); }}
                                       aria-label="Delete workout"
-                                      className="absolute -right-1 -top-1 bg-red-500 text-white rounded-full p-0.5 opacity-0 group-hover/pill:opacity-100 transition-opacity z-50"
+                                      className="absolute -right-1 -top-1 bg-red-500 text-white rounded-full p-0.5 opacity-0 group-hover/pill:opacity-100 focus-visible:opacity-100 transition-opacity z-50 focus-visible:ring-2 ring-emerald-500 ring-offset-1 outline-none"
                                    >
                                       <X size={8}/>
                                    </button>
@@ -923,7 +923,7 @@ export const DashboardView = ({ workouts, setWorkouts, userGoals, setUserGoals, 
                                </div>
                                <Lock size={10} className="text-slate-400" />
                             </div>
-                            <button onClick={(e) => { e.stopPropagation(); setSelectedDay(dStr); setShowLogModal(true); }} className="absolute bottom-2 right-2 md:bottom-4 md:right-4 w-6 h-6 md:w-8 md:h-8 bg-slate-50 rounded-full flex items-center justify-center text-slate-400 opacity-0 hover:bg-[#A7F3D0] hover:text-slate-900 transition-all group-hover:opacity-100 shadow-sm"><Plus size={12} className="md:w-3.5 md:h-3.5"/></button>
+                            <button onClick={(e) => { e.stopPropagation(); setSelectedDay(dStr); setShowLogModal(true); }} aria-label={`Add workout for ${dStr}`} className="absolute bottom-2 right-2 md:bottom-4 md:right-4 w-6 h-6 md:w-8 md:h-8 bg-slate-50 rounded-full flex items-center justify-center text-slate-400 opacity-0 hover:bg-[#A7F3D0] hover:text-slate-900 transition-all group-hover:opacity-100 focus-visible:opacity-100 focus-visible:ring-2 ring-emerald-500 outline-none shadow-sm"><Plus size={12} className="md:w-3.5 md:h-3.5"/></button>
                           </>
                         )}
                       </div>
@@ -959,7 +959,7 @@ export const DashboardView = ({ workouts, setWorkouts, userGoals, setUserGoals, 
                               <button 
                                 onClick={() => handleDeleteWorkout(log.id)} 
                                 aria-label="Delete workout"
-                                className="p-2 text-slate-300 hover:text-red-500 rounded-full hover:bg-red-50 transition-all opacity-0 group-hover:opacity-100"
+                                className="p-2 text-slate-300 hover:text-red-500 rounded-full hover:bg-red-50 transition-all opacity-0 group-hover:opacity-100 focus-visible:opacity-100 focus-visible:ring-2 ring-emerald-500 outline-none"
                               >
                                  <Trash2 size={18}/>
                               </button>
@@ -977,7 +977,7 @@ export const DashboardView = ({ workouts, setWorkouts, userGoals, setUserGoals, 
                 <Zap size={60} className="absolute -bottom-6 -right-6 opacity-10 group-hover:rotate-12 transition-transform duration-700" />
                 <h4 className="text-lg font-black uppercase text-emerald-400 mb-2 tracking-wide">Sync Platform</h4>
                 <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-6">Mehri fitness tracker detected</p>
-                <button className="w-full py-4 bg-white/10 rounded-2xl font-black uppercase text-[10px] tracking-widest border border-white/10 hover:bg-white/20 transition-all magnetic-btn">Check Connection</button>
+                <button className="w-full py-4 bg-white/10 rounded-2xl font-black uppercase text-[10px] tracking-widest border border-white/10 hover:bg-white/20 transition-all magnetic-btn focus-visible:ring-2 ring-emerald-500 outline-none">Check Connection</button>
               </div>
             </div>
           </div>
