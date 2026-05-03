@@ -9,3 +9,7 @@
 ## 2026-04-28 - [Keyboard-Accessible Hover Menus & Valid Button Content]
 **Learning:** For hover-triggered menus, use `onFocusCapture` and a refined `onBlurCapture` that checks `e.currentTarget.contains(e.relatedTarget)` to ensure the menu stays open when focus moves between the trigger and its children. Additionally, always use `span` instead of `div` inside `button` elements to maintain HTML validity while achieving desired layout.
 **Action:** Implement robust focus management for all hover-based navigation and audit button children for invalid flow content.
+
+## 2026-05-03 - [Keyboard Accessibility and Focus Visibility]
+**Learning:** In highly interactive dashboards, critical action buttons (e.g., "Add Workout", "Log Activity") and navigation controls (e.g., date switchers) often lack visual focus indicators. Using `focus-visible:ring-2` with an offset provides a clear visual cue for keyboard users without affecting mouse interactions. Furthermore, buttons that are visually hidden until hover must also be made visible on focus (`focus-visible:opacity-100`) to be discoverable by keyboard users.
+**Action:** Ensure all interactive elements have `focus-visible` styles and ensure focus-triggered visibility for hidden utility buttons.
