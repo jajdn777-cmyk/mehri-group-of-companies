@@ -691,7 +691,12 @@ export const DashboardView = ({ workouts, setWorkouts, userGoals, setUserGoals, 
               <div className="flex flex-col md:flex-row justify-between items-start md:items-center relative z-10 gap-4">
                 <div className="flex items-center gap-4 w-full md:w-auto justify-between">
                    <p className="text-[10px] font-black uppercase text-slate-400 tracking-[0.2em] self-center">Activity: {selectedDay}</p>
-                   <button onClick={() => setPrecisionMode(!precisionMode)} className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-slate-300 hover:text-[#A7F3D0] transition-colors">
+                   <button
+                      onClick={() => setPrecisionMode(!precisionMode)}
+                      role="switch"
+                      aria-checked={precisionMode}
+                      className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-slate-300 hover:text-[#A7F3D0] transition-colors focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none rounded-lg"
+                   >
                       {precisionMode ? <ToggleRight size={24} className="text-[#A7F3D0]"/> : <ToggleLeft size={24}/>}
                       Precision View
                    </button>
