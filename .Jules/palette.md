@@ -9,3 +9,7 @@
 ## 2026-04-28 - [Keyboard-Accessible Hover Menus & Valid Button Content]
 **Learning:** For hover-triggered menus, use `onFocusCapture` and a refined `onBlurCapture` that checks `e.currentTarget.contains(e.relatedTarget)` to ensure the menu stays open when focus moves between the trigger and its children. Additionally, always use `span` instead of `div` inside `button` elements to maintain HTML validity while achieving desired layout.
 **Action:** Implement robust focus management for all hover-based navigation and audit button children for invalid flow content.
+
+## 2026-05-05 - [Accessible Form Patterns & Focus States]
+**Learning:** For complex settings forms, using 'useId' to link labels to inputs/selects ensures robust accessibility. Additionally, transitioning from generic 'focus' to 'focus-visible' with 'ring-offset-2' provides a cleaner experience for mouse users while maintaining high-visibility indicators for keyboard navigation.
+**Action:** Implement 'useId' for all form groups and prefer 'focus-visible' with consistent ring offsets for interactive elements.
