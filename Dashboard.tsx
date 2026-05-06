@@ -57,7 +57,7 @@ const EmptyWorkoutState = ({ onAdd }: { onAdd: () => void }) => (
      </div>
      <button 
         onClick={onAdd}
-        className="px-10 py-4 bg-slate-900 text-white rounded-full font-black uppercase text-xs tracking-[0.3em] hover:bg-emerald-500 hover:text-slate-900 transition-all shadow-xl hover:-translate-y-1 flex items-center gap-3"
+        className="px-10 py-4 bg-slate-900 text-white rounded-full font-black uppercase text-xs tracking-[0.3em] hover:bg-emerald-500 hover:text-slate-900 transition-all shadow-xl hover:-translate-y-1 flex items-center gap-3 focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none"
      >
         <Plus size={16}/> Initialize Protocol
      </button>
@@ -669,14 +669,14 @@ export const DashboardView = ({ workouts, setWorkouts, userGoals, setUserGoals, 
             onClick={handleManualSync}
             disabled={isSyncing}
             aria-label="Sync data"
-            className={`p-2 rounded-full hover:bg-slate-50 transition-all ${isSyncing ? 'animate-spin text-emerald-500' : 'text-slate-300'}`}
+            className={`p-2 rounded-full hover:bg-slate-50 transition-all focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none ${isSyncing ? 'animate-spin text-emerald-500' : 'text-slate-300'}`}
             title="Force Sync Data"
           >
              <RefreshCw size={16}/>
           </button>
           <div className="flex gap-4 md:gap-8 border-l border-slate-100 pl-4">
-            <button onClick={() => setTab('monthly')} className={`text-[10px] md:text-[11px] font-black uppercase tracking-widest pb-2 md:pb-4 border-b-4 transition-all ${tab === 'monthly' ? 'border-[#A7F3D0] text-slate-900' : 'border-transparent text-slate-300 hover:text-slate-50'}`}>Monthly View</button>
-            <button onClick={() => setTab('stats')} className={`text-[10px] md:text-[11px] font-black uppercase tracking-widest pb-2 md:pb-4 border-b-4 transition-all ${tab === 'stats' ? 'border-[#A7F3D0] text-slate-900' : 'border-transparent text-slate-300 hover:text-slate-50'}`}>Detailed Stats</button>
+            <button onClick={() => setTab('monthly')} className={`text-[10px] md:text-[11px] font-black uppercase tracking-widest pb-2 md:pb-4 border-b-4 transition-all focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none ${tab === 'monthly' ? 'border-[#A7F3D0] text-slate-900' : 'border-transparent text-slate-300 hover:text-slate-50'}`}>Monthly View</button>
+            <button onClick={() => setTab('stats')} className={`text-[10px] md:text-[11px] font-black uppercase tracking-widest pb-2 md:pb-4 border-b-4 transition-all focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none ${tab === 'stats' ? 'border-[#A7F3D0] text-slate-900' : 'border-transparent text-slate-300 hover:text-slate-50'}`}>Detailed Stats</button>
           </div>
         </div>
       </div>
@@ -691,7 +691,12 @@ export const DashboardView = ({ workouts, setWorkouts, userGoals, setUserGoals, 
               <div className="flex flex-col md:flex-row justify-between items-start md:items-center relative z-10 gap-4">
                 <div className="flex items-center gap-4 w-full md:w-auto justify-between">
                    <p className="text-[10px] font-black uppercase text-slate-400 tracking-[0.2em] self-center">Activity: {selectedDay}</p>
-                   <button onClick={() => setPrecisionMode(!precisionMode)} className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-slate-300 hover:text-[#A7F3D0] transition-colors">
+                   <button
+                      onClick={() => setPrecisionMode(!precisionMode)}
+                      role="switch"
+                      aria-checked={precisionMode}
+                      className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-slate-300 hover:text-[#A7F3D0] transition-colors focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none rounded-lg"
+                   >
                       {precisionMode ? <ToggleRight size={24} className="text-[#A7F3D0]"/> : <ToggleLeft size={24}/>}
                       Precision View
                    </button>
@@ -699,13 +704,13 @@ export const DashboardView = ({ workouts, setWorkouts, userGoals, setUserGoals, 
                 
                 <div className="flex flex-col md:flex-row gap-4 w-full md:w-auto">
                   <div className="flex bg-slate-50/80 rounded-2xl p-1 backdrop-blur-sm border border-slate-100 w-full md:w-auto">
-                    <button onClick={() => setActivityFilter('All')} className={`flex-1 md:flex-none px-6 py-2 rounded-xl text-[10px] font-black uppercase transition-all ${activityFilter === 'All' ? 'bg-white shadow-sm text-slate-900' : 'text-slate-400'}`}>All</button>
-                    <button onClick={() => setActivityFilter('Run')} className={`flex-1 md:flex-none px-6 py-2 rounded-xl text-[10px] font-black uppercase transition-all ${activityFilter === 'Run' ? 'bg-white shadow-sm text-slate-900' : 'text-slate-400'}`}>Run</button>
+                    <button onClick={() => setActivityFilter('All')} className={`flex-1 md:flex-none px-6 py-2 rounded-xl text-[10px] font-black uppercase transition-all focus-visible:ring-2 ring-emerald-500 outline-none ${activityFilter === 'All' ? 'bg-white shadow-sm text-slate-900' : 'text-slate-400'}`}>All</button>
+                    <button onClick={() => setActivityFilter('Run')} className={`flex-1 md:flex-none px-6 py-2 rounded-xl text-[10px] font-black uppercase transition-all focus-visible:ring-2 ring-emerald-500 outline-none ${activityFilter === 'Run' ? 'bg-white shadow-sm text-slate-900' : 'text-slate-400'}`}>Run</button>
                   </div>
                   <button 
                     onClick={() => isLoggable && setShowLogModal(true)} 
                     disabled={!isLoggable}
-                    className="group bg-slate-900 text-white px-8 py-4 md:py-3 rounded-2xl text-xs md:text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-slate-800 transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 w-full md:w-auto active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="group bg-slate-900 text-white px-8 py-4 md:py-3 rounded-2xl text-xs md:text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-slate-800 transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 w-full md:w-auto active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none"
                   >
                     <Plus size={16} className="transition-transform group-hover:rotate-90" /> {isLoggable ? 'Add Workout' : (isPast ? 'Past (Locked)' : 'Future (Locked)')}
                   </button>
@@ -797,20 +802,20 @@ export const DashboardView = ({ workouts, setWorkouts, userGoals, setUserGoals, 
                 <div className="flex justify-between items-center mb-6 md:mb-10">
                   <div className="flex items-center gap-4">
                      <h3 className="text-lg md:text-2xl font-black uppercase text-slate-900 tracking-[0.02em]">{monthLabel}</h3>
-                     <button onClick={jumpToToday} className="text-[10px] font-black uppercase tracking-widest text-emerald-500 bg-emerald-50 px-3 py-1 rounded-full hover:bg-emerald-100 transition-colors" title="Jump to Current Month">Today</button>
+                     <button onClick={jumpToToday} className="text-[10px] font-black uppercase tracking-widest text-emerald-500 bg-emerald-50 px-3 py-1 rounded-full hover:bg-emerald-100 transition-colors focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none" title="Jump to Current Month">Today</button>
                   </div>
                   <div className="hidden md:flex gap-4">
                     <button
                       onClick={prevMonth}
                       aria-label="Previous month"
-                      className="text-slate-300 hover:text-slate-900 transition-colors p-2 rounded-full hover:bg-slate-50"
+                      className="text-slate-300 hover:text-slate-900 transition-colors p-2 rounded-full hover:bg-slate-50 focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none"
                     >
                       <ArrowRight className="rotate-180"/>
                     </button>
                     <button
                       onClick={nextMonth}
                       aria-label="Next month"
-                      className="text-slate-300 hover:text-slate-900 transition-colors p-2 rounded-full hover:bg-slate-50"
+                      className="text-slate-300 hover:text-slate-900 transition-colors p-2 rounded-full hover:bg-slate-50 focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none"
                     >
                       <ArrowRight/>
                     </button>
