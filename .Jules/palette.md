@@ -9,3 +9,7 @@
 ## 2026-04-28 - [Keyboard-Accessible Hover Menus & Valid Button Content]
 **Learning:** For hover-triggered menus, use `onFocusCapture` and a refined `onBlurCapture` that checks `e.currentTarget.contains(e.relatedTarget)` to ensure the menu stays open when focus moves between the trigger and its children. Additionally, always use `span` instead of `div` inside `button` elements to maintain HTML validity while achieving desired layout.
 **Action:** Implement robust focus management for all hover-based navigation and audit button children for invalid flow content.
+
+## 2026-05-06 - [Global Dashboard Accessibility Polish]
+**Learning:** For a consistent keyboard navigation experience, every interactive element—including secondary buttons (Sync), tab switchers, and custom toggles—must have clear `focus-visible` ring indicators. Toggles specifically benefit from the `role="switch"` and `aria-checked` attributes to provide semantic clarity that matches their visual behavior.
+**Action:** Audit core dashboard components for "silent" focus states and ensure all interactive controls have standardized focus rings and semantic roles.
