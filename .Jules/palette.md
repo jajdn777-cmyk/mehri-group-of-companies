@@ -9,3 +9,7 @@
 ## 2026-04-28 - [Keyboard-Accessible Hover Menus & Valid Button Content]
 **Learning:** For hover-triggered menus, use `onFocusCapture` and a refined `onBlurCapture` that checks `e.currentTarget.contains(e.relatedTarget)` to ensure the menu stays open when focus moves between the trigger and its children. Additionally, always use `span` instead of `div` inside `button` elements to maintain HTML validity while achieving desired layout.
 **Action:** Implement robust focus management for all hover-based navigation and audit button children for invalid flow content.
+
+## 2026-05-02 - [Form Accessibility & Hidden Focus States]
+**Learning:** In complex modals like `LogModal`, using `useId` ensures stable label-input linkage, which is critical for screen readers and improves hit-area affordance when paired with `cursor-pointer`. For interactive elements that are visually hidden until hover (e.g., delete buttons), applying `focus-visible:opacity-100` ensures they are discoverable and usable for keyboard-only users.
+**Action:** Systematically apply `useId` for all form fields and ensure "hover-only" actions are revealed via `focus-visible`.
