@@ -1,5 +1,5 @@
 
-import React, { useState, useMemo, useEffect, useRef } from 'react';
+import React, { useState, useMemo, useEffect, useRef, useId } from 'react';
 import { createPortal } from 'react-dom';
 import { Plus, ArrowRight, Zap, Trash2, Search, ChevronDown, MapPin, Calculator as CalcIcon, X, Dumbbell, Target, Footprints, Timer, Flame, Activity, ToggleLeft, ToggleRight, Info, Calendar, RefreshCw, CheckCircle2, Lock, Heart, Moon, Waves, Mountain, Weight, ChevronLeft, ChevronRight, BarChart } from 'lucide-react';
 import { getLocalTodayStr, ROUTE_APPLICABLE_TYPES, ACTIVITY_CATEGORIES } from './constants.ts';
@@ -57,7 +57,7 @@ const EmptyWorkoutState = ({ onAdd }: { onAdd: () => void }) => (
      </div>
      <button 
         onClick={onAdd}
-        className="px-10 py-4 bg-slate-900 text-white rounded-full font-black uppercase text-xs tracking-[0.3em] hover:bg-emerald-500 hover:text-slate-900 transition-all shadow-xl hover:-translate-y-1 flex items-center gap-3"
+        className="px-10 py-4 bg-slate-900 text-white rounded-full font-black uppercase text-xs tracking-[0.3em] hover:bg-emerald-500 hover:text-slate-900 transition-all shadow-xl hover:-translate-y-1 flex items-center gap-3 focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none"
      >
         <Plus size={16}/> Initialize Protocol
      </button>
@@ -65,6 +65,18 @@ const EmptyWorkoutState = ({ onAdd }: { onAdd: () => void }) => (
 );
 
 export const LogModal = ({ date, routes, userSpecs, userProfile, userPreferences, onClose, onSubmit }: any) => {
+  const activityNameId = useId();
+  const activityTypeId = useId();
+  const routeId = useId();
+  const setsId = useId();
+  const repsId = useId();
+  const weightId = useId();
+  const distanceId = useId();
+  const durationId = useId();
+  const caloriesId = useId();
+  const surfaceId = useId();
+  const addedLoadId = useId();
+
   const [form, setForm] = useState({ 
     name: '', 
     type: '', 
@@ -195,14 +207,15 @@ export const LogModal = ({ date, routes, userSpecs, userProfile, userPreferences
         <div className="p-6 md:p-10 pb-10 grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-10">
           <div className="space-y-6">
             <div className="space-y-2">
-              <label className="text-xs md:text-[10px] font-black uppercase text-slate-400 ml-4">Activity Name</label>
-              <input className="w-full bg-slate-50 p-5 rounded-[25px] font-bold border-none text-base focus:ring-2 ring-emerald-500/20" placeholder={isStrength ? "e.g. Chest Day" : "e.g. Morning Run"} value={form.name} onChange={e=>setForm({...form, name: e.target.value})} autoFocus />
+              <label htmlFor={activityNameId} className="text-xs md:text-[10px] font-black uppercase text-slate-400 ml-4 cursor-pointer">Activity Name</label>
+              <input id={activityNameId} className="w-full bg-slate-50 p-5 rounded-[25px] font-bold border-none text-base focus:ring-2 ring-emerald-500/20" placeholder={isStrength ? "e.g. Chest Day" : "e.g. Morning Run"} value={form.name} onChange={e=>setForm({...form, name: e.target.value})} autoFocus />
             </div>
 
             <div className="space-y-2 relative z-[60]">
-              <label className="text-xs md:text-[10px] font-black uppercase text-slate-400 ml-4">Activity Type</label>
+              <label htmlFor={activityTypeId} className="text-xs md:text-[10px] font-black uppercase text-slate-400 ml-4 cursor-pointer">Activity Type</label>
               <div className="relative">
                 <button
+                  id={activityTypeId}
                   type="button"
                   aria-haspopup="listbox"
                   aria-expanded={isDropdownOpen}
@@ -238,9 +251,10 @@ export const LogModal = ({ date, routes, userSpecs, userProfile, userPreferences
 
             {isRouteApplicable && (
               <div className="space-y-2 animate-fade-in relative z-[50]">
-                <label className="text-xs md:text-[10px] font-black uppercase text-slate-400 ml-4">Load Route</label>
+                <label htmlFor={routeId} className="text-xs md:text-[10px] font-black uppercase text-slate-400 ml-4 cursor-pointer">Load Route</label>
                 <div className="relative">
                   <button
+                    id={routeId}
                     type="button"
                     aria-haspopup="listbox"
                     aria-expanded={isRouteDropdownOpen}
@@ -270,34 +284,34 @@ export const LogModal = ({ date, routes, userSpecs, userProfile, userPreferences
               {isStrength ? (
                 <div className="grid grid-cols-3 gap-4 animate-fade-in">
                     <div className="space-y-2">
-                      <label className="text-xs md:text-[10px] font-black uppercase text-slate-400 ml-3">Sets</label>
-                      <input type="number" className="w-full bg-slate-50 p-5 rounded-[25px] font-bold text-base text-center" placeholder="0" value={form.sets} onChange={e=>setForm({...form, sets: e.target.value})} />
+                      <label htmlFor={setsId} className="text-xs md:text-[10px] font-black uppercase text-slate-400 ml-3 cursor-pointer">Sets</label>
+                      <input id={setsId} type="number" className="w-full bg-slate-50 p-5 rounded-[25px] font-bold text-base text-center" placeholder="0" value={form.sets} onChange={e=>setForm({...form, sets: e.target.value})} />
                     </div>
                     <div className="space-y-2">
-                      <label className="text-xs md:text-[10px] font-black uppercase text-slate-400 ml-3">Reps</label>
-                      <input type="number" className="w-full bg-slate-50 p-5 rounded-[25px] font-bold text-base text-center" placeholder="0" value={form.reps} onChange={e=>setForm({...form, reps: e.target.value})} />
+                      <label htmlFor={repsId} className="text-xs md:text-[10px] font-black uppercase text-slate-400 ml-3 cursor-pointer">Reps</label>
+                      <input id={repsId} type="number" className="w-full bg-slate-50 p-5 rounded-[25px] font-bold text-base text-center" placeholder="0" value={form.reps} onChange={e=>setForm({...form, reps: e.target.value})} />
                     </div>
                     <div className="space-y-2">
-                      <label className="text-xs md:text-[10px] font-black uppercase text-slate-400 ml-3">{weightUnit}</label>
-                      <input type="number" className="w-full bg-slate-50 p-5 rounded-[25px] font-bold text-base text-center" placeholder="0" value={form.weightLifted} onChange={e=>setForm({...form, weightLifted: e.target.value})} />
+                      <label htmlFor={weightId} className="text-xs md:text-[10px] font-black uppercase text-slate-400 ml-3 cursor-pointer">{weightUnit}</label>
+                      <input id={weightId} type="number" className="w-full bg-slate-50 p-5 rounded-[25px] font-bold text-base text-center" placeholder="0" value={form.weightLifted} onChange={e=>setForm({...form, weightLifted: e.target.value})} />
                     </div>
                 </div>
               ) : (
                 <div className="space-y-2 animate-fade-in">
-                   <label className="text-xs md:text-[10px] font-black uppercase text-slate-400 ml-4">Distance ({distUnit})</label>
-                   <input type="number" step="0.01" className="w-full bg-slate-50 p-5 rounded-[25px] font-bold text-base" placeholder="0.00" value={form.distance} onChange={e=>setForm({...form, distance: e.target.value})} />
+                   <label htmlFor={distanceId} className="text-xs md:text-[10px] font-black uppercase text-slate-400 ml-4 cursor-pointer">Distance ({distUnit})</label>
+                   <input id={distanceId} type="number" step="0.01" className="w-full bg-slate-50 p-5 rounded-[25px] font-bold text-base" placeholder="0.00" value={form.distance} onChange={e=>setForm({...form, distance: e.target.value})} />
                 </div>
               )}
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                   <label className="text-xs md:text-[10px] font-black uppercase text-slate-400 ml-4">Duration</label>
-                   <input className="w-full bg-slate-50 p-5 rounded-[25px] font-bold text-base" placeholder="HH:MM:SS" value={form.duration} onChange={e=>setForm({...form, duration: e.target.value})} />
+                   <label htmlFor={durationId} className="text-xs md:text-[10px] font-black uppercase text-slate-400 ml-4 cursor-pointer">Duration</label>
+                   <input id={durationId} className="w-full bg-slate-50 p-5 rounded-[25px] font-bold text-base" placeholder="HH:MM:SS" value={form.duration} onChange={e=>setForm({...form, duration: e.target.value})} />
                 </div>
                 <div className="space-y-2 relative">
-                  <label className="text-xs md:text-[10px] font-black uppercase text-slate-400 ml-4">Calories</label>
+                  <label htmlFor={caloriesId} className="text-xs md:text-[10px] font-black uppercase text-slate-400 ml-4 cursor-pointer">Calories</label>
                   <div className="relative flex gap-2">
-                    <input type="number" className="w-full bg-slate-50 p-5 rounded-[25px] font-bold text-base" placeholder="0" value={form.calories} onChange={e=>setForm({...form, calories: e.target.value})} />
+                    <input id={caloriesId} type="number" className="w-full bg-slate-50 p-5 rounded-[25px] font-bold text-base" placeholder="0" value={form.calories} onChange={e=>setForm({...form, calories: e.target.value})} />
                     <button
                       type="button"
                       aria-label="Auto-calculate calories"
@@ -319,8 +333,9 @@ export const LogModal = ({ date, routes, userSpecs, userProfile, userPreferences
                  {showAdvanced && (
                     <div className="grid grid-cols-2 gap-4 p-4 bg-slate-50 rounded-3xl border border-slate-100 animate-fade-in">
                        <div className="space-y-1">
-                          <label className="text-[9px] font-black uppercase text-slate-400 ml-2 tracking-widest flex items-center gap-1"><Mountain size={10}/> Surface</label>
+                          <label htmlFor={surfaceId} className="text-[9px] font-black uppercase text-slate-400 ml-2 tracking-widest flex items-center gap-1 cursor-pointer"><Mountain size={10}/> Surface</label>
                           <select 
+                             id={surfaceId}
                              className="w-full bg-white p-3 rounded-xl font-bold text-xs outline-none text-base md:text-xs"
                              value={form.surface}
                              onChange={e => setForm({...form, surface: e.target.value})}
@@ -333,8 +348,9 @@ export const LogModal = ({ date, routes, userSpecs, userProfile, userPreferences
                           </select>
                        </div>
                        <div className="space-y-1">
-                          <label className="text-[9px] font-black uppercase text-slate-400 ml-2 tracking-widest flex items-center gap-1"><Weight size={10}/> Added Load ({weightUnit})</label>
+                          <label htmlFor={addedLoadId} className="text-[9px] font-black uppercase text-slate-400 ml-2 tracking-widest flex items-center gap-1 cursor-pointer"><Weight size={10}/> Added Load ({weightUnit})</label>
                           <input 
+                             id={addedLoadId}
                              type="number" 
                              className="w-full bg-white p-3 rounded-xl font-bold outline-none text-base md:text-xs"
                              placeholder="Vest/Pack Weight"
@@ -347,7 +363,7 @@ export const LogModal = ({ date, routes, userSpecs, userProfile, userPreferences
               </div>
             </div>
 
-            <button onClick={handleFinalSubmit} disabled={!form.name || !form.type || isSaving} className="w-full py-6 bg-slate-900 text-white rounded-[25px] font-black uppercase text-xs md:text-[11px] tracking-[0.4em] shadow-xl transition-all active:scale-95 hover:scale-[1.02] disabled:opacity-50 hover:bg-emerald-500 flex items-center justify-center sticky bottom-0 md:relative">
+            <button onClick={handleFinalSubmit} disabled={!form.name || !form.type || isSaving} className="w-full py-6 bg-slate-900 text-white rounded-[25px] font-black uppercase text-xs md:text-[11px] tracking-[0.4em] shadow-xl transition-all active:scale-95 hover:scale-[1.02] disabled:opacity-50 hover:bg-emerald-500 flex items-center justify-center sticky bottom-0 md:relative focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none">
                {isSaving ? "Saving..." : "Log Activity"}
             </button>
           </div>
@@ -669,14 +685,14 @@ export const DashboardView = ({ workouts, setWorkouts, userGoals, setUserGoals, 
             onClick={handleManualSync}
             disabled={isSyncing}
             aria-label="Sync data"
-            className={`p-2 rounded-full hover:bg-slate-50 transition-all ${isSyncing ? 'animate-spin text-emerald-500' : 'text-slate-300'}`}
+            className={`p-2 rounded-full hover:bg-slate-50 transition-all focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none ${isSyncing ? 'animate-spin text-emerald-500' : 'text-slate-300'}`}
             title="Force Sync Data"
           >
              <RefreshCw size={16}/>
           </button>
           <div className="flex gap-4 md:gap-8 border-l border-slate-100 pl-4">
-            <button onClick={() => setTab('monthly')} className={`text-[10px] md:text-[11px] font-black uppercase tracking-widest pb-2 md:pb-4 border-b-4 transition-all ${tab === 'monthly' ? 'border-[#A7F3D0] text-slate-900' : 'border-transparent text-slate-300 hover:text-slate-50'}`}>Monthly View</button>
-            <button onClick={() => setTab('stats')} className={`text-[10px] md:text-[11px] font-black uppercase tracking-widest pb-2 md:pb-4 border-b-4 transition-all ${tab === 'stats' ? 'border-[#A7F3D0] text-slate-900' : 'border-transparent text-slate-300 hover:text-slate-50'}`}>Detailed Stats</button>
+            <button onClick={() => setTab('monthly')} className={`text-[10px] md:text-[11px] font-black uppercase tracking-widest pb-2 md:pb-4 border-b-4 transition-all focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none ${tab === 'monthly' ? 'border-[#A7F3D0] text-slate-900' : 'border-transparent text-slate-300 hover:text-slate-50'}`}>Monthly View</button>
+            <button onClick={() => setTab('stats')} className={`text-[10px] md:text-[11px] font-black uppercase tracking-widest pb-2 md:pb-4 border-b-4 transition-all focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none ${tab === 'stats' ? 'border-[#A7F3D0] text-slate-900' : 'border-transparent text-slate-300 hover:text-slate-50'}`}>Detailed Stats</button>
           </div>
         </div>
       </div>
@@ -691,7 +707,7 @@ export const DashboardView = ({ workouts, setWorkouts, userGoals, setUserGoals, 
               <div className="flex flex-col md:flex-row justify-between items-start md:items-center relative z-10 gap-4">
                 <div className="flex items-center gap-4 w-full md:w-auto justify-between">
                    <p className="text-[10px] font-black uppercase text-slate-400 tracking-[0.2em] self-center">Activity: {selectedDay}</p>
-                   <button onClick={() => setPrecisionMode(!precisionMode)} className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-slate-300 hover:text-[#A7F3D0] transition-colors">
+                   <button onClick={() => setPrecisionMode(!precisionMode)} className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-slate-300 hover:text-[#A7F3D0] transition-colors focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none rounded-lg">
                       {precisionMode ? <ToggleRight size={24} className="text-[#A7F3D0]"/> : <ToggleLeft size={24}/>}
                       Precision View
                    </button>
@@ -699,13 +715,13 @@ export const DashboardView = ({ workouts, setWorkouts, userGoals, setUserGoals, 
                 
                 <div className="flex flex-col md:flex-row gap-4 w-full md:w-auto">
                   <div className="flex bg-slate-50/80 rounded-2xl p-1 backdrop-blur-sm border border-slate-100 w-full md:w-auto">
-                    <button onClick={() => setActivityFilter('All')} className={`flex-1 md:flex-none px-6 py-2 rounded-xl text-[10px] font-black uppercase transition-all ${activityFilter === 'All' ? 'bg-white shadow-sm text-slate-900' : 'text-slate-400'}`}>All</button>
-                    <button onClick={() => setActivityFilter('Run')} className={`flex-1 md:flex-none px-6 py-2 rounded-xl text-[10px] font-black uppercase transition-all ${activityFilter === 'Run' ? 'bg-white shadow-sm text-slate-900' : 'text-slate-400'}`}>Run</button>
+                    <button onClick={() => setActivityFilter('All')} className={`flex-1 md:flex-none px-6 py-2 rounded-xl text-[10px] font-black uppercase transition-all focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none ${activityFilter === 'All' ? 'bg-white shadow-sm text-slate-900' : 'text-slate-400'}`}>All</button>
+                    <button onClick={() => setActivityFilter('Run')} className={`flex-1 md:flex-none px-6 py-2 rounded-xl text-[10px] font-black uppercase transition-all focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none ${activityFilter === 'Run' ? 'bg-white shadow-sm text-slate-900' : 'text-slate-400'}`}>Run</button>
                   </div>
                   <button 
                     onClick={() => isLoggable && setShowLogModal(true)} 
                     disabled={!isLoggable}
-                    className="group bg-slate-900 text-white px-8 py-4 md:py-3 rounded-2xl text-xs md:text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-slate-800 transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 w-full md:w-auto active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="group bg-slate-900 text-white px-8 py-4 md:py-3 rounded-2xl text-xs md:text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-slate-800 transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 w-full md:w-auto active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none"
                   >
                     <Plus size={16} className="transition-transform group-hover:rotate-90" /> {isLoggable ? 'Add Workout' : (isPast ? 'Past (Locked)' : 'Future (Locked)')}
                   </button>
@@ -768,7 +784,7 @@ export const DashboardView = ({ workouts, setWorkouts, userGoals, setUserGoals, 
                             <button
                               onClick={(e) => deleteGoal(e, goal.id)}
                               aria-label="Delete goal"
-                              className="text-slate-300 hover:text-red-500 transition-colors z-20 p-2 rounded-full hover:bg-slate-50"
+                              className="text-slate-300 hover:text-red-500 transition-colors z-20 p-2 rounded-full hover:bg-slate-50 focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none"
                             >
                                 <Trash2 size={16}/>
                             </button>
@@ -797,20 +813,20 @@ export const DashboardView = ({ workouts, setWorkouts, userGoals, setUserGoals, 
                 <div className="flex justify-between items-center mb-6 md:mb-10">
                   <div className="flex items-center gap-4">
                      <h3 className="text-lg md:text-2xl font-black uppercase text-slate-900 tracking-[0.02em]">{monthLabel}</h3>
-                     <button onClick={jumpToToday} className="text-[10px] font-black uppercase tracking-widest text-emerald-500 bg-emerald-50 px-3 py-1 rounded-full hover:bg-emerald-100 transition-colors" title="Jump to Current Month">Today</button>
+                     <button onClick={jumpToToday} className="text-[10px] font-black uppercase tracking-widest text-emerald-500 bg-emerald-50 px-3 py-1 rounded-full hover:bg-emerald-100 transition-colors focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none" title="Jump to Current Month">Today</button>
                   </div>
                   <div className="hidden md:flex gap-4">
                     <button
                       onClick={prevMonth}
                       aria-label="Previous month"
-                      className="text-slate-300 hover:text-slate-900 transition-colors p-2 rounded-full hover:bg-slate-50"
+                      className="text-slate-300 hover:text-slate-900 transition-colors p-2 rounded-full hover:bg-slate-50 focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none"
                     >
                       <ArrowRight className="rotate-180"/>
                     </button>
                     <button
                       onClick={nextMonth}
                       aria-label="Next month"
-                      className="text-slate-300 hover:text-slate-900 transition-colors p-2 rounded-full hover:bg-slate-50"
+                      className="text-slate-300 hover:text-slate-900 transition-colors p-2 rounded-full hover:bg-slate-50 focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none"
                     >
                       <ArrowRight/>
                     </button>
@@ -819,11 +835,11 @@ export const DashboardView = ({ workouts, setWorkouts, userGoals, setUserGoals, 
 
                 <div className="md:hidden mb-4">
                     <div className="flex items-center justify-between mb-4">
-                        <button onClick={() => handleDayChange(-1)} className="p-2 bg-slate-50 rounded-full"><ChevronLeft size={20}/></button>
+                        <button onClick={() => handleDayChange(-1)} aria-label="Previous day" className="p-2 bg-slate-50 rounded-full focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none"><ChevronLeft size={20}/></button>
                         <span className="text-sm font-black uppercase tracking-widest text-slate-500">
                             {new Date(selectedDay.replace(/-/g, '/')).toLocaleDateString('en-US', { weekday: 'long', day: 'numeric' })}
                         </span>
-                        <button onClick={() => handleDayChange(1)} className="p-2 bg-slate-50 rounded-full"><ChevronRight size={20}/></button>
+                        <button onClick={() => handleDayChange(1)} aria-label="Next day" className="p-2 bg-slate-50 rounded-full focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none"><ChevronRight size={20}/></button>
                     </div>
                     <div className="bg-slate-900 text-white p-6 rounded-[30px] shadow-xl relative overflow-hidden">
                        <div className="absolute top-0 right-0 p-6 opacity-10"><Activity size={80}/></div>
@@ -959,7 +975,7 @@ export const DashboardView = ({ workouts, setWorkouts, userGoals, setUserGoals, 
                               <button 
                                 onClick={() => handleDeleteWorkout(log.id)} 
                                 aria-label="Delete workout"
-                                className="p-2 text-slate-300 hover:text-red-500 rounded-full hover:bg-red-50 transition-all opacity-0 group-hover:opacity-100"
+                                className="p-2 text-slate-300 hover:text-red-500 rounded-full hover:bg-red-50 transition-all opacity-0 group-hover:opacity-100 focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none focus-visible:opacity-100"
                               >
                                  <Trash2 size={18}/>
                               </button>
