@@ -9,3 +9,7 @@
 ## 2026-04-28 - [Keyboard-Accessible Hover Menus & Valid Button Content]
 **Learning:** For hover-triggered menus, use `onFocusCapture` and a refined `onBlurCapture` that checks `e.currentTarget.contains(e.relatedTarget)` to ensure the menu stays open when focus moves between the trigger and its children. Additionally, always use `span` instead of `div` inside `button` elements to maintain HTML validity while achieving desired layout.
 **Action:** Implement robust focus management for all hover-based navigation and audit button children for invalid flow content.
+
+## 2026-05-11 - [Mobile Drawer Keyboard Accessibility & Modal ARIA]
+**Learning:** In highly customized UIs where default browser outlines are suppressed with `outline-none`, it is critical to implement high-contrast `focus-visible` styles (e.g., `ring-2 ring-emerald-500 ring-offset-2`) for all interactive elements, especially within mobile drawer navigations and modal footer actions. Furthermore, complex modals must explicitly define `role="dialog"` and `aria-modal="true"` to ensure proper screen reader entrapment and announcement.
+**Action:** Audit all mobile-only navigation links and secondary action buttons for focus-visible indicators and ensure all custom modal components utilize semantic dialog roles.

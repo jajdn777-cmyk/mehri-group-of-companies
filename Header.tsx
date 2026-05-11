@@ -72,7 +72,7 @@ export const Header = ({ currentView, onNavigate, onSignOut, onShop, userProfile
   const MobileSubLink = ({ onClick, label, icon: Icon, badge }: any) => (
     <button 
       onClick={() => { onClick(); setMobileMenuOpen(false); }} 
-      className="w-full flex items-center gap-3 pl-10 pr-6 py-3 text-left text-xs font-bold uppercase tracking-wider text-slate-500 hover:text-emerald-600 hover:bg-emerald-50/50 transition-colors"
+      className="w-full flex items-center gap-3 pl-10 pr-6 py-3 text-left text-xs font-bold uppercase tracking-wider text-slate-500 hover:text-emerald-600 hover:bg-emerald-50/50 transition-colors focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none"
     >
       {Icon && <Icon size={14} className="text-slate-400" />}
       {label}
@@ -85,7 +85,7 @@ export const Header = ({ currentView, onNavigate, onSignOut, onShop, userProfile
   const MobileDirectLink = ({ onClick, label }: any) => (
     <button 
       onClick={() => { onClick(); setMobileMenuOpen(false); }} 
-      className="w-full flex items-center justify-between px-6 py-5 text-left border-b border-slate-50 active:bg-slate-50 transition-colors"
+      className="w-full flex items-center justify-between px-6 py-5 text-left border-b border-slate-50 active:bg-slate-50 transition-colors focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none"
     >
       <span className="text-sm font-black uppercase tracking-widest text-slate-900">{label}</span>
     </button>
@@ -370,12 +370,12 @@ export const Header = ({ currentView, onNavigate, onSignOut, onShop, userProfile
                ) : (
                  <div className="p-6 flex flex-col gap-4 mt-20">
                     <p className="text-center text-slate-400 text-xs font-bold uppercase tracking-widest mb-4">Join the platform</p>
-                    <button onClick={() => { onShop(); setMobileMenuOpen(false); }} className="w-full py-4 bg-emerald-500 text-slate-900 rounded-full font-black uppercase text-xs tracking-[0.2em] active:scale-95 transition-transform flex items-center justify-center gap-2">
+                    <button onClick={() => { onShop(); setMobileMenuOpen(false); }} className="w-full py-4 bg-emerald-500 text-slate-900 rounded-full font-black uppercase text-xs tracking-[0.2em] active:scale-95 transition-transform flex items-center justify-center gap-2 focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none">
                       <ShoppingBag size={14}/> Shop Gear
                     </button>
                     <div className="grid grid-cols-2 gap-3">
-                      <button onClick={() => { onNavigate('auth-login'); setMobileMenuOpen(false); }} className="w-full py-4 border-2 border-slate-900 text-slate-900 rounded-full font-black uppercase text-[10px] tracking-[0.1em] active:scale-95 transition-transform">Sign In</button>
-                      <button onClick={() => { onNavigate('auth-signup'); setMobileMenuOpen(false); }} className="w-full py-4 bg-slate-900 text-white rounded-full font-black uppercase text-[10px] tracking-[0.1em] active:scale-95 transition-transform">Start</button>
+                      <button onClick={() => { onNavigate('auth-login'); setMobileMenuOpen(false); }} className="w-full py-4 border-2 border-slate-900 text-slate-900 rounded-full font-black uppercase text-[10px] tracking-[0.1em] active:scale-95 transition-transform focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none">Sign In</button>
+                      <button onClick={() => { onNavigate('auth-signup'); setMobileMenuOpen(false); }} className="w-full py-4 bg-slate-900 text-white rounded-full font-black uppercase text-[10px] tracking-[0.1em] active:scale-95 transition-transform focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none">Start</button>
                     </div>
                  </div>
                )}
@@ -384,7 +384,7 @@ export const Header = ({ currentView, onNavigate, onSignOut, onShop, userProfile
             {/* Drawer Footer */}
             {isDashboard || currentView === 'main' ? (
               <div className="p-6 border-t border-slate-50 bg-[#FCFCFC]/80">
-                 <button onClick={() => { onSignOut(); setMobileMenuOpen(false); }} className="w-full flex items-center justify-center gap-2 text-slate-400 font-black text-xs uppercase tracking-widest hover:text-red-500 transition-colors py-2">
+                 <button onClick={() => { onSignOut(); setMobileMenuOpen(false); }} className="w-full flex items-center justify-center gap-2 text-slate-400 font-black text-xs uppercase tracking-widest hover:text-red-500 transition-colors py-2 focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none">
                     <LogOut size={16}/> Sign Out
                  </button>
               </div>
