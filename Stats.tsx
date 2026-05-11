@@ -36,8 +36,12 @@ const LifetimeStatsModal = ({ workouts, userPreferences, onClose }: any) => {
 
   return (
     <div className="fixed inset-0 z-[7000] flex items-center justify-center p-4 md:p-6 bg-slate-900/95 backdrop-blur-3xl animate-fade-in overflow-y-auto">
-      <div className="bg-white rounded-[30px] md:rounded-[60px] w-full max-w-6xl flex flex-col shadow-2xl overflow-hidden relative my-8 md:my-0 h-auto md:h-[85vh] min-h-[50vh]">
-        <button onClick={onClose} className="absolute top-6 right-6 md:top-10 md:right-10 text-slate-300 hover:text-slate-900 transition-colors z-20"><X size={28} md-size={32}/></button>
+      <div
+        role="dialog"
+        aria-modal="true"
+        className="bg-white rounded-[30px] md:rounded-[60px] w-full max-w-6xl flex flex-col shadow-2xl overflow-hidden relative my-8 md:my-0 h-auto md:h-[85vh] min-h-[50vh]"
+      >
+        <button onClick={onClose} aria-label="Close modal" className="absolute top-6 right-6 md:top-10 md:right-10 text-slate-300 hover:text-slate-900 transition-colors z-20"><X size={28} md-size={32}/></button>
         
         <div className="p-8 md:p-12 border-b border-slate-100 bg-slate-50">
            <h2 className="text-3xl md:text-4xl font-black uppercase tracking-tighter text-slate-900 mb-2">My Lifetime Stats</h2>
@@ -445,5 +449,5 @@ export const StatsView = ({ workouts, userPreferences, userMeals = [], userSpecs
 };
 
 const ChevronDown = ({ size, className }: any) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="m6 9 6 6 6-6"/></svg>
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
 );
