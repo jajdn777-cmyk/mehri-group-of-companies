@@ -9,3 +9,7 @@
 ## 2026-04-28 - [Keyboard-Accessible Hover Menus & Valid Button Content]
 **Learning:** For hover-triggered menus, use `onFocusCapture` and a refined `onBlurCapture` that checks `e.currentTarget.contains(e.relatedTarget)` to ensure the menu stays open when focus moves between the trigger and its children. Additionally, always use `span` instead of `div` inside `button` elements to maintain HTML validity while achieving desired layout.
 **Action:** Implement robust focus management for all hover-based navigation and audit button children for invalid flow content.
+
+## 2026-05-20 - [Form Accessibility & Semantic Linkage]
+**Learning:** Form fields in the settings view, specifically `InputGroup`, Gender, Weekly Rest Day, and Time Zone, were missing programmatic linkage between labels and controls. Using React's `useId` to generate stable IDs and linking them via `htmlFor` and `id` significantly improves accessibility for screen readers and hit-area affordance for all users.
+**Action:** Always verify that every form input or select has a semantic label linked via `useId`. Add `aria-hidden="true"` to decorative dropdown indicators and `cursor-pointer` to labels to improve UX.
