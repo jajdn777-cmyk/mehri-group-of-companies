@@ -29,7 +29,7 @@ const LegalModal = ({ title, content, onClose }: { title: string, content: strin
           {title === 'Privacy Policy' ? <Lock size={20} className="text-emerald-500"/> : title === 'About Us' ? <Users size={20} className="text-emerald-500"/> : <FileText size={20} className="text-emerald-500"/>}
           {title}
         </h3>
-        <button onClick={onClose} className="p-2 hover:bg-slate-800 rounded-full transition-colors text-slate-400 hover:text-white"><X size={20}/></button>
+        <button onClick={onClose} aria-label="Close modal" className="p-2 hover:bg-slate-800 rounded-full transition-colors text-slate-400 hover:text-white focus-visible:ring-2 ring-emerald-500 outline-none"><X size={20}/></button>
       </div>
       <div className="p-8 overflow-y-auto custom-scrollbar bg-slate-900">
         <div className="prose prose-invert prose-sm max-w-none font-sans leading-relaxed text-slate-300 whitespace-pre-line">
@@ -37,7 +37,7 @@ const LegalModal = ({ title, content, onClose }: { title: string, content: strin
         </div>
       </div>
       <div className="p-6 border-t border-slate-800 bg-black flex justify-end">
-        <button onClick={onClose} className="px-8 py-3 bg-white text-black rounded-full font-black uppercase text-[10px] tracking-widest hover:bg-emerald-400 transition-colors">
+        <button onClick={onClose} className="px-8 py-3 bg-white text-black rounded-full font-black uppercase text-[10px] tracking-widest hover:bg-emerald-400 transition-colors focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none">
           Close Document
         </button>
       </div>
@@ -82,7 +82,7 @@ export const Footer = ({ onNavigate }: any) => {
       {formStatus === 'success' && createPortal(
         <div className="fixed inset-0 z-[10000] flex items-center justify-center p-4 bg-slate-900/95 backdrop-blur-2xl animate-fade-in">
             <div className="bg-white rounded-[40px] p-8 md:p-14 max-w-lg text-center relative shadow-2xl w-full border border-slate-100 flex flex-col items-center animate-scale-in">
-                <button onClick={() => setFormStatus('idle')} className="absolute top-6 right-6 p-2 hover:bg-slate-100 rounded-full transition-colors">
+                <button onClick={() => setFormStatus('idle')} aria-label="Close confirmation" className="absolute top-6 right-6 p-2 hover:bg-slate-100 rounded-full transition-colors focus-visible:ring-2 ring-emerald-500 outline-none">
                     <X size={24} className="text-slate-400 hover:text-slate-900"/>
                 </button>
                 <div className="w-24 h-24 bg-[#A7F3D0] rounded-full flex items-center justify-center mb-8 text-slate-900 shadow-[0_0_30px_rgba(167,243,208,0.5)] animate-bounce-slow">
@@ -92,7 +92,7 @@ export const Footer = ({ onNavigate }: any) => {
                 <p className="text-slate-500 font-medium mb-10 leading-relaxed text-lg">
                     Your message has been sent to the MEHRI development team. We will respond shortly.
                 </p>
-                <button onClick={() => setFormStatus('idle')} className="w-full py-5 bg-slate-900 text-white rounded-2xl font-black uppercase text-xs tracking-[0.3em] hover:bg-emerald-500 hover:text-slate-900 transition-all shadow-xl active:scale-95">
+                <button onClick={() => setFormStatus('idle')} className="w-full py-5 bg-slate-900 text-white rounded-2xl font-black uppercase text-xs tracking-[0.3em] hover:bg-emerald-500 hover:text-slate-900 transition-all shadow-xl active:scale-95 focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none">
                     Close Confirmation
                 </button>
             </div>
@@ -121,7 +121,7 @@ export const Footer = ({ onNavigate }: any) => {
                href="https://www.amazon.com/dp/B0FH4YTQ78?ref=cm_sw_r_cso_wa_apin_dp_9WM50155ESTE8FG1JDZG&ref_=cm_sw_r_cso_wa_apin_dp_9WM50155ESTE8FG1JDZG&social_share=cm_sw_r_cso_wa_apin_dp_9WM50155ESTE8FG1JDZG&titleSource=true&th=1"
                target="_blank" 
                rel="noopener noreferrer"
-               className="px-10 py-5 bg-white text-black rounded-full font-black uppercase text-xs tracking-[0.3em] hover:bg-emerald-400 transition-all flex items-center gap-3 shadow-[0_0_20px_rgba(255,255,255,0.1)] hover:shadow-[0_0_30px_rgba(52,211,153,0.4)]"
+               className="px-10 py-5 bg-white text-black rounded-full font-black uppercase text-xs tracking-[0.3em] hover:bg-emerald-400 transition-all flex items-center gap-3 shadow-[0_0_20px_rgba(255,255,255,0.1)] hover:shadow-[0_0_30px_rgba(52,211,153,0.4)] focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none"
              >
                Get on Amazon <ArrowRight size={16} />
              </a>
@@ -140,7 +140,7 @@ export const Footer = ({ onNavigate }: any) => {
                       href="https://medium.com/@shamsullah.mehri/beyond-the-step-counter-the-new-rules-of-personal-health-monitoring-ee7f3d27d5a9"
                       target="_blank" 
                       rel="noopener noreferrer" 
-                      className="flex items-center gap-3 text-slate-400 hover:text-white transition-colors group"
+                      className="flex items-center gap-3 text-slate-400 hover:text-white transition-colors group focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none rounded-lg"
                    >
                       <div className="w-8 h-8 rounded-full bg-slate-900 flex items-center justify-center border border-slate-800 group-hover:border-emerald-500/50 transition-colors shrink-0">
                          <BookOpen size={14} className="text-emerald-500"/>
@@ -151,7 +151,7 @@ export const Footer = ({ onNavigate }: any) => {
                       href="https://www.facebook.com/p/MEHRI-Group-Of-Companies-61578019483578/" 
                       target="_blank" 
                       rel="noopener noreferrer" 
-                      className="flex items-center gap-3 text-slate-400 hover:text-white transition-colors group"
+                      className="flex items-center gap-3 text-slate-400 hover:text-white transition-colors group focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none rounded-lg"
                    >
                       <div className="w-8 h-8 rounded-full bg-slate-900 flex items-center justify-center border border-slate-800 group-hover:border-blue-500/50 transition-colors shrink-0">
                          <FacebookIcon size={14} className="text-blue-500"/>
@@ -162,7 +162,7 @@ export const Footer = ({ onNavigate }: any) => {
                       href="https://www.instagram.com/mehrigroupofcompanies" 
                       target="_blank" 
                       rel="noopener noreferrer" 
-                      className="flex items-center gap-3 text-slate-400 hover:text-white transition-colors group"
+                      className="flex items-center gap-3 text-slate-400 hover:text-white transition-colors group focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none rounded-lg"
                    >
                       <div className="w-8 h-8 rounded-full bg-slate-900 flex items-center justify-center border border-slate-800 group-hover:border-pink-500/50 transition-colors shrink-0">
                          <InstagramIcon size={14} className="text-pink-500"/>
@@ -174,14 +174,14 @@ export const Footer = ({ onNavigate }: any) => {
              <div className="lg:col-span-3 space-y-8">
                 <h4 className="text-sm font-black uppercase tracking-widest text-slate-600">Product</h4>
                 <ul className="space-y-4">
-                   <li><a href="https://www.amazon.com/dp/B0FH4YTQ78?ref=cm_sw_r_cso_wa_apin_dp_9WM50155ESTE8FG1JDZG&ref_=cm_sw_r_cso_wa_apin_dp_9WM50155ESTE8FG1JDZG&social_share=cm_sw_r_cso_wa_apin_dp_9WM50155ESTE8FG1JDZG&titleSource=true&th=1" target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-emerald-400 text-sm font-medium transition-colors">Mehri fitness tracker</a></li>
-                   <li><a href="https://apps.apple.com/us/app/runmefit/id1541334057" target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-emerald-400 text-sm font-medium transition-colors">App Store (iOS)</a></li>
-                   <li><a href="https://play.google.com/store/apps/details?id=com.runmefit.wear" target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-emerald-400 text-sm font-medium transition-colors">Google Play (Android)</a></li>
+                   <li><a href="https://www.amazon.com/dp/B0FH4YTQ78?ref=cm_sw_r_cso_wa_apin_dp_9WM50155ESTE8FG1JDZG&ref_=cm_sw_r_cso_wa_apin_dp_9WM50155ESTE8FG1JDZG&social_share=cm_sw_r_cso_wa_apin_dp_9WM50155ESTE8FG1JDZG&titleSource=true&th=1" target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-emerald-400 text-sm font-medium transition-colors focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none rounded-md">Mehri fitness tracker</a></li>
+                   <li><a href="https://apps.apple.com/us/app/runmefit/id1541334057" target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-emerald-400 text-sm font-medium transition-colors focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none rounded-md">App Store (iOS)</a></li>
+                   <li><a href="https://play.google.com/store/apps/details?id=com.runmefit.wear" target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-emerald-400 text-sm font-medium transition-colors focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none rounded-md">Google Play (Android)</a></li>
                 </ul>
                 <h4 className="text-sm font-black uppercase tracking-widest text-slate-600 pt-4">Support</h4>
                 <ul className="space-y-4">
-                   <li><button onClick={() => setActiveModal('about')} className="text-slate-400 hover:text-emerald-400 text-sm font-medium transition-colors">About Us</button></li>
-                   <li><a href="mailto:jajdn777@gmail.com" className="text-slate-400 hover:text-emerald-400 text-sm font-medium transition-colors">Contact Support</a></li>
+                   <li><button onClick={() => setActiveModal('about')} className="text-slate-400 hover:text-emerald-400 text-sm font-medium transition-colors focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none rounded-md">About Us</button></li>
+                   <li><a href="mailto:jajdn777@gmail.com" className="text-slate-400 hover:text-emerald-400 text-sm font-medium transition-colors focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none rounded-md">Contact Support</a></li>
                 </ul>
              </div>
              <div className="lg:col-span-5 bg-slate-900/30 p-8 rounded-[30px] border border-slate-900/50 backdrop-blur-md">
@@ -189,11 +189,11 @@ export const Footer = ({ onNavigate }: any) => {
                 <p className="text-slate-500 text-xs mb-6">Direct line to the MEHRI development team.</p>
                 <form onSubmit={handleContactSubmit} className="space-y-4">
                    <div className="grid grid-cols-2 gap-4">
-                      <input type="text" name="name" placeholder="Name" className="w-full bg-slate-900 border border-slate-800 text-white text-sm rounded-xl px-4 py-3 outline-none focus:border-emerald-500 transition-colors placeholder:text-slate-600" required />
-                      <input type="email" name="email" placeholder="Email" className="w-full bg-slate-900 border border-slate-800 text-white text-sm rounded-xl px-4 py-3 outline-none focus:border-emerald-500 transition-colors placeholder:text-slate-600" required />
+                      <input type="text" name="name" aria-label="Name" placeholder="Name" className="w-full bg-slate-900 border border-slate-800 text-white text-sm rounded-xl px-4 py-3 outline-none focus:border-emerald-500 focus-visible:ring-2 ring-emerald-500 ring-offset-2 transition-colors placeholder:text-slate-600" required />
+                      <input type="email" name="email" aria-label="Email" placeholder="Email" className="w-full bg-slate-900 border border-slate-800 text-white text-sm rounded-xl px-4 py-3 outline-none focus:border-emerald-500 focus-visible:ring-2 ring-emerald-500 ring-offset-2 transition-colors placeholder:text-slate-600" required />
                    </div>
-                   <textarea name="message" rows={3} placeholder="How can we help?" className="w-full bg-slate-900 border border-slate-800 text-white text-sm rounded-xl px-4 py-3 outline-none focus:border-emerald-500 transition-colors placeholder:text-slate-600 resize-none" required></textarea>
-                   <button type="submit" disabled={formStatus === 'submitting'} className="w-full bg-white text-black font-black uppercase text-[10px] tracking-[0.2em] py-4 rounded-xl hover:bg-emerald-400 transition-colors disabled:opacity-50 flex items-center justify-center gap-2">
+                   <textarea name="message" rows={3} aria-label="How can we help?" placeholder="How can we help?" className="w-full bg-slate-900 border border-slate-800 text-white text-sm rounded-xl px-4 py-3 outline-none focus:border-emerald-500 focus-visible:ring-2 ring-emerald-500 ring-offset-2 transition-colors placeholder:text-slate-600 resize-none" required></textarea>
+                   <button type="submit" disabled={formStatus === 'submitting'} className="w-full bg-white text-black font-black uppercase text-[10px] tracking-[0.2em] py-4 rounded-xl hover:bg-emerald-400 transition-colors disabled:opacity-50 focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none flex items-center justify-center gap-2">
                       {formStatus === 'submitting' ? <Loader2 size={16} className="animate-spin"/> : 'Send Message'}
                    </button>
                 </form>
@@ -204,10 +204,10 @@ export const Footer = ({ onNavigate }: any) => {
                 © 2026 MEHRI Group. Powered by Mehri fitness tracker Technology.
              </p>
              <div className="flex gap-8">
-                <button onClick={() => onNavigate('privacy')} className="text-slate-500 hover:text-white text-[10px] font-black uppercase tracking-widest transition-colors flex items-center gap-2">
+                <button onClick={() => onNavigate('privacy')} className="text-slate-500 hover:text-white text-[10px] font-black uppercase tracking-widest transition-colors flex items-center gap-2 focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none rounded-md">
                    <Shield size={12}/> Privacy Policy
                 </button>
-                <button onClick={() => onNavigate('terms')} className="text-slate-500 hover:text-white text-[10px] font-black uppercase tracking-widest transition-colors flex items-center gap-2">
+                <button onClick={() => onNavigate('terms')} className="text-slate-500 hover:text-white text-[10px] font-black uppercase tracking-widest transition-colors flex items-center gap-2 focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none rounded-md">
                    <FileText size={12}/> Terms of Service
                 </button>
              </div>
