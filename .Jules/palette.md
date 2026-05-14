@@ -9,3 +9,7 @@
 ## 2026-04-28 - [Keyboard-Accessible Hover Menus & Valid Button Content]
 **Learning:** For hover-triggered menus, use `onFocusCapture` and a refined `onBlurCapture` that checks `e.currentTarget.contains(e.relatedTarget)` to ensure the menu stays open when focus moves between the trigger and its children. Additionally, always use `span` instead of `div` inside `button` elements to maintain HTML validity while achieving desired layout.
 **Action:** Implement robust focus management for all hover-based navigation and audit button children for invalid flow content.
+
+## 2026-05-15 - [Footer Accessibility & Keyboard Nav]
+**Learning:** Footers often contain dense navigation and forms where visible labels might be omitted for aesthetics. In such cases, using 'aria-label' on input fields provides essential context for screen readers without compromising design. Additionally, ensuring all footer links and buttons implement 'focus-visible' ring styles is critical for full keyboard navigability of the page.
+**Action:** Always audit footers for interactive elements lacking focus indicators and form fields lacking descriptive aria-labels.
