@@ -9,3 +9,7 @@
 ## 2026-04-28 - [Keyboard-Accessible Hover Menus & Valid Button Content]
 **Learning:** For hover-triggered menus, use `onFocusCapture` and a refined `onBlurCapture` that checks `e.currentTarget.contains(e.relatedTarget)` to ensure the menu stays open when focus moves between the trigger and its children. Additionally, always use `span` instead of `div` inside `button` elements to maintain HTML validity while achieving desired layout.
 **Action:** Implement robust focus management for all hover-based navigation and audit button children for invalid flow content.
+
+## 2026-05-15 - [Accessible Form Linkage in Settings]
+**Learning:** Form fields (inputs and selects) should always be programmatically linked to their labels using `useId` to generate unique, stable IDs for `htmlFor` and `id` attributes. This is critical for screen reader accessibility. Adding `cursor-pointer` to labels improves UX by indicating they are interactive. Decorative elements like custom dropdown arrows should be marked with `aria-hidden="true"`.
+**Action:** Consistently use `useId` for all form-label pairings and audit decorative text for proper ARIA hiding.
