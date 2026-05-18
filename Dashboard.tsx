@@ -347,7 +347,12 @@ export const LogModal = ({ date, routes, userSpecs, userProfile, userPreferences
               </div>
             </div>
 
-            <button onClick={handleFinalSubmit} disabled={!form.name || !form.type || isSaving} className="w-full py-6 bg-slate-900 text-white rounded-[25px] font-black uppercase text-xs md:text-[11px] tracking-[0.4em] shadow-xl transition-all active:scale-95 hover:scale-[1.02] disabled:opacity-50 hover:bg-emerald-500 flex items-center justify-center sticky bottom-0 md:relative">
+            <button
+               type="button"
+               onClick={handleFinalSubmit}
+               disabled={!form.name || !form.type || isSaving}
+               className="w-full py-6 bg-slate-900 text-white rounded-[25px] font-black uppercase text-xs md:text-[11px] tracking-[0.4em] shadow-xl transition-all active:scale-95 hover:scale-[1.02] disabled:opacity-50 hover:bg-emerald-500 flex items-center justify-center sticky bottom-0 md:relative focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none"
+            >
                {isSaving ? "Saving..." : "Log Activity"}
             </button>
           </div>
@@ -691,7 +696,13 @@ export const DashboardView = ({ workouts, setWorkouts, userGoals, setUserGoals, 
               <div className="flex flex-col md:flex-row justify-between items-start md:items-center relative z-10 gap-4">
                 <div className="flex items-center gap-4 w-full md:w-auto justify-between">
                    <p className="text-[10px] font-black uppercase text-slate-400 tracking-[0.2em] self-center">Activity: {selectedDay}</p>
-                   <button onClick={() => setPrecisionMode(!precisionMode)} className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-slate-300 hover:text-[#A7F3D0] transition-colors">
+                   <button
+                      type="button"
+                      role="switch"
+                      aria-checked={precisionMode}
+                      onClick={() => setPrecisionMode(!precisionMode)}
+                      className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-slate-300 hover:text-[#A7F3D0] transition-colors focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none rounded-lg"
+                   >
                       {precisionMode ? <ToggleRight size={24} className="text-[#A7F3D0]"/> : <ToggleLeft size={24}/>}
                       Precision View
                    </button>
@@ -703,9 +714,10 @@ export const DashboardView = ({ workouts, setWorkouts, userGoals, setUserGoals, 
                     <button onClick={() => setActivityFilter('Run')} className={`flex-1 md:flex-none px-6 py-2 rounded-xl text-[10px] font-black uppercase transition-all ${activityFilter === 'Run' ? 'bg-white shadow-sm text-slate-900' : 'text-slate-400'}`}>Run</button>
                   </div>
                   <button 
+                    type="button"
                     onClick={() => isLoggable && setShowLogModal(true)} 
                     disabled={!isLoggable}
-                    className="group bg-slate-900 text-white px-8 py-4 md:py-3 rounded-2xl text-xs md:text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-slate-800 transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 w-full md:w-auto active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="group bg-slate-900 text-white px-8 py-4 md:py-3 rounded-2xl text-xs md:text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-slate-800 transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 w-full md:w-auto active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none"
                   >
                     <Plus size={16} className="transition-transform group-hover:rotate-90" /> {isLoggable ? 'Add Workout' : (isPast ? 'Past (Locked)' : 'Future (Locked)')}
                   </button>
@@ -819,11 +831,25 @@ export const DashboardView = ({ workouts, setWorkouts, userGoals, setUserGoals, 
 
                 <div className="md:hidden mb-4">
                     <div className="flex items-center justify-between mb-4">
-                        <button onClick={() => handleDayChange(-1)} className="p-2 bg-slate-50 rounded-full"><ChevronLeft size={20}/></button>
+                        <button
+                          type="button"
+                          aria-label="Previous day"
+                          onClick={() => handleDayChange(-1)}
+                          className="p-2 bg-slate-50 rounded-full focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none"
+                        >
+                          <ChevronLeft size={20}/>
+                        </button>
                         <span className="text-sm font-black uppercase tracking-widest text-slate-500">
                             {new Date(selectedDay.replace(/-/g, '/')).toLocaleDateString('en-US', { weekday: 'long', day: 'numeric' })}
                         </span>
-                        <button onClick={() => handleDayChange(1)} className="p-2 bg-slate-50 rounded-full"><ChevronRight size={20}/></button>
+                        <button
+                          type="button"
+                          aria-label="Next day"
+                          onClick={() => handleDayChange(1)}
+                          className="p-2 bg-slate-50 rounded-full focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none"
+                        >
+                          <ChevronRight size={20}/>
+                        </button>
                     </div>
                     <div className="bg-slate-900 text-white p-6 rounded-[30px] shadow-xl relative overflow-hidden">
                        <div className="absolute top-0 right-0 p-6 opacity-10"><Activity size={80}/></div>
@@ -923,7 +949,14 @@ export const DashboardView = ({ workouts, setWorkouts, userGoals, setUserGoals, 
                                </div>
                                <Lock size={10} className="text-slate-400" />
                             </div>
-                            <button onClick={(e) => { e.stopPropagation(); setSelectedDay(dStr); setShowLogModal(true); }} className="absolute bottom-2 right-2 md:bottom-4 md:right-4 w-6 h-6 md:w-8 md:h-8 bg-slate-50 rounded-full flex items-center justify-center text-slate-400 opacity-0 hover:bg-[#A7F3D0] hover:text-slate-900 transition-all group-hover:opacity-100 shadow-sm"><Plus size={12} className="md:w-3.5 md:h-3.5"/></button>
+                            <button
+                               type="button"
+                               aria-label="Add workout for this day"
+                               onClick={(e) => { e.stopPropagation(); setSelectedDay(dStr); setShowLogModal(true); }}
+                               className="absolute bottom-2 right-2 md:bottom-4 md:right-4 w-6 h-6 md:w-8 md:h-8 bg-slate-50 rounded-full flex items-center justify-center text-slate-400 opacity-0 hover:bg-[#A7F3D0] hover:text-slate-900 transition-all group-hover:opacity-100 focus-visible:opacity-100 focus-visible:ring-2 ring-emerald-500 outline-none shadow-sm"
+                            >
+                               <Plus size={12} className="md:w-3.5 md:h-3.5"/>
+                            </button>
                           </>
                         )}
                       </div>
