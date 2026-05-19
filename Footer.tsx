@@ -29,7 +29,7 @@ const LegalModal = ({ title, content, onClose }: { title: string, content: strin
           {title === 'Privacy Policy' ? <Lock size={20} className="text-emerald-500"/> : title === 'About Us' ? <Users size={20} className="text-emerald-500"/> : <FileText size={20} className="text-emerald-500"/>}
           {title}
         </h3>
-        <button onClick={onClose} className="p-2 hover:bg-slate-800 rounded-full transition-colors text-slate-400 hover:text-white"><X size={20}/></button>
+        <button onClick={onClose} aria-label="Close document" className="p-2 hover:bg-slate-800 rounded-full transition-colors text-slate-400 hover:text-white"><X size={20}/></button>
       </div>
       <div className="p-8 overflow-y-auto custom-scrollbar bg-slate-900">
         <div className="prose prose-invert prose-sm max-w-none font-sans leading-relaxed text-slate-300 whitespace-pre-line">
@@ -82,7 +82,7 @@ export const Footer = ({ onNavigate }: any) => {
       {formStatus === 'success' && createPortal(
         <div className="fixed inset-0 z-[10000] flex items-center justify-center p-4 bg-slate-900/95 backdrop-blur-2xl animate-fade-in">
             <div className="bg-white rounded-[40px] p-8 md:p-14 max-w-lg text-center relative shadow-2xl w-full border border-slate-100 flex flex-col items-center animate-scale-in">
-                <button onClick={() => setFormStatus('idle')} className="absolute top-6 right-6 p-2 hover:bg-slate-100 rounded-full transition-colors">
+                <button onClick={() => setFormStatus('idle')} aria-label="Close confirmation" className="absolute top-6 right-6 p-2 hover:bg-slate-100 rounded-full transition-colors">
                     <X size={24} className="text-slate-400 hover:text-slate-900"/>
                 </button>
                 <div className="w-24 h-24 bg-[#A7F3D0] rounded-full flex items-center justify-center mb-8 text-slate-900 shadow-[0_0_30px_rgba(167,243,208,0.5)] animate-bounce-slow">
