@@ -9,3 +9,7 @@
 ## 2026-04-28 - [Keyboard-Accessible Hover Menus & Valid Button Content]
 **Learning:** For hover-triggered menus, use `onFocusCapture` and a refined `onBlurCapture` that checks `e.currentTarget.contains(e.relatedTarget)` to ensure the menu stays open when focus moves between the trigger and its children. Additionally, always use `span` instead of `div` inside `button` elements to maintain HTML validity while achieving desired layout.
 **Action:** Implement robust focus management for all hover-based navigation and audit button children for invalid flow content.
+
+## 2024-05-15 - [Keyboard Accessibility for Hover-Dependent Elements]
+**Learning:** Interactive elements that are visually hidden until hover (e.g., delete buttons, calendar cell actions) must be made visible for keyboard users using `focus-visible:opacity-100`. Pairing this with standard focus rings (`focus-visible:ring-2`) ensures that keyboard users can discover and interact with all functionality. Additionally, marking decorative icons within buttons as `aria-hidden="true"` reduces screen reader noise.
+**Action:** Always include `focus-visible:opacity-100` and focus indicators for hover-triggered interactive elements to ensure full keyboard discoverability.
