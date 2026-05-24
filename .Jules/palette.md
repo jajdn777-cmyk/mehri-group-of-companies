@@ -9,3 +9,7 @@
 ## 2026-04-28 - [Keyboard-Accessible Hover Menus & Valid Button Content]
 **Learning:** For hover-triggered menus, use `onFocusCapture` and a refined `onBlurCapture` that checks `e.currentTarget.contains(e.relatedTarget)` to ensure the menu stays open when focus moves between the trigger and its children. Additionally, always use `span` instead of `div` inside `button` elements to maintain HTML validity while achieving desired layout.
 **Action:** Implement robust focus management for all hover-based navigation and audit button children for invalid flow content.
+
+## 2026-05-24 - [Accessible Form Modals & Semantic Triggers]
+**Learning:** For complex form modals, using React's `useId` ensures robust programmatic linkage between labels and inputs, especially when multiple instances might exist. Converting interactive `div` elements to semantic `button` triggers for custom dropdowns, combined with `aria-haspopup` and `aria-expanded`, provides necessary context for screen readers and native keyboard support.
+**Action:** Consistently apply `useId` for all new form components and audit existing "click-div" patterns to convert them to semantic buttons with appropriate ARIA states.
