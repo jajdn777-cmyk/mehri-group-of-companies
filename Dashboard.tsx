@@ -669,14 +669,14 @@ export const DashboardView = ({ workouts, setWorkouts, userGoals, setUserGoals, 
             onClick={handleManualSync}
             disabled={isSyncing}
             aria-label="Sync data"
-            className={`p-2 rounded-full hover:bg-slate-50 transition-all ${isSyncing ? 'animate-spin text-emerald-500' : 'text-slate-300'}`}
+            className={`p-2 rounded-full hover:bg-slate-50 transition-all focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none ${isSyncing ? 'animate-spin text-emerald-500' : 'text-slate-300'}`}
             title="Force Sync Data"
           >
-             <RefreshCw size={16}/>
+             <RefreshCw size={16} aria-hidden="true"/>
           </button>
           <div className="flex gap-4 md:gap-8 border-l border-slate-100 pl-4">
-            <button onClick={() => setTab('monthly')} className={`text-[10px] md:text-[11px] font-black uppercase tracking-widest pb-2 md:pb-4 border-b-4 transition-all ${tab === 'monthly' ? 'border-[#A7F3D0] text-slate-900' : 'border-transparent text-slate-300 hover:text-slate-50'}`}>Monthly View</button>
-            <button onClick={() => setTab('stats')} className={`text-[10px] md:text-[11px] font-black uppercase tracking-widest pb-2 md:pb-4 border-b-4 transition-all ${tab === 'stats' ? 'border-[#A7F3D0] text-slate-900' : 'border-transparent text-slate-300 hover:text-slate-50'}`}>Detailed Stats</button>
+            <button onClick={() => setTab('monthly')} className={`text-[10px] md:text-[11px] font-black uppercase tracking-widest pb-2 md:pb-4 border-b-4 transition-all focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none ${tab === 'monthly' ? 'border-[#A7F3D0] text-slate-900' : 'border-transparent text-slate-300 hover:text-slate-50'}`}>Monthly View</button>
+            <button onClick={() => setTab('stats')} className={`text-[10px] md:text-[11px] font-black uppercase tracking-widest pb-2 md:pb-4 border-b-4 transition-all focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none ${tab === 'stats' ? 'border-[#A7F3D0] text-slate-900' : 'border-transparent text-slate-300 hover:text-slate-50'}`}>Detailed Stats</button>
           </div>
         </div>
       </div>
@@ -691,16 +691,21 @@ export const DashboardView = ({ workouts, setWorkouts, userGoals, setUserGoals, 
               <div className="flex flex-col md:flex-row justify-between items-start md:items-center relative z-10 gap-4">
                 <div className="flex items-center gap-4 w-full md:w-auto justify-between">
                    <p className="text-[10px] font-black uppercase text-slate-400 tracking-[0.2em] self-center">Activity: {selectedDay}</p>
-                   <button onClick={() => setPrecisionMode(!precisionMode)} className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-slate-300 hover:text-[#A7F3D0] transition-colors">
-                      {precisionMode ? <ToggleRight size={24} className="text-[#A7F3D0]"/> : <ToggleLeft size={24}/>}
+                   <button
+                     role="switch"
+                     aria-checked={precisionMode}
+                     onClick={() => setPrecisionMode(!precisionMode)}
+                     className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-slate-300 hover:text-[#A7F3D0] transition-colors focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none rounded-lg"
+                   >
+                      {precisionMode ? <ToggleRight size={24} className="text-[#A7F3D0]" aria-hidden="true"/> : <ToggleLeft size={24} aria-hidden="true"/>}
                       Precision View
                    </button>
                 </div>
                 
                 <div className="flex flex-col md:flex-row gap-4 w-full md:w-auto">
                   <div className="flex bg-slate-50/80 rounded-2xl p-1 backdrop-blur-sm border border-slate-100 w-full md:w-auto">
-                    <button onClick={() => setActivityFilter('All')} className={`flex-1 md:flex-none px-6 py-2 rounded-xl text-[10px] font-black uppercase transition-all ${activityFilter === 'All' ? 'bg-white shadow-sm text-slate-900' : 'text-slate-400'}`}>All</button>
-                    <button onClick={() => setActivityFilter('Run')} className={`flex-1 md:flex-none px-6 py-2 rounded-xl text-[10px] font-black uppercase transition-all ${activityFilter === 'Run' ? 'bg-white shadow-sm text-slate-900' : 'text-slate-400'}`}>Run</button>
+                    <button onClick={() => setActivityFilter('All')} className={`flex-1 md:flex-none px-6 py-2 rounded-xl text-[10px] font-black uppercase transition-all focus-visible:ring-2 ring-emerald-500 outline-none ${activityFilter === 'All' ? 'bg-white shadow-sm text-slate-900' : 'text-slate-400'}`}>All</button>
+                    <button onClick={() => setActivityFilter('Run')} className={`flex-1 md:flex-none px-6 py-2 rounded-xl text-[10px] font-black uppercase transition-all focus-visible:ring-2 ring-emerald-500 outline-none ${activityFilter === 'Run' ? 'bg-white shadow-sm text-slate-900' : 'text-slate-400'}`}>Run</button>
                   </div>
                   <button 
                     onClick={() => isLoggable && setShowLogModal(true)} 
@@ -797,22 +802,22 @@ export const DashboardView = ({ workouts, setWorkouts, userGoals, setUserGoals, 
                 <div className="flex justify-between items-center mb-6 md:mb-10">
                   <div className="flex items-center gap-4">
                      <h3 className="text-lg md:text-2xl font-black uppercase text-slate-900 tracking-[0.02em]">{monthLabel}</h3>
-                     <button onClick={jumpToToday} className="text-[10px] font-black uppercase tracking-widest text-emerald-500 bg-emerald-50 px-3 py-1 rounded-full hover:bg-emerald-100 transition-colors" title="Jump to Current Month">Today</button>
+                     <button onClick={jumpToToday} className="text-[10px] font-black uppercase tracking-widest text-emerald-500 bg-emerald-50 px-3 py-1 rounded-full hover:bg-emerald-100 transition-colors focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none" title="Jump to Current Month">Today</button>
                   </div>
                   <div className="hidden md:flex gap-4">
                     <button
                       onClick={prevMonth}
                       aria-label="Previous month"
-                      className="text-slate-300 hover:text-slate-900 transition-colors p-2 rounded-full hover:bg-slate-50"
+                      className="text-slate-300 hover:text-slate-900 transition-colors p-2 rounded-full hover:bg-slate-50 focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none"
                     >
-                      <ArrowRight className="rotate-180"/>
+                      <ArrowRight className="rotate-180" aria-hidden="true"/>
                     </button>
                     <button
                       onClick={nextMonth}
                       aria-label="Next month"
-                      className="text-slate-300 hover:text-slate-900 transition-colors p-2 rounded-full hover:bg-slate-50"
+                      className="text-slate-300 hover:text-slate-900 transition-colors p-2 rounded-full hover:bg-slate-50 focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none"
                     >
-                      <ArrowRight/>
+                      <ArrowRight aria-hidden="true"/>
                     </button>
                   </div>
                 </div>
@@ -904,9 +909,9 @@ export const DashboardView = ({ workouts, setWorkouts, userGoals, setUserGoals, 
                                    <button
                                       onClick={(e) => { e.stopPropagation(); handleDeleteWorkout(log.id); }}
                                       aria-label="Delete workout"
-                                      className="absolute -right-1 -top-1 bg-red-500 text-white rounded-full p-0.5 opacity-0 group-hover/pill:opacity-100 transition-opacity z-50"
+                                      className="absolute -right-1 -top-1 bg-red-500 text-white rounded-full p-0.5 opacity-0 group-hover/pill:opacity-100 focus-visible:opacity-100 focus-visible:ring-2 ring-emerald-500 outline-none transition-opacity z-50"
                                    >
-                                      <X size={8}/>
+                                      <X size={8} aria-hidden="true"/>
                                    </button>
                                  )}
                                </div>
@@ -923,7 +928,13 @@ export const DashboardView = ({ workouts, setWorkouts, userGoals, setUserGoals, 
                                </div>
                                <Lock size={10} className="text-slate-400" />
                             </div>
-                            <button onClick={(e) => { e.stopPropagation(); setSelectedDay(dStr); setShowLogModal(true); }} className="absolute bottom-2 right-2 md:bottom-4 md:right-4 w-6 h-6 md:w-8 md:h-8 bg-slate-50 rounded-full flex items-center justify-center text-slate-400 opacity-0 hover:bg-[#A7F3D0] hover:text-slate-900 transition-all group-hover:opacity-100 shadow-sm"><Plus size={12} className="md:w-3.5 md:h-3.5"/></button>
+                            <button
+                              onClick={(e) => { e.stopPropagation(); setSelectedDay(dStr); setShowLogModal(true); }}
+                              aria-label="Add workout for this day"
+                              className="absolute bottom-2 right-2 md:bottom-4 md:right-4 w-6 h-6 md:w-8 md:h-8 bg-slate-50 rounded-full flex items-center justify-center text-slate-400 opacity-0 hover:bg-[#A7F3D0] hover:text-slate-900 transition-all group-hover:opacity-100 focus-visible:opacity-100 focus-visible:ring-2 ring-emerald-500 outline-none shadow-sm"
+                            >
+                               <Plus size={12} className="md:w-3.5 md:h-3.5" aria-hidden="true"/>
+                            </button>
                           </>
                         )}
                       </div>

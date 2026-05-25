@@ -9,3 +9,7 @@
 ## 2026-04-28 - [Keyboard-Accessible Hover Menus & Valid Button Content]
 **Learning:** For hover-triggered menus, use `onFocusCapture` and a refined `onBlurCapture` that checks `e.currentTarget.contains(e.relatedTarget)` to ensure the menu stays open when focus moves between the trigger and its children. Additionally, always use `span` instead of `div` inside `button` elements to maintain HTML validity while achieving desired layout.
 **Action:** Implement robust focus management for all hover-based navigation and audit button children for invalid flow content.
+
+## 2026-05-25 - [Dashboard Keyboard Discoverability & State Clarity]
+**Learning:** In a data-heavy dashboard with interactive elements that are visually subtle or hidden until hover (like calendar 'Add' buttons or list 'Delete' buttons), it is critical to pair `focus-visible:ring-2` with `focus-visible:opacity-100` to ensure keyboard users can discover and interact with these controls. Furthermore, stateful controls like toggles must utilize semantic roles (`role="switch"`) and ARIA attributes (`aria-checked`) to provide clear feedback to assistive technologies.
+**Action:** Audit all interactive dashboard elements—including hover-triggered actions and custom toggles—for missing focus indicators and semantic roles, ensuring `focus-visible` states match the component's visual style.
