@@ -1,5 +1,5 @@
 
-import React, { useState, useMemo, useEffect, useRef } from 'react';
+import React, { useState, useMemo, useEffect, useRef, useId } from 'react';
 import { createPortal } from 'react-dom';
 import { Plus, ArrowRight, Zap, Trash2, Search, ChevronDown, MapPin, Calculator as CalcIcon, X, Dumbbell, Target, Footprints, Timer, Flame, Activity, ToggleLeft, ToggleRight, Info, Calendar, RefreshCw, CheckCircle2, Lock, Heart, Moon, Waves, Mountain, Weight, ChevronLeft, ChevronRight, BarChart } from 'lucide-react';
 import { getLocalTodayStr, ROUTE_APPLICABLE_TYPES, ACTIVITY_CATEGORIES } from './constants.ts';
@@ -65,6 +65,18 @@ const EmptyWorkoutState = ({ onAdd }: { onAdd: () => void }) => (
 );
 
 export const LogModal = ({ date, routes, userSpecs, userProfile, userPreferences, onClose, onSubmit }: any) => {
+  const nameId = useId();
+  const typeId = useId();
+  const routeId = useId();
+  const setsId = useId();
+  const repsId = useId();
+  const weightLiftedId = useId();
+  const distanceId = useId();
+  const durationId = useId();
+  const caloriesId = useId();
+  const surfaceId = useId();
+  const loadAddedId = useId();
+
   const [form, setForm] = useState({ 
     name: '', 
     type: '', 
@@ -188,21 +200,22 @@ export const LogModal = ({ date, routes, userSpecs, userProfile, userPreferences
              aria-label="Close modal"
              className="p-2 -mr-2 text-slate-300 hover:text-red-500 transition-colors"
            >
-             <X size={28}/>
+             <X size={28} aria-hidden="true" />
            </button>
         </div>
 
         <div className="p-6 md:p-10 pb-10 grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-10">
           <div className="space-y-6">
             <div className="space-y-2">
-              <label className="text-xs md:text-[10px] font-black uppercase text-slate-400 ml-4">Activity Name</label>
-              <input className="w-full bg-slate-50 p-5 rounded-[25px] font-bold border-none text-base focus:ring-2 ring-emerald-500/20" placeholder={isStrength ? "e.g. Chest Day" : "e.g. Morning Run"} value={form.name} onChange={e=>setForm({...form, name: e.target.value})} autoFocus />
+              <label htmlFor={nameId} className="text-xs md:text-[10px] font-black uppercase text-slate-400 ml-4 cursor-pointer">Activity Name</label>
+              <input id={nameId} className="w-full bg-slate-50 p-5 rounded-[25px] font-bold border-none text-base focus:ring-2 ring-emerald-500/20" placeholder={isStrength ? "e.g. Chest Day" : "e.g. Morning Run"} value={form.name} onChange={e=>setForm({...form, name: e.target.value})} autoFocus />
             </div>
 
             <div className="space-y-2 relative z-[60]">
-              <label className="text-xs md:text-[10px] font-black uppercase text-slate-400 ml-4">Activity Type</label>
+              <label htmlFor={typeId} className="text-xs md:text-[10px] font-black uppercase text-slate-400 ml-4 cursor-pointer">Activity Type</label>
               <div className="relative">
                 <button
+                  id={typeId}
                   type="button"
                   aria-haspopup="listbox"
                   aria-expanded={isDropdownOpen}
@@ -210,13 +223,13 @@ export const LogModal = ({ date, routes, userSpecs, userProfile, userPreferences
                   onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                 >
                   <span className="text-slate-900">{form.type || "Select Category..."}</span>
-                  <ChevronDown size={20} className="text-slate-400" />
+                  <ChevronDown size={20} className="text-slate-400" aria-hidden="true" />
                 </button>
                 {isDropdownOpen && (
                   <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-slate-100 rounded-[25px] shadow-2xl z-[100] overflow-hidden h-64 flex flex-col">
                     <div className="p-3 border-b border-slate-50 bg-white">
                       <div className="flex items-center bg-slate-50 rounded-xl px-3 py-2">
-                        <Search size={14} className="text-slate-400 mr-2"/><input className="bg-transparent w-full font-bold text-base md:text-xs outline-none" placeholder="Search..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} onClick={(e) => e.stopPropagation()}/>
+                        <Search size={14} className="text-slate-400 mr-2" aria-hidden="true" /><input className="bg-transparent w-full font-bold text-base md:text-xs outline-none" placeholder="Search..." aria-label="Search activity types" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} onClick={(e) => e.stopPropagation()}/>
                       </div>
                     </div>
                     <div className="overflow-y-auto custom-scrollbar p-2 flex-1 bg-white">
@@ -238,17 +251,18 @@ export const LogModal = ({ date, routes, userSpecs, userProfile, userPreferences
 
             {isRouteApplicable && (
               <div className="space-y-2 animate-fade-in relative z-[50]">
-                <label className="text-xs md:text-[10px] font-black uppercase text-slate-400 ml-4">Load Route</label>
+                <label htmlFor={routeId} className="text-xs md:text-[10px] font-black uppercase text-slate-400 ml-4 cursor-pointer">Load Route</label>
                 <div className="relative">
                   <button
+                    id={routeId}
                     type="button"
                     aria-haspopup="listbox"
                     aria-expanded={isRouteDropdownOpen}
                     className={`w-full p-5 rounded-[25px] font-bold text-base flex items-center justify-between cursor-pointer border-2 transition-all focus-visible:ring-2 ring-emerald-500 outline-none ${routes.length > 0 ? 'bg-emerald-50 border-emerald-100 hover:border-emerald-200' : 'bg-slate-50 border-transparent opacity-50 cursor-not-allowed'}`}
                     onClick={() => routes.length > 0 && setIsRouteDropdownOpen(!isRouteDropdownOpen)}
                   >
-                    <span className="text-slate-900 flex items-center gap-2 truncate"><MapPin size={16}/> {routes.find((r:any) => getDistVal(r.distance, units, 2) === form.distance)?.name || (routes.length > 0 ? "Pick a Saved Route" : "No Saved Routes")}</span>
-                    <ChevronDown size={20} className="text-slate-400" />
+                    <span className="text-slate-900 flex items-center gap-2 truncate"><MapPin size={16} aria-hidden="true" /> {routes.find((r:any) => getDistVal(r.distance, units, 2) === form.distance)?.name || (routes.length > 0 ? "Pick a Saved Route" : "No Saved Routes")}</span>
+                    <ChevronDown size={20} className="text-slate-400" aria-hidden="true" />
                   </button>
                   {isRouteDropdownOpen && routes.length > 0 && (
                     <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-slate-100 rounded-[25px] shadow-2xl z-[100] overflow-hidden p-2">
@@ -270,34 +284,34 @@ export const LogModal = ({ date, routes, userSpecs, userProfile, userPreferences
               {isStrength ? (
                 <div className="grid grid-cols-3 gap-4 animate-fade-in">
                     <div className="space-y-2">
-                      <label className="text-xs md:text-[10px] font-black uppercase text-slate-400 ml-3">Sets</label>
-                      <input type="number" className="w-full bg-slate-50 p-5 rounded-[25px] font-bold text-base text-center" placeholder="0" value={form.sets} onChange={e=>setForm({...form, sets: e.target.value})} />
+                      <label htmlFor={setsId} className="text-xs md:text-[10px] font-black uppercase text-slate-400 ml-3 cursor-pointer">Sets</label>
+                      <input id={setsId} type="number" className="w-full bg-slate-50 p-5 rounded-[25px] font-bold text-base text-center" placeholder="0" value={form.sets} onChange={e=>setForm({...form, sets: e.target.value})} />
                     </div>
                     <div className="space-y-2">
-                      <label className="text-xs md:text-[10px] font-black uppercase text-slate-400 ml-3">Reps</label>
-                      <input type="number" className="w-full bg-slate-50 p-5 rounded-[25px] font-bold text-base text-center" placeholder="0" value={form.reps} onChange={e=>setForm({...form, reps: e.target.value})} />
+                      <label htmlFor={repsId} className="text-xs md:text-[10px] font-black uppercase text-slate-400 ml-3 cursor-pointer">Reps</label>
+                      <input id={repsId} type="number" className="w-full bg-slate-50 p-5 rounded-[25px] font-bold text-base text-center" placeholder="0" value={form.reps} onChange={e=>setForm({...form, reps: e.target.value})} />
                     </div>
                     <div className="space-y-2">
-                      <label className="text-xs md:text-[10px] font-black uppercase text-slate-400 ml-3">{weightUnit}</label>
-                      <input type="number" className="w-full bg-slate-50 p-5 rounded-[25px] font-bold text-base text-center" placeholder="0" value={form.weightLifted} onChange={e=>setForm({...form, weightLifted: e.target.value})} />
+                      <label htmlFor={weightLiftedId} className="text-xs md:text-[10px] font-black uppercase text-slate-400 ml-3 cursor-pointer">{weightUnit}</label>
+                      <input id={weightLiftedId} type="number" className="w-full bg-slate-50 p-5 rounded-[25px] font-bold text-base text-center" placeholder="0" value={form.weightLifted} onChange={e=>setForm({...form, weightLifted: e.target.value})} />
                     </div>
                 </div>
               ) : (
                 <div className="space-y-2 animate-fade-in">
-                   <label className="text-xs md:text-[10px] font-black uppercase text-slate-400 ml-4">Distance ({distUnit})</label>
-                   <input type="number" step="0.01" className="w-full bg-slate-50 p-5 rounded-[25px] font-bold text-base" placeholder="0.00" value={form.distance} onChange={e=>setForm({...form, distance: e.target.value})} />
+                   <label htmlFor={distanceId} className="text-xs md:text-[10px] font-black uppercase text-slate-400 ml-4 cursor-pointer">Distance ({distUnit})</label>
+                   <input id={distanceId} type="number" step="0.01" className="w-full bg-slate-50 p-5 rounded-[25px] font-bold text-base" placeholder="0.00" value={form.distance} onChange={e=>setForm({...form, distance: e.target.value})} />
                 </div>
               )}
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                   <label className="text-xs md:text-[10px] font-black uppercase text-slate-400 ml-4">Duration</label>
-                   <input className="w-full bg-slate-50 p-5 rounded-[25px] font-bold text-base" placeholder="HH:MM:SS" value={form.duration} onChange={e=>setForm({...form, duration: e.target.value})} />
+                   <label htmlFor={durationId} className="text-xs md:text-[10px] font-black uppercase text-slate-400 ml-4 cursor-pointer">Duration</label>
+                   <input id={durationId} className="w-full bg-slate-50 p-5 rounded-[25px] font-bold text-base" placeholder="HH:MM:SS" value={form.duration} onChange={e=>setForm({...form, duration: e.target.value})} />
                 </div>
                 <div className="space-y-2 relative">
-                  <label className="text-xs md:text-[10px] font-black uppercase text-slate-400 ml-4">Calories</label>
+                  <label htmlFor={caloriesId} className="text-xs md:text-[10px] font-black uppercase text-slate-400 ml-4 cursor-pointer">Calories</label>
                   <div className="relative flex gap-2">
-                    <input type="number" className="w-full bg-slate-50 p-5 rounded-[25px] font-bold text-base" placeholder="0" value={form.calories} onChange={e=>setForm({...form, calories: e.target.value})} />
+                    <input id={caloriesId} type="number" className="w-full bg-slate-50 p-5 rounded-[25px] font-bold text-base" placeholder="0" value={form.calories} onChange={e=>setForm({...form, calories: e.target.value})} />
                     <button
                       type="button"
                       aria-label="Auto-calculate calories"
@@ -305,7 +319,7 @@ export const LogModal = ({ date, routes, userSpecs, userProfile, userPreferences
                       className="bg-slate-900 text-white px-4 rounded-[20px] hover:bg-emerald-500 transition-colors flex items-center justify-center shrink-0 focus-visible:ring-2 ring-emerald-500 outline-none"
                       title="Auto-Calculate"
                     >
-                      <CalcIcon size={18}/>
+                      <CalcIcon size={18} aria-hidden="true" />
                     </button>
                   </div>
                 </div>
@@ -313,14 +327,15 @@ export const LogModal = ({ date, routes, userSpecs, userProfile, userPreferences
 
               <div className="pt-2">
                  <button onClick={() => setShowAdvanced(!showAdvanced)} className="text-xs md:text-[10px] font-black uppercase tracking-widest text-emerald-600 hover:text-emerald-500 flex items-center gap-1 mb-3">
-                    {showAdvanced ? "Hide Precision Factors" : "Show Precision Factors"} <ChevronDown size={12} className={`transition-transform ${showAdvanced ? 'rotate-180' : ''}`}/>
+                    {showAdvanced ? "Hide Precision Factors" : "Show Precision Factors"} <ChevronDown size={12} className={`transition-transform ${showAdvanced ? 'rotate-180' : ''}`} aria-hidden="true" />
                  </button>
                  
                  {showAdvanced && (
                     <div className="grid grid-cols-2 gap-4 p-4 bg-slate-50 rounded-3xl border border-slate-100 animate-fade-in">
                        <div className="space-y-1">
-                          <label className="text-[9px] font-black uppercase text-slate-400 ml-2 tracking-widest flex items-center gap-1"><Mountain size={10}/> Surface</label>
+                          <label htmlFor={surfaceId} className="text-[9px] font-black uppercase text-slate-400 ml-2 tracking-widest flex items-center gap-1 cursor-pointer"><Mountain size={10} aria-hidden="true" /> Surface</label>
                           <select 
+                             id={surfaceId}
                              className="w-full bg-white p-3 rounded-xl font-bold text-xs outline-none text-base md:text-xs"
                              value={form.surface}
                              onChange={e => setForm({...form, surface: e.target.value})}
@@ -333,8 +348,9 @@ export const LogModal = ({ date, routes, userSpecs, userProfile, userPreferences
                           </select>
                        </div>
                        <div className="space-y-1">
-                          <label className="text-[9px] font-black uppercase text-slate-400 ml-2 tracking-widest flex items-center gap-1"><Weight size={10}/> Added Load ({weightUnit})</label>
+                          <label htmlFor={loadAddedId} className="text-[9px] font-black uppercase text-slate-400 ml-2 tracking-widest flex items-center gap-1 cursor-pointer"><Weight size={10} aria-hidden="true" /> Added Load ({weightUnit})</label>
                           <input 
+                             id={loadAddedId}
                              type="number" 
                              className="w-full bg-white p-3 rounded-xl font-bold outline-none text-base md:text-xs"
                              placeholder="Vest/Pack Weight"
@@ -923,7 +939,13 @@ export const DashboardView = ({ workouts, setWorkouts, userGoals, setUserGoals, 
                                </div>
                                <Lock size={10} className="text-slate-400" />
                             </div>
-                            <button onClick={(e) => { e.stopPropagation(); setSelectedDay(dStr); setShowLogModal(true); }} className="absolute bottom-2 right-2 md:bottom-4 md:right-4 w-6 h-6 md:w-8 md:h-8 bg-slate-50 rounded-full flex items-center justify-center text-slate-400 opacity-0 hover:bg-[#A7F3D0] hover:text-slate-900 transition-all group-hover:opacity-100 shadow-sm"><Plus size={12} className="md:w-3.5 md:h-3.5"/></button>
+                            <button
+                              onClick={(e) => { e.stopPropagation(); setSelectedDay(dStr); setShowLogModal(true); }}
+                              aria-label="Add workout for this day"
+                              className="absolute bottom-2 right-2 md:bottom-4 md:right-4 w-6 h-6 md:w-8 md:h-8 bg-slate-50 rounded-full flex items-center justify-center text-slate-400 opacity-0 focus-visible:opacity-100 focus-visible:ring-2 ring-emerald-500 outline-none hover:bg-[#A7F3D0] hover:text-slate-900 transition-all group-hover:opacity-100 shadow-sm"
+                            >
+                              <Plus size={12} className="md:w-3.5 md:h-3.5" aria-hidden="true" />
+                            </button>
                           </>
                         )}
                       </div>
