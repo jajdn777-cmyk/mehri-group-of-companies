@@ -57,7 +57,7 @@ const EmptyWorkoutState = ({ onAdd }: { onAdd: () => void }) => (
      </div>
      <button 
         onClick={onAdd}
-        className="px-10 py-4 bg-slate-900 text-white rounded-full font-black uppercase text-xs tracking-[0.3em] hover:bg-emerald-500 hover:text-slate-900 transition-all shadow-xl hover:-translate-y-1 flex items-center gap-3"
+        className="px-10 py-4 bg-slate-900 text-white rounded-full font-black uppercase text-xs tracking-[0.3em] hover:bg-emerald-500 hover:text-slate-900 transition-all shadow-xl hover:-translate-y-1 flex items-center gap-3 focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none"
      >
         <Plus size={16}/> Initialize Protocol
      </button>
@@ -669,14 +669,14 @@ export const DashboardView = ({ workouts, setWorkouts, userGoals, setUserGoals, 
             onClick={handleManualSync}
             disabled={isSyncing}
             aria-label="Sync data"
-            className={`p-2 rounded-full hover:bg-slate-50 transition-all ${isSyncing ? 'animate-spin text-emerald-500' : 'text-slate-300'}`}
+            className={`p-2 rounded-full hover:bg-slate-50 transition-all focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none ${isSyncing ? 'animate-spin text-emerald-500' : 'text-slate-300'}`}
             title="Force Sync Data"
           >
              <RefreshCw size={16}/>
           </button>
           <div className="flex gap-4 md:gap-8 border-l border-slate-100 pl-4">
-            <button onClick={() => setTab('monthly')} className={`text-[10px] md:text-[11px] font-black uppercase tracking-widest pb-2 md:pb-4 border-b-4 transition-all ${tab === 'monthly' ? 'border-[#A7F3D0] text-slate-900' : 'border-transparent text-slate-300 hover:text-slate-50'}`}>Monthly View</button>
-            <button onClick={() => setTab('stats')} className={`text-[10px] md:text-[11px] font-black uppercase tracking-widest pb-2 md:pb-4 border-b-4 transition-all ${tab === 'stats' ? 'border-[#A7F3D0] text-slate-900' : 'border-transparent text-slate-300 hover:text-slate-50'}`}>Detailed Stats</button>
+            <button onClick={() => setTab('monthly')} className={`text-[10px] md:text-[11px] font-black uppercase tracking-widest pb-2 md:pb-4 border-b-4 transition-all focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none ${tab === 'monthly' ? 'border-[#A7F3D0] text-slate-900' : 'border-transparent text-slate-300 hover:text-slate-50'}`}>Monthly View</button>
+            <button onClick={() => setTab('stats')} className={`text-[10px] md:text-[11px] font-black uppercase tracking-widest pb-2 md:pb-4 border-b-4 transition-all focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none ${tab === 'stats' ? 'border-[#A7F3D0] text-slate-900' : 'border-transparent text-slate-300 hover:text-slate-50'}`}>Detailed Stats</button>
           </div>
         </div>
       </div>
@@ -691,8 +691,8 @@ export const DashboardView = ({ workouts, setWorkouts, userGoals, setUserGoals, 
               <div className="flex flex-col md:flex-row justify-between items-start md:items-center relative z-10 gap-4">
                 <div className="flex items-center gap-4 w-full md:w-auto justify-between">
                    <p className="text-[10px] font-black uppercase text-slate-400 tracking-[0.2em] self-center">Activity: {selectedDay}</p>
-                   <button onClick={() => setPrecisionMode(!precisionMode)} className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-slate-300 hover:text-[#A7F3D0] transition-colors">
-                      {precisionMode ? <ToggleRight size={24} className="text-[#A7F3D0]"/> : <ToggleLeft size={24}/>}
+                   <button onClick={() => setPrecisionMode(!precisionMode)} className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-slate-300 hover:text-[#A7F3D0] transition-colors focus-visible:ring-2 ring-emerald-500 rounded-lg outline-none ring-offset-2">
+                      {precisionMode ? <ToggleRight size={24} className="text-[#A7F3D0]" aria-hidden="true"/> : <ToggleLeft size={24} aria-hidden="true"/>}
                       Precision View
                    </button>
                 </div>
@@ -797,7 +797,7 @@ export const DashboardView = ({ workouts, setWorkouts, userGoals, setUserGoals, 
                 <div className="flex justify-between items-center mb-6 md:mb-10">
                   <div className="flex items-center gap-4">
                      <h3 className="text-lg md:text-2xl font-black uppercase text-slate-900 tracking-[0.02em]">{monthLabel}</h3>
-                     <button onClick={jumpToToday} className="text-[10px] font-black uppercase tracking-widest text-emerald-500 bg-emerald-50 px-3 py-1 rounded-full hover:bg-emerald-100 transition-colors" title="Jump to Current Month">Today</button>
+                     <button onClick={jumpToToday} className="text-[10px] font-black uppercase tracking-widest text-emerald-500 bg-emerald-50 px-3 py-1 rounded-full hover:bg-emerald-100 transition-colors focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none" title="Jump to Current Month">Today</button>
                   </div>
                   <div className="hidden md:flex gap-4">
                     <button
@@ -819,11 +819,23 @@ export const DashboardView = ({ workouts, setWorkouts, userGoals, setUserGoals, 
 
                 <div className="md:hidden mb-4">
                     <div className="flex items-center justify-between mb-4">
-                        <button onClick={() => handleDayChange(-1)} className="p-2 bg-slate-50 rounded-full"><ChevronLeft size={20}/></button>
+                        <button
+                          onClick={() => handleDayChange(-1)}
+                          aria-label="Previous day"
+                          className="p-2 bg-slate-50 rounded-full focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none"
+                        >
+                          <ChevronLeft size={20} aria-hidden="true"/>
+                        </button>
                         <span className="text-sm font-black uppercase tracking-widest text-slate-500">
                             {new Date(selectedDay.replace(/-/g, '/')).toLocaleDateString('en-US', { weekday: 'long', day: 'numeric' })}
                         </span>
-                        <button onClick={() => handleDayChange(1)} className="p-2 bg-slate-50 rounded-full"><ChevronRight size={20}/></button>
+                        <button
+                          onClick={() => handleDayChange(1)}
+                          aria-label="Next day"
+                          className="p-2 bg-slate-50 rounded-full focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none"
+                        >
+                          <ChevronRight size={20} aria-hidden="true"/>
+                        </button>
                     </div>
                     <div className="bg-slate-900 text-white p-6 rounded-[30px] shadow-xl relative overflow-hidden">
                        <div className="absolute top-0 right-0 p-6 opacity-10"><Activity size={80}/></div>
@@ -869,13 +881,25 @@ export const DashboardView = ({ workouts, setWorkouts, userGoals, setUserGoals, 
                     const isStreak = dayLogs.length > 0;
 
                     return (
-                      <div key={i} onClick={() => setSelectedDay(dStr)} className={`group min-h-[80px] md:min-h-[140px] rounded-[16px] md:rounded-[24px] p-2 md:p-4 transition-all duration-300 relative flex flex-col gap-1 md:gap-2 border-2 ${
+                      <div
+                        key={i}
+                        onClick={() => setSelectedDay(dStr)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            setSelectedDay(dStr);
+                          }
+                        }}
+                        role="button"
+                        tabIndex={0}
+                        aria-label={`${d.toLocaleDateString('default', { month: 'long', day: 'numeric', year: 'numeric' })}${isToday ? ' (Today)' : ''}${dayLogs.length > 0 ? `. ${dayLogs.length} ${dayLogs.length === 1 ? 'activity' : 'activities'} logged` : '. No activity'}`}
+                        className={`group min-h-[80px] md:min-h-[140px] rounded-[16px] md:rounded-[24px] p-2 md:p-4 transition-all duration-300 relative flex flex-col gap-1 md:gap-2 border-2 focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none ${
                         locked 
                           ? 'bg-slate-50/40 border-transparent opacity-40 cursor-not-allowed grayscale' 
                           : future 
                             ? 'bg-white border-dashed border-slate-200 opacity-60'
                             : active 
-                              ? 'bg-white border-transparent ring-2 md:ring-4 ring-[#A7F3D0]/50 shadow-2xl scale-[1.03] z-20' 
+                              ? 'bg-white border-transparent ring-2 md:ring-4 ring-[#A7F3D0]/50 shadow-2xl scale-[1.03] z-20 focus-visible:ring-offset-4'
                               : 'bg-white border-slate-50 hover:border-slate-100 hover:scale-[1.02] hover:shadow-xl cursor-pointer z-0'
                       }`}>
                         {!locked && !future && isStreak && (
@@ -923,7 +947,13 @@ export const DashboardView = ({ workouts, setWorkouts, userGoals, setUserGoals, 
                                </div>
                                <Lock size={10} className="text-slate-400" />
                             </div>
-                            <button onClick={(e) => { e.stopPropagation(); setSelectedDay(dStr); setShowLogModal(true); }} className="absolute bottom-2 right-2 md:bottom-4 md:right-4 w-6 h-6 md:w-8 md:h-8 bg-slate-50 rounded-full flex items-center justify-center text-slate-400 opacity-0 hover:bg-[#A7F3D0] hover:text-slate-900 transition-all group-hover:opacity-100 shadow-sm"><Plus size={12} className="md:w-3.5 md:h-3.5"/></button>
+                            <button
+                              onClick={(e) => { e.stopPropagation(); setSelectedDay(dStr); setShowLogModal(true); }}
+                              aria-label="Add workout for this day"
+                              className="absolute bottom-2 right-2 md:bottom-4 md:right-4 w-6 h-6 md:w-8 md:h-8 bg-slate-50 rounded-full flex items-center justify-center text-slate-400 opacity-0 hover:bg-[#A7F3D0] hover:text-slate-900 transition-all group-hover:opacity-100 focus-visible:opacity-100 focus-visible:ring-2 ring-emerald-500 outline-none shadow-sm"
+                            >
+                              <Plus size={12} className="md:w-3.5 md:h-3.5" aria-hidden="true"/>
+                            </button>
                           </>
                         )}
                       </div>
