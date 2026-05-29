@@ -9,3 +9,7 @@
 ## 2026-04-28 - [Keyboard-Accessible Hover Menus & Valid Button Content]
 **Learning:** For hover-triggered menus, use `onFocusCapture` and a refined `onBlurCapture` that checks `e.currentTarget.contains(e.relatedTarget)` to ensure the menu stays open when focus moves between the trigger and its children. Additionally, always use `span` instead of `div` inside `button` elements to maintain HTML validity while achieving desired layout.
 **Action:** Implement robust focus management for all hover-based navigation and audit button children for invalid flow content.
+
+## 2026-05-22 - [Keyboard-Accessible Calendar & Focus States]
+**Learning:** For grid-based components like calendars where cells are interactive but implemented as `div` elements for layout control, adding `role="button"`, `tabIndex`, and an `onKeyDown` handler (supporting Enter/Space) is essential for keyboard accessibility. Pairing this with descriptive `aria-label` attributes and the project's standard `focus-visible` ring styles ensures a cohesive and accessible user experience.
+**Action:** When implementing or auditing grid-based interactive elements, ensure they follow the accessible "click-div" pattern: role, tabIndex, keydown support, and focus rings.

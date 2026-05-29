@@ -797,20 +797,27 @@ export const DashboardView = ({ workouts, setWorkouts, userGoals, setUserGoals, 
                 <div className="flex justify-between items-center mb-6 md:mb-10">
                   <div className="flex items-center gap-4">
                      <h3 className="text-lg md:text-2xl font-black uppercase text-slate-900 tracking-[0.02em]">{monthLabel}</h3>
-                     <button onClick={jumpToToday} className="text-[10px] font-black uppercase tracking-widest text-emerald-500 bg-emerald-50 px-3 py-1 rounded-full hover:bg-emerald-100 transition-colors" title="Jump to Current Month">Today</button>
+                     <button
+                        onClick={jumpToToday}
+                        aria-label="Jump to today"
+                        className="text-[10px] font-black uppercase tracking-widest text-emerald-500 bg-emerald-50 px-3 py-1 rounded-full hover:bg-emerald-100 transition-colors focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none"
+                        title="Jump to Current Month"
+                      >
+                        Today
+                      </button>
                   </div>
                   <div className="hidden md:flex gap-4">
                     <button
                       onClick={prevMonth}
                       aria-label="Previous month"
-                      className="text-slate-300 hover:text-slate-900 transition-colors p-2 rounded-full hover:bg-slate-50"
+                      className="text-slate-300 hover:text-slate-900 transition-colors p-2 rounded-full hover:bg-slate-50 focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none"
                     >
                       <ArrowRight className="rotate-180"/>
                     </button>
                     <button
                       onClick={nextMonth}
                       aria-label="Next month"
-                      className="text-slate-300 hover:text-slate-900 transition-colors p-2 rounded-full hover:bg-slate-50"
+                      className="text-slate-300 hover:text-slate-900 transition-colors p-2 rounded-full hover:bg-slate-50 focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none"
                     >
                       <ArrowRight/>
                     </button>
@@ -869,7 +876,19 @@ export const DashboardView = ({ workouts, setWorkouts, userGoals, setUserGoals, 
                     const isStreak = dayLogs.length > 0;
 
                     return (
-                      <div key={i} onClick={() => setSelectedDay(dStr)} className={`group min-h-[80px] md:min-h-[140px] rounded-[16px] md:rounded-[24px] p-2 md:p-4 transition-all duration-300 relative flex flex-col gap-1 md:gap-2 border-2 ${
+                      <div
+                        key={i}
+                        role="button"
+                        tabIndex={locked ? -1 : 0}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            setSelectedDay(dStr);
+                          }
+                        }}
+                        onClick={() => setSelectedDay(dStr)}
+                        aria-label={d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+                        className={`group min-h-[80px] md:min-h-[140px] rounded-[16px] md:rounded-[24px] p-2 md:p-4 transition-all duration-300 relative flex flex-col gap-1 md:gap-2 border-2 focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none ${
                         locked 
                           ? 'bg-slate-50/40 border-transparent opacity-40 cursor-not-allowed grayscale' 
                           : future 
