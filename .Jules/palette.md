@@ -9,3 +9,7 @@
 ## 2026-04-28 - [Keyboard-Accessible Hover Menus & Valid Button Content]
 **Learning:** For hover-triggered menus, use `onFocusCapture` and a refined `onBlurCapture` that checks `e.currentTarget.contains(e.relatedTarget)` to ensure the menu stays open when focus moves between the trigger and its children. Additionally, always use `span` instead of `div` inside `button` elements to maintain HTML validity while achieving desired layout.
 **Action:** Implement robust focus management for all hover-based navigation and audit button children for invalid flow content.
+
+## 2026-05-30 - [Accessible Goal Creation & List Management]
+**Learning:** Goal management interfaces often involve complex interactions like custom dropdowns and icon-only actions. Using `useId` to link labels with inputs, and converting `div` triggers to semantic `button` elements with `aria-haspopup` and `aria-expanded`, significantly improves the experience for keyboard and screen reader users.
+**Action:** Always audit form modals for missing semantic triggers and ensure all icon-only buttons (like delete or close) have descriptive `aria-label` attributes.
