@@ -1,10 +1,15 @@
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useId } from 'react';
 import { Plus, Target, X, ChevronDown, Search, ArrowRight, Trophy, Trash2, CheckCircle2, Loader2, Flag } from 'lucide-react';
 import { ACTIVITY_CATEGORIES, getLocalTodayStr } from './constants.ts';
 import { getDistUnit, parseDurationToHours, getDistVal, api } from './utils.ts';
 
 const CreateGoalModal = ({ onClose, onSubmit, userPreferences }: any) => {
+  const activityId = useId();
+  const goalTypeId = useId();
+  const targetId = useId();
+  const startDateId = useId();
+
   const [activity, setActivity] = useState('');
   const [goalType, setGoalType] = useState<'count' | 'distance' | 'duration'>('count');
   const [target, setTarget] = useState('');
@@ -74,18 +79,32 @@ const CreateGoalModal = ({ onClose, onSubmit, userPreferences }: any) => {
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
           <div className="space-y-3 relative md:z-50">
-            <label className="text-[10px] font-black uppercase text-slate-400 ml-4 tracking-widest">Activity</label>
+            <label htmlFor={activityId} className="text-[10px] font-black uppercase text-slate-400 ml-4 tracking-widest cursor-pointer">Activity</label>
             <div className="relative">
-              <div className="w-full bg-slate-50 p-5 rounded-[25px] font-bold text-base flex items-center justify-between cursor-pointer hover:bg-slate-100 transition-colors" onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
+              <button
+                id={activityId}
+                type="button"
+                aria-haspopup="listbox"
+                aria-expanded={isDropdownOpen}
+                className="w-full bg-slate-50 p-5 rounded-[25px] font-bold text-base flex items-center justify-between cursor-pointer hover:bg-slate-100 transition-colors focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none"
+                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+              >
                 <span className={activity ? "text-slate-900" : "text-slate-400"}>{activity || "Select Activity..."}</span>
-                <ChevronDown size={20} className="text-slate-400" />
-              </div>
+                <ChevronDown size={20} className="text-slate-400" aria-hidden="true" />
+              </button>
               {isDropdownOpen && (
                 <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-slate-100 rounded-[25px] shadow-2xl overflow-hidden h-64 flex flex-col z-[100]">
                   <div className="p-3 border-b border-slate-50 bg-white">
                     <div className="flex items-center bg-slate-50 rounded-xl px-3 py-2">
-                      <Search size={14} className="text-slate-400 mr-2"/>
-                      <input className="bg-transparent w-full font-bold text-xs outline-none" placeholder="Search..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} autoFocus />
+                      <Search size={14} className="text-slate-400 mr-2" aria-hidden="true" />
+                      <input
+                        className="bg-transparent w-full font-bold text-xs outline-none"
+                        placeholder="Search..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        autoFocus
+                        aria-label="Search activity types"
+                      />
                     </div>
                   </div>
                   <div className="overflow-y-auto custom-scrollbar p-2 flex-1">
@@ -104,32 +123,37 @@ const CreateGoalModal = ({ onClose, onSubmit, userPreferences }: any) => {
             </div>
           </div>
           <div className="space-y-3 z-40">
-            <label className="text-[10px] font-black uppercase text-slate-400 ml-4 tracking-widest">Goal Type</label>
-            <div className="flex gap-2">
+            <label id={goalTypeId} className="text-[10px] font-black uppercase text-slate-400 ml-4 tracking-widest">Goal Type</label>
+            <div className="flex gap-2" role="group" aria-labelledby={goalTypeId}>
                {['count', 'distance', 'duration'].map(t => (
-                 <button key={t} onClick={() => setGoalType(t as any)} className={`flex-1 py-5 rounded-[25px] font-black uppercase text-[10px] tracking-widest transition-all ${goalType === t ? 'bg-slate-900 text-white shadow-lg' : 'bg-slate-50 text-slate-400 hover:bg-slate-100'}`}>
+                 <button
+                  key={t}
+                  type="button"
+                  onClick={() => setGoalType(t as any)}
+                  className={`flex-1 py-5 rounded-[25px] font-black uppercase text-[10px] tracking-widest transition-all focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none ${goalType === t ? 'bg-slate-900 text-white shadow-lg' : 'bg-slate-50 text-slate-400 hover:bg-slate-100'}`}
+                 >
                    {t === 'count' ? '# Workouts' : t}
                  </button>
                ))}
             </div>
           </div>
           <div className="space-y-3 z-30">
-            <label className="text-[10px] font-black uppercase text-slate-400 ml-4 tracking-widest">{goalType === 'distance' ? `Target Distance (${distUnit})` : goalType === 'duration' ? 'Target Duration' : 'Number of Workouts'}</label>
+            <label htmlFor={targetId} className="text-[10px] font-black uppercase text-slate-400 ml-4 tracking-widest cursor-pointer">{goalType === 'distance' ? `Target Distance (${distUnit})` : goalType === 'duration' ? 'Target Duration' : 'Number of Workouts'}</label>
             {goalType === 'duration' ? (
               <div className="flex gap-2">
-                 <input className="w-full bg-slate-50 p-5 rounded-[25px] font-bold text-center" placeholder="HH" value={durationDetails.h} onChange={e => setDurationDetails({...durationDetails, h: e.target.value})} />
-                 <span className="self-center font-black text-slate-300">:</span>
-                 <input className="w-full bg-slate-50 p-5 rounded-[25px] font-bold text-center" placeholder="MM" value={durationDetails.m} onChange={e => setDurationDetails({...durationDetails, m: e.target.value})} />
-                 <span className="self-center font-black text-slate-300">:</span>
-                 <input className="w-full bg-slate-50 p-5 rounded-[25px] font-bold text-center" placeholder="SS" value={durationDetails.s} onChange={e => setDurationDetails({...durationDetails, s: e.target.value})} />
+                 <input id={targetId} className="w-full bg-slate-50 p-5 rounded-[25px] font-bold text-center focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none" placeholder="HH" value={durationDetails.h} onChange={e => setDurationDetails({...durationDetails, h: e.target.value})} />
+                 <span className="self-center font-black text-slate-300" aria-hidden="true">:</span>
+                 <input aria-label="Minutes" className="w-full bg-slate-50 p-5 rounded-[25px] font-bold text-center focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none" placeholder="MM" value={durationDetails.m} onChange={e => setDurationDetails({...durationDetails, m: e.target.value})} />
+                 <span className="self-center font-black text-slate-300" aria-hidden="true">:</span>
+                 <input aria-label="Seconds" className="w-full bg-slate-50 p-5 rounded-[25px] font-bold text-center focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none" placeholder="SS" value={durationDetails.s} onChange={e => setDurationDetails({...durationDetails, s: e.target.value})} />
               </div>
             ) : (
-              <input type="number" className="w-full bg-slate-50 p-5 rounded-[25px] font-bold text-lg" placeholder={goalType === 'distance' ? "e.g. 50" : "e.g. 10"} value={target} onChange={e => setTarget(e.target.value)} />
+              <input id={targetId} type="number" className="w-full bg-slate-50 p-5 rounded-[25px] font-bold text-lg focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none" placeholder={goalType === 'distance' ? "e.g. 50" : "e.g. 10"} value={target} onChange={e => setTarget(e.target.value)} />
             )}
           </div>
           <div className="space-y-3 z-30">
-            <label className="text-[10px] font-black uppercase text-slate-400 ml-4 tracking-widest">Start Date</label>
-            <input type="date" className="w-full bg-slate-50 p-5 rounded-[25px] font-bold text-slate-900" value={startDate} onChange={e => setStartDate(e.target.value)} />
+            <label htmlFor={startDateId} className="text-[10px] font-black uppercase text-slate-400 ml-4 tracking-widest cursor-pointer">Start Date</label>
+            <input id={startDateId} type="date" className="w-full bg-slate-50 p-5 rounded-[25px] font-bold text-slate-900 focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none" value={startDate} onChange={e => setStartDate(e.target.value)} />
           </div>
         </div>
 
