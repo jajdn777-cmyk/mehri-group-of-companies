@@ -9,3 +9,7 @@
 ## 2026-04-28 - [Keyboard-Accessible Hover Menus & Valid Button Content]
 **Learning:** For hover-triggered menus, use `onFocusCapture` and a refined `onBlurCapture` that checks `e.currentTarget.contains(e.relatedTarget)` to ensure the menu stays open when focus moves between the trigger and its children. Additionally, always use `span` instead of `div` inside `button` elements to maintain HTML validity while achieving desired layout.
 **Action:** Implement robust focus management for all hover-based navigation and audit button children for invalid flow content.
+
+## 2026-06-02 - [Form Accessibility & Keyboard Navigation]
+**Learning:** Using React's `useId` hook ensures reliable, unique associations between form labels and controls, especially in reusable components like `InputGroup`. Pairing semantic `<label>` elements with `cursor-pointer` improves hit-area affordance, while standardizing on `focus-visible:ring-2 ring-emerald-500 ring-offset-2` provides a consistent and accessible experience for keyboard users across the application.
+**Action:** Always utilize `useId` for form fields and apply the design system's focus-visible rings to all interactive elements to maintain high accessibility standards.
