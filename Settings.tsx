@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useId } from 'react';
 import { User, CreditCard, Monitor, ArrowRight, Save, Clock, MapPin, Ruler, Weight, UserCircle, Calendar, ShieldAlert } from 'lucide-react';
 import { getDistVal, getDistUnit, convertDist, api } from './utils.ts';
 import { AdminView } from './Admin.tsx';
@@ -27,6 +27,10 @@ export const SettingsView = ({
   const [heightFt, setHeightFt] = useState('');
   const [heightIn, setHeightIn] = useState('');
   
+  const genderId = useId();
+  const restDayId = useId();
+  const timezoneId = useId();
+
   const units = userPreferences.units;
 
   useEffect(() => {
@@ -105,7 +109,7 @@ export const SettingsView = ({
               <button
                 key={item.id}
                 onClick={() => setActiveTab(item.id as any)}
-                className={`flex items-center gap-4 px-6 py-4 rounded-2xl transition-all duration-300 group whitespace-nowrap shrink-0 lg:shrink ${activeTab === item.id ? 'bg-slate-900 text-white shadow-lg' : 'bg-transparent text-slate-500 hover:bg-slate-50'}`}
+                className={`flex items-center gap-4 px-6 py-4 rounded-2xl transition-all duration-300 group whitespace-nowrap shrink-0 lg:shrink focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none ${activeTab === item.id ? 'bg-slate-900 text-white shadow-lg' : 'bg-transparent text-slate-500 hover:bg-slate-50'}`}
               >
                 <item.icon size={18} className={activeTab === item.id ? 'text-[#A7F3D0]' : 'text-slate-400 group-hover:text-slate-900'} />
                 <span className="text-xs font-black uppercase tracking-widest">{item.label}</span>
@@ -117,7 +121,7 @@ export const SettingsView = ({
           {userProfile.email === ADMIN_EMAIL && (
              <button 
                onClick={() => setShowAdmin(true)} 
-               className="w-full mt-4 md:mt-8 bg-slate-900 text-[#A7F3D0] border border-[#A7F3D0]/20 px-6 py-4 rounded-2xl flex items-center justify-center gap-3 hover:bg-slate-800 transition-all shadow-[0_0_15px_rgba(167,243,208,0.1)] group"
+               className="w-full mt-4 md:mt-8 bg-slate-900 text-[#A7F3D0] border border-[#A7F3D0]/20 px-6 py-4 rounded-2xl flex items-center justify-center gap-3 hover:bg-slate-800 transition-all shadow-[0_0_15px_rgba(167,243,208,0.1)] group focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none"
              >
                 <ShieldAlert size={18} className="animate-pulse" />
                 <span className="text-xs font-black uppercase tracking-widest group-hover:text-white transition-colors">Admin Command</span>
@@ -179,16 +183,16 @@ export const SettingsView = ({
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
                      <div className="space-y-2">
-                        <label className="text-[10px] font-black uppercase text-slate-400 ml-4 tracking-widest">Gender *</label>
+                        <label htmlFor={genderId} className="text-[10px] font-black uppercase text-slate-400 ml-4 tracking-widest cursor-pointer">Gender *</label>
                         <div className="relative">
-                           <select value={form.gender} onChange={e => setForm({...form, gender: e.target.value})} className="w-full bg-slate-50 border-none text-slate-900 text-sm font-bold rounded-2xl px-5 py-4 focus:ring-2 focus:ring-[#A7F3D0] outline-none appearance-none font-sans">
+                           <select id={genderId} value={form.gender} onChange={e => setForm({...form, gender: e.target.value})} className="w-full bg-slate-50 border-none text-slate-900 text-sm font-bold rounded-2xl px-5 py-4 focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none appearance-none font-sans">
                               <option value="">Select...</option>
                               <option value="Female">Female</option>
                               <option value="Male">Male</option>
                               <option value="Non-binary">Non-binary</option>
                               <option value="Prefer not to say">Prefer not to say</option>
                            </select>
-                           <div className="absolute right-4 top-4 pointer-events-none text-slate-400">▼</div>
+                           <div className="absolute right-4 top-4 pointer-events-none text-slate-400" aria-hidden="true">▼</div>
                         </div>
                      </div>
                   </div>
@@ -203,12 +207,12 @@ export const SettingsView = ({
                      <div className="flex items-center gap-4">
                         <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center text-slate-400 shadow-sm"><Calendar size={18}/></div>
                         <div>
-                           <p className="text-sm font-bold text-slate-900 uppercase tracking-wide">Weekly Rest Day</p>
+                           <label htmlFor={restDayId} className="text-sm font-bold text-slate-900 uppercase tracking-wide cursor-pointer block">Weekly Rest Day</label>
                            <p className="text-xs text-slate-400 mt-1">Protects your streak on this day</p>
                         </div>
                      </div>
                      <div className="relative w-full md:w-auto md:min-w-[200px]">
-                        <select value={userPreferences.restDay || ""} onChange={e => setUserPreferences({...userPreferences, restDay: e.target.value})} className="w-full bg-white border-none text-slate-900 text-xs font-bold rounded-xl px-4 py-3 focus:ring-2 focus:ring-[#A7F3D0] outline-none appearance-none font-sans">
+                        <select id={restDayId} value={userPreferences.restDay || ""} onChange={e => setUserPreferences({...userPreferences, restDay: e.target.value})} className="w-full bg-white border-none text-slate-900 text-xs font-bold rounded-xl px-4 py-3 focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none appearance-none font-sans">
                            <option value="">None</option>
                            <option value="Monday">Monday</option>
                            <option value="Tuesday">Tuesday</option>
@@ -218,13 +222,13 @@ export const SettingsView = ({
                            <option value="Saturday">Saturday</option>
                            <option value="Sunday">Sunday</option>
                         </select>
-                        <div className="absolute right-3 top-3.5 pointer-events-none text-slate-400 text-[8px]">▼</div>
+                        <div className="absolute right-3 top-3.5 pointer-events-none text-slate-400 text-[8px]" aria-hidden="true">▼</div>
                      </div>
                   </div>
                </div>
 
                <div className="pt-4 md:pt-8">
-                  <button onClick={handleSave} className="w-full md:w-auto bg-slate-900 text-white px-10 py-4 rounded-full font-black uppercase text-[10px] tracking-[0.3em] hover:bg-emerald-500 transition-colors shadow-lg flex items-center justify-center gap-3"><Save size={16}/> Save Changes</button>
+                  <button onClick={handleSave} className="w-full md:w-auto bg-slate-900 text-white px-10 py-4 rounded-full font-black uppercase text-[10px] tracking-[0.3em] hover:bg-emerald-500 transition-colors shadow-lg flex items-center justify-center gap-3 focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none"><Save size={16}/> Save Changes</button>
                </div>
             </div>
           )}
@@ -236,7 +240,7 @@ export const SettingsView = ({
                <div className="bg-slate-50 p-8 rounded-[30px] border border-slate-100 w-full max-w-xl">
                   <div className="flex justify-between items-center mb-6"><span className="text-xs font-black uppercase tracking-widest text-slate-400">Current Plan</span><span className="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest">Free Tier</span></div>
                   <div className="h-px bg-slate-200 w-full mb-6" />
-                  <button onClick={onShop} className="w-full py-5 bg-[#A7F3D0] text-slate-900 rounded-2xl font-black uppercase text-xs tracking-[0.3em] hover:brightness-105 transition-all shadow-lg flex items-center justify-center gap-3">Subscribe & Get Tracker <ArrowRight size={16}/></button>
+                  <button onClick={onShop} className="w-full py-5 bg-[#A7F3D0] text-slate-900 rounded-2xl font-black uppercase text-xs tracking-[0.3em] hover:brightness-105 transition-all shadow-lg flex items-center justify-center gap-3 focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none">Subscribe & Get Tracker <ArrowRight size={16}/></button>
                </div>
             </div>
           )}
@@ -247,17 +251,17 @@ export const SettingsView = ({
                   <div className="flex flex-col md:flex-row items-start md:items-center justify-between p-6 bg-slate-50 rounded-3xl border border-slate-100 gap-4">
                      <div className="flex items-center gap-4"><div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center text-slate-400 shadow-sm"><Ruler size={18}/></div><div><p className="text-sm font-bold text-slate-900 uppercase tracking-wide">Measurement Units</p><p className="text-xs text-slate-400 mt-1">Weight, distance, height</p></div></div>
                      <div className="flex bg-white rounded-lg p-1 border border-slate-200">
-                        <button onClick={() => setUserPreferences({...userPreferences, units: 'imperial'})} className={`px-4 py-2 rounded-md text-[10px] font-black uppercase tracking-widest transition-all ${units === 'imperial' ? 'bg-slate-900 text-white shadow-md' : 'text-slate-400 hover:text-slate-600'}`}>Imperial</button>
-                        <button onClick={() => setUserPreferences({...userPreferences, units: 'metric'})} className={`px-4 py-2 rounded-md text-[10px] font-black uppercase tracking-widest transition-all ${units === 'metric' ? 'bg-slate-900 text-white shadow-md' : 'text-slate-400 hover:text-slate-600'}`}>Metric</button>
+                        <button onClick={() => setUserPreferences({...userPreferences, units: 'imperial'})} className={`px-4 py-2 rounded-md text-[10px] font-black uppercase tracking-widest transition-all focus-visible:ring-2 ring-emerald-500 outline-none ${units === 'imperial' ? 'bg-slate-900 text-white shadow-md' : 'text-slate-400 hover:text-slate-600'}`}>Imperial</button>
+                        <button onClick={() => setUserPreferences({...userPreferences, units: 'metric'})} className={`px-4 py-2 rounded-md text-[10px] font-black uppercase tracking-widest transition-all focus-visible:ring-2 ring-emerald-500 outline-none ${units === 'metric' ? 'bg-slate-900 text-white shadow-md' : 'text-slate-400 hover:text-slate-600'}`}>Metric</button>
                      </div>
                   </div>
                   <div className="flex flex-col md:flex-row items-start md:items-center justify-between p-6 bg-slate-50 rounded-3xl border border-slate-100 gap-4">
-                     <div className="flex items-center gap-4"><div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center text-slate-400 shadow-sm"><Clock size={18}/></div><div><p className="text-sm font-bold text-slate-900 uppercase tracking-wide">Time Zone</p><p className="text-xs text-slate-400 mt-1">Local time display</p></div></div>
+                     <div className="flex items-center gap-4"><div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center text-slate-400 shadow-sm"><Clock size={18}/></div><div><label htmlFor={timezoneId} className="text-sm font-bold text-slate-900 uppercase tracking-wide cursor-pointer block">Time Zone</label><p className="text-xs text-slate-400 mt-1">Local time display</p></div></div>
                      <div className="relative w-full md:w-auto md:min-w-[200px]">
-                        <select value={userPreferences.timezone} onChange={e => setUserPreferences({...userPreferences,timezone: e.target.value})} className="w-full bg-white border-none text-slate-900 text-xs font-bold rounded-xl px-4 py-3 focus:ring-2 focus:ring-[#A7F3D0] outline-none appearance-none font-sans">
+                        <select id={timezoneId} value={userPreferences.timezone} onChange={e => setUserPreferences({...userPreferences,timezone: e.target.value})} className="w-full bg-white border-none text-slate-900 text-xs font-bold rounded-xl px-4 py-3 focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none appearance-none font-sans">
                            {["America/New_York", "America/Los_Angeles", "America/Chicago", "Europe/London", "Europe/Paris", "Asia/Tokyo", "Australia/Sydney", "UTC"].map(tz => <option key={tz} value={tz}>{tz}</option>)}
                         </select>
-                        <div className="absolute right-3 top-3.5 pointer-events-none text-slate-400 text-[8px]">▼</div>
+                        <div className="absolute right-3 top-3.5 pointer-events-none text-slate-400 text-[8px]" aria-hidden="true">▼</div>
                      </div>
                   </div>
                </div>
@@ -270,9 +274,12 @@ export const SettingsView = ({
   );
 };
 
-const InputGroup = ({ label, type = "text", value, onChange, placeholder, disabled = false }: any) => (
-  <div className="space-y-2 w-full">
-    <label className="text-[10px] font-black uppercase text-slate-400 ml-4 tracking-widest">{label}</label>
-    <input type={type} className={`w-full bg-slate-50 border-none text-slate-900 text-sm font-bold rounded-2xl px-5 py-4 focus:ring-2 focus:ring-[#A7F3D0] outline-none transition-all font-sans ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`} placeholder={placeholder} value={value} onChange={e => onChange && onChange(e.target.value)} disabled={disabled} />
-  </div>
-);
+const InputGroup = ({ label, type = "text", value, onChange, placeholder, disabled = false }: any) => {
+  const id = useId();
+  return (
+    <div className="space-y-2 w-full">
+      <label htmlFor={id} className="text-[10px] font-black uppercase text-slate-400 ml-4 tracking-widest cursor-pointer">{label}</label>
+      <input id={id} type={type} className={`w-full bg-slate-50 border-none text-slate-900 text-sm font-bold rounded-2xl px-5 py-4 focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none transition-all font-sans ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`} placeholder={placeholder} value={value} onChange={e => onChange && onChange(e.target.value)} disabled={disabled} />
+    </div>
+  );
+};
