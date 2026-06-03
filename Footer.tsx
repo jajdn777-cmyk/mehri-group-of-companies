@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useId } from 'react';
 import { createPortal } from 'react-dom';
 import { ArrowRight, Shield, FileText, X, Lock, Users, BookOpen, Facebook as FacebookIcon, Instagram as InstagramIcon, Check, Loader2 } from 'lucide-react';
 import { MehriLogo } from './Logo.tsx';
@@ -49,6 +49,10 @@ export const Footer = ({ onNavigate }: any) => {
   const [activeModal, setActiveModal] = useState<'about' | null>(null);
   const [formStatus, setFormStatus] = useState<'idle' | 'submitting' | 'success'>('idle');
 
+  const nameId = useId();
+  const emailId = useId();
+  const messageId = useId();
+
   const handleContactSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setFormStatus('submitting');
@@ -80,13 +84,21 @@ export const Footer = ({ onNavigate }: any) => {
   return (
     <>
       {formStatus === 'success' && createPortal(
-        <div className="fixed inset-0 z-[10000] flex items-center justify-center p-4 bg-slate-900/95 backdrop-blur-2xl animate-fade-in">
+        <div
+          role="dialog"
+          aria-modal="true"
+          className="fixed inset-0 z-[10000] flex items-center justify-center p-4 bg-slate-900/95 backdrop-blur-2xl animate-fade-in"
+        >
             <div className="bg-white rounded-[40px] p-8 md:p-14 max-w-lg text-center relative shadow-2xl w-full border border-slate-100 flex flex-col items-center animate-scale-in">
-                <button onClick={() => setFormStatus('idle')} className="absolute top-6 right-6 p-2 hover:bg-slate-100 rounded-full transition-colors">
+                <button
+                  onClick={() => setFormStatus('idle')}
+                  aria-label="Close modal"
+                  className="absolute top-6 right-6 p-2 hover:bg-slate-100 rounded-full transition-colors focus-visible:ring-2 ring-emerald-500 outline-none"
+                >
                     <X size={24} className="text-slate-400 hover:text-slate-900"/>
                 </button>
                 <div className="w-24 h-24 bg-[#A7F3D0] rounded-full flex items-center justify-center mb-8 text-slate-900 shadow-[0_0_30px_rgba(167,243,208,0.5)] animate-bounce-slow">
-                    <Check size={48} strokeWidth={4} />
+                    <Check size={48} strokeWidth={4} aria-hidden="true" />
                 </div>
                 <h3 className="text-4xl font-black uppercase text-slate-900 mb-4 tracking-tighter">Thank You</h3>
                 <p className="text-slate-500 font-medium mb-10 leading-relaxed text-lg">
@@ -121,9 +133,9 @@ export const Footer = ({ onNavigate }: any) => {
                href="https://www.amazon.com/dp/B0FH4YTQ78?ref=cm_sw_r_cso_wa_apin_dp_9WM50155ESTE8FG1JDZG&ref_=cm_sw_r_cso_wa_apin_dp_9WM50155ESTE8FG1JDZG&social_share=cm_sw_r_cso_wa_apin_dp_9WM50155ESTE8FG1JDZG&titleSource=true&th=1"
                target="_blank" 
                rel="noopener noreferrer"
-               className="px-10 py-5 bg-white text-black rounded-full font-black uppercase text-xs tracking-[0.3em] hover:bg-emerald-400 transition-all flex items-center gap-3 shadow-[0_0_20px_rgba(255,255,255,0.1)] hover:shadow-[0_0_30px_rgba(52,211,153,0.4)]"
+               className="px-10 py-5 bg-white text-black rounded-full font-black uppercase text-xs tracking-[0.3em] hover:bg-emerald-400 transition-all flex items-center gap-3 shadow-[0_0_20px_rgba(255,255,255,0.1)] hover:shadow-[0_0_30px_rgba(52,211,153,0.4)] focus-visible:ring-2 ring-emerald-500 ring-offset-2 ring-offset-black outline-none"
              >
-               Get on Amazon <ArrowRight size={16} />
+               Get on Amazon <ArrowRight size={16} aria-hidden="true" />
              </a>
           </div>
 
@@ -140,7 +152,7 @@ export const Footer = ({ onNavigate }: any) => {
                       href="https://medium.com/@shamsullah.mehri/beyond-the-step-counter-the-new-rules-of-personal-health-monitoring-ee7f3d27d5a9"
                       target="_blank" 
                       rel="noopener noreferrer" 
-                      className="flex items-center gap-3 text-slate-400 hover:text-white transition-colors group"
+                      className="flex items-center gap-3 text-slate-400 hover:text-white transition-colors group focus-visible:ring-2 ring-emerald-500 ring-offset-2 ring-offset-black outline-none rounded-lg"
                    >
                       <div className="w-8 h-8 rounded-full bg-slate-900 flex items-center justify-center border border-slate-800 group-hover:border-emerald-500/50 transition-colors shrink-0">
                          <BookOpen size={14} className="text-emerald-500"/>
@@ -151,7 +163,7 @@ export const Footer = ({ onNavigate }: any) => {
                       href="https://www.facebook.com/p/MEHRI-Group-Of-Companies-61578019483578/" 
                       target="_blank" 
                       rel="noopener noreferrer" 
-                      className="flex items-center gap-3 text-slate-400 hover:text-white transition-colors group"
+                      className="flex items-center gap-3 text-slate-400 hover:text-white transition-colors group focus-visible:ring-2 ring-emerald-500 ring-offset-2 ring-offset-black outline-none rounded-lg"
                    >
                       <div className="w-8 h-8 rounded-full bg-slate-900 flex items-center justify-center border border-slate-800 group-hover:border-blue-500/50 transition-colors shrink-0">
                          <FacebookIcon size={14} className="text-blue-500"/>
@@ -162,7 +174,7 @@ export const Footer = ({ onNavigate }: any) => {
                       href="https://www.instagram.com/mehrigroupofcompanies" 
                       target="_blank" 
                       rel="noopener noreferrer" 
-                      className="flex items-center gap-3 text-slate-400 hover:text-white transition-colors group"
+                      className="flex items-center gap-3 text-slate-400 hover:text-white transition-colors group focus-visible:ring-2 ring-emerald-500 ring-offset-2 ring-offset-black outline-none rounded-lg"
                    >
                       <div className="w-8 h-8 rounded-full bg-slate-900 flex items-center justify-center border border-slate-800 group-hover:border-pink-500/50 transition-colors shrink-0">
                          <InstagramIcon size={14} className="text-pink-500"/>
@@ -174,14 +186,14 @@ export const Footer = ({ onNavigate }: any) => {
              <div className="lg:col-span-3 space-y-8">
                 <h4 className="text-sm font-black uppercase tracking-widest text-slate-600">Product</h4>
                 <ul className="space-y-4">
-                   <li><a href="https://www.amazon.com/dp/B0FH4YTQ78?ref=cm_sw_r_cso_wa_apin_dp_9WM50155ESTE8FG1JDZG&ref_=cm_sw_r_cso_wa_apin_dp_9WM50155ESTE8FG1JDZG&social_share=cm_sw_r_cso_wa_apin_dp_9WM50155ESTE8FG1JDZG&titleSource=true&th=1" target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-emerald-400 text-sm font-medium transition-colors">Mehri fitness tracker</a></li>
-                   <li><a href="https://apps.apple.com/us/app/runmefit/id1541334057" target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-emerald-400 text-sm font-medium transition-colors">App Store (iOS)</a></li>
-                   <li><a href="https://play.google.com/store/apps/details?id=com.runmefit.wear" target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-emerald-400 text-sm font-medium transition-colors">Google Play (Android)</a></li>
+                   <li><a href="https://www.amazon.com/dp/B0FH4YTQ78?ref=cm_sw_r_cso_wa_apin_dp_9WM50155ESTE8FG1JDZG&ref_=cm_sw_r_cso_wa_apin_dp_9WM50155ESTE8FG1JDZG&social_share=cm_sw_r_cso_wa_apin_dp_9WM50155ESTE8FG1JDZG&titleSource=true&th=1" target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-emerald-400 text-sm font-medium transition-colors focus-visible:ring-2 ring-emerald-500 rounded px-1 -mx-1 outline-none">Mehri fitness tracker</a></li>
+                   <li><a href="https://apps.apple.com/us/app/runmefit/id1541334057" target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-emerald-400 text-sm font-medium transition-colors focus-visible:ring-2 ring-emerald-500 rounded px-1 -mx-1 outline-none">App Store (iOS)</a></li>
+                   <li><a href="https://play.google.com/store/apps/details?id=com.runmefit.wear" target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-emerald-400 text-sm font-medium transition-colors focus-visible:ring-2 ring-emerald-500 rounded px-1 -mx-1 outline-none">Google Play (Android)</a></li>
                 </ul>
                 <h4 className="text-sm font-black uppercase tracking-widest text-slate-600 pt-4">Support</h4>
                 <ul className="space-y-4">
-                   <li><button onClick={() => setActiveModal('about')} className="text-slate-400 hover:text-emerald-400 text-sm font-medium transition-colors">About Us</button></li>
-                   <li><a href="mailto:jajdn777@gmail.com" className="text-slate-400 hover:text-emerald-400 text-sm font-medium transition-colors">Contact Support</a></li>
+                   <li><button onClick={() => setActiveModal('about')} className="text-slate-400 hover:text-emerald-400 text-sm font-medium transition-colors focus-visible:ring-2 ring-emerald-500 rounded px-1 -mx-1 outline-none">About Us</button></li>
+                   <li><a href="mailto:jajdn777@gmail.com" className="text-slate-400 hover:text-emerald-400 text-sm font-medium transition-colors focus-visible:ring-2 ring-emerald-500 rounded px-1 -mx-1 outline-none">Contact Support</a></li>
                 </ul>
              </div>
              <div className="lg:col-span-5 bg-slate-900/30 p-8 rounded-[30px] border border-slate-900/50 backdrop-blur-md">
@@ -189,11 +201,11 @@ export const Footer = ({ onNavigate }: any) => {
                 <p className="text-slate-500 text-xs mb-6">Direct line to the MEHRI development team.</p>
                 <form onSubmit={handleContactSubmit} className="space-y-4">
                    <div className="grid grid-cols-2 gap-4">
-                      <input type="text" name="name" placeholder="Name" className="w-full bg-slate-900 border border-slate-800 text-white text-sm rounded-xl px-4 py-3 outline-none focus:border-emerald-500 transition-colors placeholder:text-slate-600" required />
-                      <input type="email" name="email" placeholder="Email" className="w-full bg-slate-900 border border-slate-800 text-white text-sm rounded-xl px-4 py-3 outline-none focus:border-emerald-500 transition-colors placeholder:text-slate-600" required />
+                      <input id={nameId} type="text" name="name" placeholder="Name" aria-label="Full Name" className="w-full bg-slate-900 border border-slate-800 text-white text-sm rounded-xl px-4 py-3 outline-none focus:border-emerald-500 focus-visible:ring-2 ring-emerald-500 ring-offset-2 ring-offset-black transition-colors placeholder:text-slate-600" required />
+                      <input id={emailId} type="email" name="email" placeholder="Email" aria-label="Email Address" className="w-full bg-slate-900 border border-slate-800 text-white text-sm rounded-xl px-4 py-3 outline-none focus:border-emerald-500 focus-visible:ring-2 ring-emerald-500 ring-offset-2 ring-offset-black transition-colors placeholder:text-slate-600" required />
                    </div>
-                   <textarea name="message" rows={3} placeholder="How can we help?" className="w-full bg-slate-900 border border-slate-800 text-white text-sm rounded-xl px-4 py-3 outline-none focus:border-emerald-500 transition-colors placeholder:text-slate-600 resize-none" required></textarea>
-                   <button type="submit" disabled={formStatus === 'submitting'} className="w-full bg-white text-black font-black uppercase text-[10px] tracking-[0.2em] py-4 rounded-xl hover:bg-emerald-400 transition-colors disabled:opacity-50 flex items-center justify-center gap-2">
+                   <textarea id={messageId} name="message" rows={3} placeholder="How can we help?" aria-label="Message" className="w-full bg-slate-900 border border-slate-800 text-white text-sm rounded-xl px-4 py-3 outline-none focus:border-emerald-500 focus-visible:ring-2 ring-emerald-500 ring-offset-2 ring-offset-black transition-colors placeholder:text-slate-600 resize-none" required></textarea>
+                   <button type="submit" disabled={formStatus === 'submitting'} className="w-full bg-white text-black font-black uppercase text-[10px] tracking-[0.2em] py-4 rounded-xl hover:bg-emerald-400 transition-colors disabled:opacity-50 flex items-center justify-center gap-2 focus-visible:ring-2 ring-emerald-500 ring-offset-2 ring-offset-black outline-none">
                       {formStatus === 'submitting' ? <Loader2 size={16} className="animate-spin"/> : 'Send Message'}
                    </button>
                 </form>
@@ -204,11 +216,11 @@ export const Footer = ({ onNavigate }: any) => {
                 © 2026 MEHRI Group. Powered by Mehri fitness tracker Technology.
              </p>
              <div className="flex gap-8">
-                <button onClick={() => onNavigate('privacy')} className="text-slate-500 hover:text-white text-[10px] font-black uppercase tracking-widest transition-colors flex items-center gap-2">
-                   <Shield size={12}/> Privacy Policy
+                <button onClick={() => onNavigate('privacy')} className="text-slate-500 hover:text-white text-[10px] font-black uppercase tracking-widest transition-colors flex items-center gap-2 focus-visible:ring-2 ring-emerald-500 rounded px-1 -mx-1 outline-none">
+                   <Shield size={12} aria-hidden="true" /> Privacy Policy
                 </button>
-                <button onClick={() => onNavigate('terms')} className="text-slate-500 hover:text-white text-[10px] font-black uppercase tracking-widest transition-colors flex items-center gap-2">
-                   <FileText size={12}/> Terms of Service
+                <button onClick={() => onNavigate('terms')} className="text-slate-500 hover:text-white text-[10px] font-black uppercase tracking-widest transition-colors flex items-center gap-2 focus-visible:ring-2 ring-emerald-500 rounded px-1 -mx-1 outline-none">
+                   <FileText size={12} aria-hidden="true" /> Terms of Service
                 </button>
              </div>
           </div>

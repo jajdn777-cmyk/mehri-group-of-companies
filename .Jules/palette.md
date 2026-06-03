@@ -9,3 +9,7 @@
 ## 2026-04-28 - [Keyboard-Accessible Hover Menus & Valid Button Content]
 **Learning:** For hover-triggered menus, use `onFocusCapture` and a refined `onBlurCapture` that checks `e.currentTarget.contains(e.relatedTarget)` to ensure the menu stays open when focus moves between the trigger and its children. Additionally, always use `span` instead of `div` inside `button` elements to maintain HTML validity while achieving desired layout.
 **Action:** Implement robust focus management for all hover-based navigation and audit button children for invalid flow content.
+
+## 2026-05-14 - [Footer Accessibility & Focus States]
+**Learning:** Interactive elements in dark-themed footers require specific focus-visible rings with appropriate offsets (e.g., `ring-offset-black`) to remain visible. Additionally, using `useId` for form fields in global components like the footer ensures unique ID generation across the app, preventing collision while maintaining semantic linkage between labels (via `aria-label` when visual labels are absent) and inputs.
+**Action:** Always pair `useId` with `aria-label` for footer form fields and apply high-contrast focus rings with dark-mode specific offsets.
