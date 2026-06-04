@@ -9,3 +9,7 @@
 ## 2026-04-28 - [Keyboard-Accessible Hover Menus & Valid Button Content]
 **Learning:** For hover-triggered menus, use `onFocusCapture` and a refined `onBlurCapture` that checks `e.currentTarget.contains(e.relatedTarget)` to ensure the menu stays open when focus moves between the trigger and its children. Additionally, always use `span` instead of `div` inside `button` elements to maintain HTML validity while achieving desired layout.
 **Action:** Implement robust focus management for all hover-based navigation and audit button children for invalid flow content.
+
+## 2026-05-15 - [Comprehensive Modal Accessibility & Form Linkage]
+**Learning:** For complex form-based modals like `CreateGoalModal`, accessibility requires a multi-layered approach: `role="dialog"` and `aria-modal="true"` for the container, semantic `<button>` elements for all interactive triggers (including custom dropdowns), and the `useId` hook to programmatically link `<label>` elements with their respective inputs or buttons. Additionally, all icon-only actions must have explicit `aria-label` attributes, and decorative icons must be hidden with `aria-hidden="true"`.
+**Action:** Always audit modals for these specific attributes and use `useId` for all form field associations to ensure a screen-reader-friendly experience.
