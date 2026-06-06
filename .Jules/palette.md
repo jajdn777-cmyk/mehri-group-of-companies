@@ -9,3 +9,7 @@
 ## 2026-04-28 - [Keyboard-Accessible Hover Menus & Valid Button Content]
 **Learning:** For hover-triggered menus, use `onFocusCapture` and a refined `onBlurCapture` that checks `e.currentTarget.contains(e.relatedTarget)` to ensure the menu stays open when focus moves between the trigger and its children. Additionally, always use `span` instead of `div` inside `button` elements to maintain HTML validity while achieving desired layout.
 **Action:** Implement robust focus management for all hover-based navigation and audit button children for invalid flow content.
+
+## 2026-06-06 - [Accessible Forms & High-Contrast Focus States]
+**Learning:** For forms without visible labels, use React's `useId` hook to link semantic `<label className="sr-only">` elements to inputs, providing context for screen readers without altering the visual design. On dark backgrounds, use `ring-offset-black` with the standard `focus-visible:ring-emerald-500` to ensure the focus indicator is clearly visible against high-contrast surfaces.
+**Action:** Always implement `sr-only` labels for "placeholder-only" forms and utilize black ring offsets for focus states in dark mode components.
