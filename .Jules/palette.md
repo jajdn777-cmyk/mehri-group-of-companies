@@ -9,3 +9,7 @@
 ## 2026-04-28 - [Keyboard-Accessible Hover Menus & Valid Button Content]
 **Learning:** For hover-triggered menus, use `onFocusCapture` and a refined `onBlurCapture` that checks `e.currentTarget.contains(e.relatedTarget)` to ensure the menu stays open when focus moves between the trigger and its children. Additionally, always use `span` instead of `div` inside `button` elements to maintain HTML validity while achieving desired layout.
 **Action:** Implement robust focus management for all hover-based navigation and audit button children for invalid flow content.
+
+## 2025-05-14 - [Form Accessibility & Semantic Linkage]
+**Learning:** Using `useId` for stable, unique IDs ensures that `<label>` elements are correctly linked to their respective inputs or custom interactive triggers (like buttons). This is especially critical in modals where multiple instances might exist or where dynamic content is rendered. Additionally, converting interactive `div` elements to semantic `button` elements is the baseline for keyboard and screen reader accessibility.
+**Action:** Implement `useId` for all new form fields and audit existing modals for label-input linkage and semantic interactive elements.
