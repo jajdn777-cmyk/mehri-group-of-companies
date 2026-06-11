@@ -9,3 +9,7 @@
 ## 2026-04-28 - [Keyboard-Accessible Hover Menus & Valid Button Content]
 **Learning:** For hover-triggered menus, use `onFocusCapture` and a refined `onBlurCapture` that checks `e.currentTarget.contains(e.relatedTarget)` to ensure the menu stays open when focus moves between the trigger and its children. Additionally, always use `span` instead of `div` inside `button` elements to maintain HTML validity while achieving desired layout.
 **Action:** Implement robust focus management for all hover-based navigation and audit button children for invalid flow content.
+
+## 2026-06-11 - [Form Accessibility in LogModal]
+**Learning:** Monolithic form components like `LogModal` often lack proper semantic linkage between labels and inputs. Using React's `useId` hook ensures unique, stable IDs for `htmlFor` and `id` attributes, even when multiple instances of a component or modal might exist. Adding `cursor-pointer` to labels further improves the interactive affordance for all users.
+**Action:** Always utilize `useId` for form field associations and apply `cursor-pointer` to labels to enhance the hit area.
