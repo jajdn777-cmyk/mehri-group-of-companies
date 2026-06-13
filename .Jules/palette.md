@@ -9,3 +9,7 @@
 ## 2026-04-28 - [Keyboard-Accessible Hover Menus & Valid Button Content]
 **Learning:** For hover-triggered menus, use `onFocusCapture` and a refined `onBlurCapture` that checks `e.currentTarget.contains(e.relatedTarget)` to ensure the menu stays open when focus moves between the trigger and its children. Additionally, always use `span` instead of `div` inside `button` elements to maintain HTML validity while achieving desired layout.
 **Action:** Implement robust focus management for all hover-based navigation and audit button children for invalid flow content.
+
+## 2026-05-15 - [Semantic Labeling & Focus States in Complex Modals]
+**Learning:** Form fields within complex monolithic components often lack semantic linkage and clear focus indicators. Utilizing React's `useId` hook allows for reliable programmatic association between `<label>` and controls (inputs, selects, custom buttons) even in highly dynamic or repeated UI sections. Consistent application of `focus-visible` rings and `cursor-pointer` on labels significantly improves keyboard navigability and interactive affordance.
+**Action:** Always audit form sections for missing `htmlFor`/`id` linkage and missing focus states. Use `useId` to generate stable IDs and apply the project's standard `focus-visible:ring-2 ring-emerald-500` ring style to all interactive elements.
