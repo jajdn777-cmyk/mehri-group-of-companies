@@ -869,7 +869,19 @@ export const DashboardView = ({ workouts, setWorkouts, userGoals, setUserGoals, 
                     const isStreak = dayLogs.length > 0;
 
                     return (
-                      <div key={i} onClick={() => setSelectedDay(dStr)} className={`group min-h-[80px] md:min-h-[140px] rounded-[16px] md:rounded-[24px] p-2 md:p-4 transition-all duration-300 relative flex flex-col gap-1 md:gap-2 border-2 ${
+                      <div
+                        key={i}
+                        onClick={() => setSelectedDay(dStr)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            setSelectedDay(dStr);
+                          }
+                        }}
+                        role="button"
+                        tabIndex={locked ? -1 : 0}
+                        aria-label={`${d.toLocaleDateString(undefined, { month: 'long', day: 'numeric', year: 'numeric' })}${isToday ? ', Today' : ''}${isStreak ? ', Workout logged' : ''}`}
+                        className={`group min-h-[80px] md:min-h-[140px] rounded-[16px] md:rounded-[24px] p-2 md:p-4 transition-all duration-300 relative flex flex-col gap-1 md:gap-2 border-2 focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none ${
                         locked 
                           ? 'bg-slate-50/40 border-transparent opacity-40 cursor-not-allowed grayscale' 
                           : future 
@@ -923,7 +935,13 @@ export const DashboardView = ({ workouts, setWorkouts, userGoals, setUserGoals, 
                                </div>
                                <Lock size={10} className="text-slate-400" />
                             </div>
-                            <button onClick={(e) => { e.stopPropagation(); setSelectedDay(dStr); setShowLogModal(true); }} className="absolute bottom-2 right-2 md:bottom-4 md:right-4 w-6 h-6 md:w-8 md:h-8 bg-slate-50 rounded-full flex items-center justify-center text-slate-400 opacity-0 hover:bg-[#A7F3D0] hover:text-slate-900 transition-all group-hover:opacity-100 shadow-sm"><Plus size={12} className="md:w-3.5 md:h-3.5"/></button>
+                            <button
+                              onClick={(e) => { e.stopPropagation(); setSelectedDay(dStr); setShowLogModal(true); }}
+                              aria-label="Add workout for this day"
+                              className="absolute bottom-2 right-2 md:bottom-4 md:right-4 w-6 h-6 md:w-8 md:h-8 bg-slate-50 rounded-full flex items-center justify-center text-slate-400 opacity-0 hover:bg-[#A7F3D0] hover:text-slate-900 focus-visible:opacity-100 focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none transition-all group-hover:opacity-100 group-focus-within:opacity-100 shadow-sm"
+                            >
+                              <Plus size={12} className="md:w-3.5 md:h-3.5" aria-hidden="true" />
+                            </button>
                           </>
                         )}
                       </div>
