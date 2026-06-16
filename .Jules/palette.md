@@ -9,3 +9,7 @@
 ## 2026-04-28 - [Keyboard-Accessible Hover Menus & Valid Button Content]
 **Learning:** For hover-triggered menus, use `onFocusCapture` and a refined `onBlurCapture` that checks `e.currentTarget.contains(e.relatedTarget)` to ensure the menu stays open when focus moves between the trigger and its children. Additionally, always use `span` instead of `div` inside `button` elements to maintain HTML validity while achieving desired layout.
 **Action:** Implement robust focus management for all hover-based navigation and audit button children for invalid flow content.
+
+## 2026-06-16 - [Focus-Dependent Visibility for Hidden Controls]
+**Learning:** Interactive elements that are visually hidden until hover (using `opacity-0` or similar) must also be revealed when they or their container receives focus. Using Tailwind utilities like `focus-visible:opacity-100` or `group-focus-within:opacity-100` ensures that keyboard users can discover and interact with these controls during navigation. Additionally, when converting generic `div` containers to accessible buttons, dynamic `aria-label` attributes should be used to provide specific context (e.g., date and status) to screen readers.
+**Action:** Always pair hover-based visibility transitions with focus-based reveals for interactive elements.

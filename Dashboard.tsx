@@ -691,8 +691,13 @@ export const DashboardView = ({ workouts, setWorkouts, userGoals, setUserGoals, 
               <div className="flex flex-col md:flex-row justify-between items-start md:items-center relative z-10 gap-4">
                 <div className="flex items-center gap-4 w-full md:w-auto justify-between">
                    <p className="text-[10px] font-black uppercase text-slate-400 tracking-[0.2em] self-center">Activity: {selectedDay}</p>
-                   <button onClick={() => setPrecisionMode(!precisionMode)} className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-slate-300 hover:text-[#A7F3D0] transition-colors">
-                      {precisionMode ? <ToggleRight size={24} className="text-[#A7F3D0]"/> : <ToggleLeft size={24}/>}
+                   <button
+                     onClick={() => setPrecisionMode(!precisionMode)}
+                     role="switch"
+                     aria-checked={precisionMode}
+                     className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-slate-300 hover:text-[#A7F3D0] transition-colors focus-visible:ring-2 ring-emerald-500 rounded-lg outline-none ring-offset-2"
+                   >
+                      {precisionMode ? <ToggleRight size={24} className="text-[#A7F3D0]" aria-hidden="true"/> : <ToggleLeft size={24} aria-hidden="true"/>}
                       Precision View
                    </button>
                 </div>
@@ -869,7 +874,19 @@ export const DashboardView = ({ workouts, setWorkouts, userGoals, setUserGoals, 
                     const isStreak = dayLogs.length > 0;
 
                     return (
-                      <div key={i} onClick={() => setSelectedDay(dStr)} className={`group min-h-[80px] md:min-h-[140px] rounded-[16px] md:rounded-[24px] p-2 md:p-4 transition-all duration-300 relative flex flex-col gap-1 md:gap-2 border-2 ${
+                      <div
+                        key={i}
+                        role="button"
+                        tabIndex={locked ? -1 : 0}
+                        aria-label={`${new Date(y, month, i + 1).toLocaleDateString('default', { month: 'long', day: 'numeric', year: 'numeric' })}${isToday ? ', Today' : ''}${dayLogs.length > 0 ? `, ${dayLogs.length} workout${dayLogs.length === 1 ? '' : 's'}` : ', No workouts'}`}
+                        onClick={() => !locked && setSelectedDay(dStr)}
+                        onKeyDown={(e) => {
+                          if (!locked && (e.key === 'Enter' || e.key === ' ')) {
+                            e.preventDefault();
+                            setSelectedDay(dStr);
+                          }
+                        }}
+                        className={`group min-h-[80px] md:min-h-[140px] rounded-[16px] md:rounded-[24px] p-2 md:p-4 transition-all duration-300 relative flex flex-col gap-1 md:gap-2 border-2 focus-visible:ring-2 ring-emerald-500 outline-none ${
                         locked 
                           ? 'bg-slate-50/40 border-transparent opacity-40 cursor-not-allowed grayscale' 
                           : future 
@@ -904,7 +921,7 @@ export const DashboardView = ({ workouts, setWorkouts, userGoals, setUserGoals, 
                                    <button
                                       onClick={(e) => { e.stopPropagation(); handleDeleteWorkout(log.id); }}
                                       aria-label="Delete workout"
-                                      className="absolute -right-1 -top-1 bg-red-500 text-white rounded-full p-0.5 opacity-0 group-hover/pill:opacity-100 transition-opacity z-50"
+                                      className="absolute -right-1 -top-1 bg-red-500 text-white rounded-full p-0.5 opacity-0 group-hover/pill:opacity-100 focus-visible:opacity-100 transition-opacity z-50"
                                    >
                                       <X size={8}/>
                                    </button>
@@ -923,7 +940,7 @@ export const DashboardView = ({ workouts, setWorkouts, userGoals, setUserGoals, 
                                </div>
                                <Lock size={10} className="text-slate-400" />
                             </div>
-                            <button onClick={(e) => { e.stopPropagation(); setSelectedDay(dStr); setShowLogModal(true); }} className="absolute bottom-2 right-2 md:bottom-4 md:right-4 w-6 h-6 md:w-8 md:h-8 bg-slate-50 rounded-full flex items-center justify-center text-slate-400 opacity-0 hover:bg-[#A7F3D0] hover:text-slate-900 transition-all group-hover:opacity-100 shadow-sm"><Plus size={12} className="md:w-3.5 md:h-3.5"/></button>
+                            <button onClick={(e) => { e.stopPropagation(); setSelectedDay(dStr); setShowLogModal(true); }} className="absolute bottom-2 right-2 md:bottom-4 md:right-4 w-6 h-6 md:w-8 md:h-8 bg-slate-50 rounded-full flex items-center justify-center text-slate-400 opacity-0 hover:bg-[#A7F3D0] hover:text-slate-900 transition-all group-hover:opacity-100 group-focus-within:opacity-100 focus-visible:opacity-100 focus-visible:ring-2 ring-emerald-500 outline-none shadow-sm"><Plus size={12} className="md:w-3.5 md:h-3.5"/></button>
                           </>
                         )}
                       </div>
