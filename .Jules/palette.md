@@ -9,3 +9,7 @@
 ## 2026-04-28 - [Keyboard-Accessible Hover Menus & Valid Button Content]
 **Learning:** For hover-triggered menus, use `onFocusCapture` and a refined `onBlurCapture` that checks `e.currentTarget.contains(e.relatedTarget)` to ensure the menu stays open when focus moves between the trigger and its children. Additionally, always use `span` instead of `div` inside `button` elements to maintain HTML validity while achieving desired layout.
 **Action:** Implement robust focus management for all hover-based navigation and audit button children for invalid flow content.
+
+## 2026-06-20 - [Labeling & Listbox Semantics]
+**Learning:** Labels in HTML can only be programmatically linked to "labelable elements" (like inputs, buttons, selects); linking them to a container `div` is semantically invalid. When implementing a custom `listbox` pattern, ensuring that individual items have `role="option"` and `aria-selected` states is crucial for screen reader parity with native selects.
+**Action:** Always link labels to the first interactive control in a group (e.g., the first button in a segmented control) and audit custom dropdowns for complete ARIA listbox/option roles.
