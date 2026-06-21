@@ -1,5 +1,5 @@
-import React from 'react';
-import { Trophy, CheckCircle2, ArrowRight } from 'lucide-react';
+import React, { useState } from 'react';
+import { Trophy, CheckCircle2, ArrowRight, Loader2 } from 'lucide-react';
 import { api } from './utils.ts';
 
 const CHALLENGE_PRESETS = [
@@ -10,9 +10,11 @@ const CHALLENGE_PRESETS = [
 ];
 
 export const ChallengesView = ({ userChallenges, setUserChallenges, userHandle }: any) => {
+  const [loadingId, setLoadingId] = useState<string | null>(null);
   
-  const handleJoin = (challenge: any) => {
+  const handleJoin = async (challenge: any) => {
     if (!userHandle) { alert("Please login to join challenges."); return; }
+    if (loadingId) return;
     
     // Check if already joined
     if (userChallenges.some((uc: any) => uc.challenge_id === challenge.id)) return;
@@ -24,14 +26,26 @@ export const ChallengesView = ({ userChallenges, setUserChallenges, userHandle }
         joined_date: new Date().toISOString()
     };
 
-    api("JOIN_CHALLENGE", { username: userHandle, ...newEntry });
-    setUserChallenges([...userChallenges, newEntry]);
+    setLoadingId(challenge.id);
+    try {
+      await api("JOIN_CHALLENGE", { username: userHandle, ...newEntry });
+      setUserChallenges([...userChallenges, newEntry]);
+    } finally {
+      setLoadingId(null);
+    }
   };
 
-  const handleLeave = (challengeId: string) => {
+  const handleLeave = async (challengeId: string) => {
     if (!confirm("Leave this challenge?")) return;
-    api("LEAVE_CHALLENGE", { username: userHandle, challenge_id: challengeId });
-    setUserChallenges(userChallenges.filter((c: any) => c.challenge_id !== challengeId));
+    if (loadingId) return;
+
+    setLoadingId(challengeId);
+    try {
+      await api("LEAVE_CHALLENGE", { username: userHandle, challenge_id: challengeId });
+      setUserChallenges(userChallenges.filter((c: any) => c.challenge_id !== challengeId));
+    } finally {
+      setLoadingId(null);
+    }
   };
 
   return (
@@ -61,12 +75,24 @@ export const ChallengesView = ({ userChallenges, setUserChallenges, userHandle }
                       <p className="text-xs font-medium text-slate-300 mb-6 leading-relaxed">{c.desc}</p>
                       
                       {isJoined ? (
-                        <button onClick={() => handleLeave(c.id)} className="text-[10px] font-bold uppercase tracking-widest text-red-400 hover:text-white transition-colors">
-                           Leave Challenge
+                        <button
+                          onClick={() => handleLeave(c.id)}
+                          disabled={!!loadingId}
+                          aria-busy={loadingId === c.id}
+                          aria-label={loadingId === c.id ? "Leaving challenge..." : undefined}
+                          className="text-[10px] font-bold uppercase tracking-widest text-red-400 hover:text-white transition-colors disabled:opacity-50 focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none rounded-lg"
+                        >
+                           {loadingId === c.id ? <Loader2 size={12} className="animate-spin" /> : "Leave Challenge"}
                         </button>
                       ) : (
-                        <button onClick={() => handleJoin(c)} className="w-full py-3 bg-white text-slate-900 rounded-xl font-black uppercase text-[10px] tracking-[0.2em] hover:bg-emerald-400 transition-colors flex items-center justify-center gap-2">
-                           Join <ArrowRight size={12}/>
+                        <button
+                          onClick={() => handleJoin(c)}
+                          disabled={!!loadingId}
+                          aria-busy={loadingId === c.id}
+                          aria-label={loadingId === c.id ? "Joining challenge..." : undefined}
+                          className="w-full py-3 bg-white text-slate-900 rounded-xl font-black uppercase text-[10px] tracking-[0.2em] hover:bg-emerald-400 transition-all flex items-center justify-center gap-2 disabled:opacity-50 focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none"
+                        >
+                           {loadingId === c.id ? <Loader2 size={12} className="animate-spin" /> : <>Join <ArrowRight size={12}/></>}
                         </button>
                       )}
                    </div>
