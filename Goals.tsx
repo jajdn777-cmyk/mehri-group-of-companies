@@ -1,10 +1,14 @@
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useId } from 'react';
 import { Plus, Target, X, ChevronDown, Search, ArrowRight, Trophy, Trash2, CheckCircle2, Loader2, Flag } from 'lucide-react';
 import { ACTIVITY_CATEGORIES, getLocalTodayStr } from './constants.ts';
 import { getDistUnit, parseDurationToHours, getDistVal, api } from './utils.ts';
 
 const CreateGoalModal = ({ onClose, onSubmit, userPreferences }: any) => {
+  const activityId = useId();
+  const targetId = useId();
+  const startDateId = useId();
+
   const [activity, setActivity] = useState('');
   const [goalType, setGoalType] = useState<'count' | 'distance' | 'duration'>('count');
   const [target, setTarget] = useState('');
@@ -69,32 +73,39 @@ const CreateGoalModal = ({ onClose, onSubmit, userPreferences }: any) => {
   return (
     <div className="fixed inset-0 z-[6000] flex items-center justify-center p-4 bg-slate-900/90 backdrop-blur-md overflow-y-auto">
       <div className="bg-white p-6 md:p-10 rounded-[30px] md:rounded-[50px] shadow-2xl w-full max-w-4xl relative overflow-visible animate-scale-in my-8">
-        <button onClick={onClose} className="absolute top-6 right-6 md:top-8 md:right-8 text-slate-300 hover:text-emerald-500 transition-colors"><X size={28}/></button>
+        <button onClick={onClose} aria-label="Close modal" className="absolute top-6 right-6 md:top-8 md:right-8 text-slate-300 hover:text-emerald-500 transition-colors focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none rounded-full"><X size={28}/></button>
         <h3 className="text-3xl md:text-4xl font-black uppercase text-slate-900 tracking-tighter mb-8">Create A Goal</h3>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
           <div className="space-y-3 relative md:z-50">
-            <label className="text-[10px] font-black uppercase text-slate-400 ml-4 tracking-widest">Activity</label>
+            <label htmlFor={activityId} className="text-[10px] font-black uppercase text-slate-400 ml-4 tracking-widest">Activity</label>
             <div className="relative">
-              <div className="w-full bg-slate-50 p-5 rounded-[25px] font-bold text-base flex items-center justify-between cursor-pointer hover:bg-slate-100 transition-colors" onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
+              <button
+                type="button"
+                id={activityId}
+                aria-haspopup="listbox"
+                aria-expanded={isDropdownOpen}
+                className="w-full bg-slate-50 p-5 rounded-[25px] font-bold text-base flex items-center justify-between cursor-pointer hover:bg-slate-100 transition-colors focus-visible:ring-2 ring-emerald-500 outline-none"
+                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+              >
                 <span className={activity ? "text-slate-900" : "text-slate-400"}>{activity || "Select Activity..."}</span>
                 <ChevronDown size={20} className="text-slate-400" />
-              </div>
+              </button>
               {isDropdownOpen && (
                 <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-slate-100 rounded-[25px] shadow-2xl overflow-hidden h-64 flex flex-col z-[100]">
                   <div className="p-3 border-b border-slate-50 bg-white">
-                    <div className="flex items-center bg-slate-50 rounded-xl px-3 py-2">
+                    <div className="flex items-center bg-slate-50 rounded-xl px-3 py-2 focus-within:ring-2 ring-emerald-500">
                       <Search size={14} className="text-slate-400 mr-2"/>
-                      <input className="bg-transparent w-full font-bold text-xs outline-none" placeholder="Search..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} autoFocus />
+                      <input aria-label="Search activity types" className="bg-transparent w-full font-bold text-xs outline-none" placeholder="Search..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} autoFocus />
                     </div>
                   </div>
                   <div className="overflow-y-auto custom-scrollbar p-2 flex-1">
-                     <button className="w-full text-left px-4 py-2 rounded-lg text-xs font-bold hover:bg-slate-50 text-emerald-600 mb-2" onClick={() => { setActivity('Any Activity'); setIsDropdownOpen(false); }}>★ Any Activity</button>
+                     <button className="w-full text-left px-4 py-2 rounded-lg text-xs font-bold hover:bg-slate-50 text-emerald-600 mb-2 focus-visible:ring-2 ring-emerald-500 outline-none" onClick={() => { setActivity('Any Activity'); setIsDropdownOpen(false); }}>★ Any Activity</button>
                     {Object.keys(filteredCategories).map(category => (
                       <div key={category} className="mb-3">
                         <div className="px-3 py-1 text-[9px] font-black uppercase tracking-widest text-slate-400 bg-slate-50/50 rounded-lg mb-1">{category}</div>
                         {filteredCategories[category].map(act => (
-                          <button key={act} className="w-full text-left px-4 py-2 rounded-lg text-xs font-bold hover:bg-slate-50 text-slate-600" onClick={() => { setActivity(act); setIsDropdownOpen(false); }}>{act}</button>
+                          <button key={act} className="w-full text-left px-4 py-2 rounded-lg text-xs font-bold hover:bg-slate-50 text-slate-600 focus-visible:ring-2 ring-emerald-500 outline-none" onClick={() => { setActivity(act); setIsDropdownOpen(false); }}>{act}</button>
                         ))}
                       </div>
                     ))}
@@ -107,35 +118,35 @@ const CreateGoalModal = ({ onClose, onSubmit, userPreferences }: any) => {
             <label className="text-[10px] font-black uppercase text-slate-400 ml-4 tracking-widest">Goal Type</label>
             <div className="flex gap-2">
                {['count', 'distance', 'duration'].map(t => (
-                 <button key={t} onClick={() => setGoalType(t as any)} className={`flex-1 py-5 rounded-[25px] font-black uppercase text-[10px] tracking-widest transition-all ${goalType === t ? 'bg-slate-900 text-white shadow-lg' : 'bg-slate-50 text-slate-400 hover:bg-slate-100'}`}>
+                 <button key={t} onClick={() => setGoalType(t as any)} className={`flex-1 py-5 rounded-[25px] font-black uppercase text-[10px] tracking-widest transition-all focus-visible:ring-2 ring-emerald-500 outline-none ${goalType === t ? 'bg-slate-900 text-white shadow-lg' : 'bg-slate-50 text-slate-400 hover:bg-slate-100'}`}>
                    {t === 'count' ? '# Workouts' : t}
                  </button>
                ))}
             </div>
           </div>
           <div className="space-y-3 z-30">
-            <label className="text-[10px] font-black uppercase text-slate-400 ml-4 tracking-widest">{goalType === 'distance' ? `Target Distance (${distUnit})` : goalType === 'duration' ? 'Target Duration' : 'Number of Workouts'}</label>
+            <label htmlFor={targetId} className="text-[10px] font-black uppercase text-slate-400 ml-4 tracking-widest">{goalType === 'distance' ? `Target Distance (${distUnit})` : goalType === 'duration' ? 'Target Duration' : 'Number of Workouts'}</label>
             {goalType === 'duration' ? (
               <div className="flex gap-2">
-                 <input className="w-full bg-slate-50 p-5 rounded-[25px] font-bold text-center" placeholder="HH" value={durationDetails.h} onChange={e => setDurationDetails({...durationDetails, h: e.target.value})} />
+                 <input id={targetId} aria-label="Hours" className="w-full bg-slate-50 p-5 rounded-[25px] font-bold text-center focus-visible:ring-2 ring-emerald-500 outline-none" placeholder="HH" value={durationDetails.h} onChange={e => setDurationDetails({...durationDetails, h: e.target.value})} />
                  <span className="self-center font-black text-slate-300">:</span>
-                 <input className="w-full bg-slate-50 p-5 rounded-[25px] font-bold text-center" placeholder="MM" value={durationDetails.m} onChange={e => setDurationDetails({...durationDetails, m: e.target.value})} />
+                 <input aria-label="Minutes" className="w-full bg-slate-50 p-5 rounded-[25px] font-bold text-center focus-visible:ring-2 ring-emerald-500 outline-none" placeholder="MM" value={durationDetails.m} onChange={e => setDurationDetails({...durationDetails, m: e.target.value})} />
                  <span className="self-center font-black text-slate-300">:</span>
-                 <input className="w-full bg-slate-50 p-5 rounded-[25px] font-bold text-center" placeholder="SS" value={durationDetails.s} onChange={e => setDurationDetails({...durationDetails, s: e.target.value})} />
+                 <input aria-label="Seconds" className="w-full bg-slate-50 p-5 rounded-[25px] font-bold text-center focus-visible:ring-2 ring-emerald-500 outline-none" placeholder="SS" value={durationDetails.s} onChange={e => setDurationDetails({...durationDetails, s: e.target.value})} />
               </div>
             ) : (
-              <input type="number" className="w-full bg-slate-50 p-5 rounded-[25px] font-bold text-lg" placeholder={goalType === 'distance' ? "e.g. 50" : "e.g. 10"} value={target} onChange={e => setTarget(e.target.value)} />
+              <input id={targetId} type="number" className="w-full bg-slate-50 p-5 rounded-[25px] font-bold text-lg focus-visible:ring-2 ring-emerald-500 outline-none" placeholder={goalType === 'distance' ? "e.g. 50" : "e.g. 10"} value={target} onChange={e => setTarget(e.target.value)} />
             )}
           </div>
           <div className="space-y-3 z-30">
-            <label className="text-[10px] font-black uppercase text-slate-400 ml-4 tracking-widest">Start Date</label>
-            <input type="date" className="w-full bg-slate-50 p-5 rounded-[25px] font-bold text-slate-900" value={startDate} onChange={e => setStartDate(e.target.value)} />
+            <label htmlFor={startDateId} className="text-[10px] font-black uppercase text-slate-400 ml-4 tracking-widest">Start Date</label>
+            <input id={startDateId} type="date" className="w-full bg-slate-50 p-5 rounded-[25px] font-bold text-slate-900 focus-visible:ring-2 ring-emerald-500 outline-none" value={startDate} onChange={e => setStartDate(e.target.value)} />
           </div>
         </div>
 
         <div className="mt-10 pt-8 border-t border-slate-100">
            <p className="text-center text-slate-500 font-bold mb-8 text-sm">{getSummary()}</p>
-           <button onClick={handleSubmit} disabled={isSubmitting} className="w-full py-6 bg-emerald-400 text-slate-900 rounded-[25px] font-black uppercase text-[11px] tracking-[0.4em] shadow-xl hover:scale-[1.02] transition-transform flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed">
+           <button onClick={handleSubmit} disabled={isSubmitting} className="w-full py-6 bg-emerald-400 text-slate-900 rounded-[25px] font-black uppercase text-[11px] tracking-[0.4em] shadow-xl hover:scale-[1.02] transition-transform flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed focus-visible:ring-2 ring-emerald-500 outline-none">
               {isSubmitting ? <Loader2 size={16} className="animate-spin"/> : <><ArrowRight size={16}/> Create Goal</>}
            </button>
         </div>
@@ -269,7 +280,7 @@ export const GoalsView = ({ userGoals, setUserGoals, onNavigate, userPreferences
           <h1 className="text-4xl md:text-6xl font-black uppercase tracking-tighter text-slate-900 leading-none">Achieve Your <span className="text-emerald-500">Best.</span></h1>
           <p className="text-slate-400 font-bold tracking-widest uppercase text-xs">Stay on target with a weekly goal.</p>
         </div>
-        <button onClick={() => setShowCreate(true)} className="w-full md:w-auto bg-emerald-400 text-slate-900 px-10 py-5 rounded-[30px] font-black uppercase text-[10px] tracking-[0.3em] hover:scale-105 transition-all shadow-xl flex items-center justify-center gap-3">
+        <button onClick={() => setShowCreate(true)} className="w-full md:w-auto bg-emerald-400 text-slate-900 px-10 py-5 rounded-[30px] font-black uppercase text-[10px] tracking-[0.3em] hover:scale-105 transition-all shadow-xl flex items-center justify-center gap-3 focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none">
           <Plus size={18} /> Create A Goal
         </button>
       </div>
@@ -277,8 +288,8 @@ export const GoalsView = ({ userGoals, setUserGoals, onNavigate, userPreferences
       <div className="space-y-8">
         <div className="flex justify-between items-center">
            <div className="flex gap-4">
-              <button onClick={() => setFilter('Active')} className={`text-[10px] font-black uppercase tracking-widest transition-colors ${filter === 'Active' ? 'text-emerald-500' : 'text-slate-300'}`}>Active</button>
-              <button onClick={() => setFilter('Completed')} className={`text-[10px] font-black uppercase tracking-widest transition-colors ${filter === 'Completed' ? 'text-emerald-500' : 'text-slate-300'}`}>Completed</button>
+              <button onClick={() => setFilter('Active')} className={`text-[10px] font-black uppercase tracking-widest transition-colors focus-visible:ring-2 ring-emerald-500 outline-none rounded ${filter === 'Active' ? 'text-emerald-500' : 'text-slate-300'}`}>Active</button>
+              <button onClick={() => setFilter('Completed')} className={`text-[10px] font-black uppercase tracking-widest transition-colors focus-visible:ring-2 ring-emerald-500 outline-none rounded ${filter === 'Completed' ? 'text-emerald-500' : 'text-slate-300'}`}>Completed</button>
            </div>
         </div>
         
@@ -295,7 +306,7 @@ export const GoalsView = ({ userGoals, setUserGoals, onNavigate, userPreferences
                     <div className="flex justify-between items-start mb-2">
                        <p className={`text-[10px] font-black uppercase tracking-widest ${g.status === 'Completed' ? 'text-emerald-500' : 'text-emerald-500'}`}>{g.status || 'Active'}</p>
                        {filter === 'Active' && stats.isComplete && (
-                          <button onClick={() => markCompleted(g)} className="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full text-[9px] font-bold uppercase tracking-widest hover:bg-emerald-200 transition-colors flex items-center gap-1">
+                          <button onClick={() => markCompleted(g)} className="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full text-[9px] font-bold uppercase tracking-widest hover:bg-emerald-200 transition-colors flex items-center gap-1 focus-visible:ring-2 ring-emerald-500 outline-none">
                              <CheckCircle2 size={12}/> Mark Done
                           </button>
                        )}
@@ -310,7 +321,7 @@ export const GoalsView = ({ userGoals, setUserGoals, onNavigate, userPreferences
                     <div className="flex justify-between items-end">
                         <p className="text-xs font-bold text-slate-400">{g.activity}</p>
                         <p className="text-xl font-black text-slate-900">{stats.current} <span className="text-[10px] text-slate-400 uppercase">/ {g.target} {stats.unitLabel}</span></p>
-                        <button onClick={(e) => {e.stopPropagation(); deleteGoal(g.id);}} className="text-slate-300 hover:text-red-500 p-2 rounded-full hover:bg-red-50 transition-all z-20"><Trash2 size={16}/></button>
+                        <button onClick={(e) => {e.stopPropagation(); deleteGoal(g.id);}} aria-label="Delete goal" className="text-slate-300 hover:text-red-500 p-2 rounded-full hover:bg-red-50 transition-all z-20 focus-visible:ring-2 ring-emerald-500 outline-none"><Trash2 size={16}/></button>
                     </div>
                   </div>
                </div>
@@ -324,7 +335,7 @@ export const GoalsView = ({ userGoals, setUserGoals, onNavigate, userPreferences
                <p className="text-slate-400 text-xs font-medium mt-1">Define a target to start tracking your progress.</p>
             </div>
             {filter === 'Active' && (
-                <button onClick={() => setShowCreate(true)} className="mt-4 text-[10px] font-black uppercase tracking-widest text-emerald-500 hover:text-emerald-600 underline">Create First Goal</button>
+                <button onClick={() => setShowCreate(true)} className="mt-4 text-[10px] font-black uppercase tracking-widest text-emerald-500 hover:text-emerald-600 underline focus-visible:ring-2 ring-emerald-500 outline-none rounded">Create First Goal</button>
             )}
           </div>
         )}
@@ -346,7 +357,7 @@ export const GoalsView = ({ userGoals, setUserGoals, onNavigate, userPreferences
                   <h4 className="text-xl font-black uppercase tracking-tight text-slate-900">{preset.title}</h4>
                   <p className="text-sm font-medium text-slate-500">{preset.desc}</p>
                </div>
-               <button onClick={() => addPreset(preset.count)} className="w-full py-4 bg-slate-900 text-white rounded-2xl font-black uppercase text-[10px] tracking-[0.3em] hover:bg-emerald-400 transition-colors">Set Goal</button>
+               <button onClick={() => addPreset(preset.count)} className="w-full py-4 bg-slate-900 text-white rounded-2xl font-black uppercase text-[10px] tracking-[0.3em] hover:bg-emerald-400 transition-colors focus-visible:ring-2 ring-emerald-500 outline-none">Set Goal</button>
             </div>
           ))}
         </div>
