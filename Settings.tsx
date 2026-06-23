@@ -1,6 +1,6 @@
 
-import React, { useState, useEffect } from 'react';
-import { User, CreditCard, Monitor, ArrowRight, Save, Clock, MapPin, Ruler, Weight, UserCircle, Calendar, ShieldAlert } from 'lucide-react';
+import React, { useState, useEffect, useId } from 'react';
+import { User, CreditCard, Monitor, ArrowRight, Save, Clock, MapPin, Ruler, Weight, UserCircle, Calendar, ShieldAlert, Loader2, Check } from 'lucide-react';
 import { getDistVal, getDistUnit, convertDist, api } from './utils.ts';
 import { AdminView } from './Admin.tsx';
 import { ADMIN_EMAIL } from './constants.ts';
@@ -23,9 +23,15 @@ export const SettingsView = ({
   const [form, setForm] = useState(userProfile);
   const [specsForm, setSpecsForm] = useState(userSpecs);
   const [showAdmin, setShowAdmin] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [isSaved, setIsSaved] = useState(false);
   
   const [heightFt, setHeightFt] = useState('');
   const [heightIn, setHeightIn] = useState('');
+
+  const genderId = useId();
+  const restDayId = useId();
+  const timezoneId = useId();
   
   const units = userPreferences.units;
 
@@ -38,7 +44,10 @@ export const SettingsView = ({
     }
   }, []);
 
-  const handleSave = () => {
+  const handleSave = async () => {
+    setIsSaving(true);
+    setIsSaved(false);
+
     let finalHeightCm = specsForm.height;
     let finalWeightKg = specsForm.weight;
 
@@ -48,17 +57,24 @@ export const SettingsView = ({
       finalHeightCm = (totalInches * 2.54).toFixed(0);
     }
     
-    // API UPDATE
-    api("UPDATE_PROFILE", { 
-        username: userProfile.username,
-        profile: form,
-        specs: { weight: finalWeightKg, height: finalHeightCm },
-        preferences: userPreferences
-    });
+    try {
+      // API UPDATE
+      await api("UPDATE_PROFILE", {
+          username: userProfile.username,
+          profile: form,
+          specs: { weight: finalWeightKg, height: finalHeightCm },
+          preferences: userPreferences
+      });
 
-    setUserProfile(form);
-    setUserSpecs({ weight: finalWeightKg, height: finalHeightCm });
-    alert("Profile Updated Successfully in Database.");
+      setUserProfile(form);
+      setUserSpecs({ weight: finalWeightKg, height: finalHeightCm });
+      setIsSaved(true);
+      setTimeout(() => setIsSaved(false), 3000);
+    } catch (error) {
+      console.error("Failed to save profile:", error);
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   const navItems = [
@@ -179,9 +195,9 @@ export const SettingsView = ({
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
                      <div className="space-y-2">
-                        <label className="text-[10px] font-black uppercase text-slate-400 ml-4 tracking-widest">Gender *</label>
+                        <label htmlFor={genderId} className="text-[10px] font-black uppercase text-slate-400 ml-4 tracking-widest cursor-pointer">Gender *</label>
                         <div className="relative">
-                           <select value={form.gender} onChange={e => setForm({...form, gender: e.target.value})} className="w-full bg-slate-50 border-none text-slate-900 text-sm font-bold rounded-2xl px-5 py-4 focus:ring-2 focus:ring-[#A7F3D0] outline-none appearance-none font-sans">
+                           <select id={genderId} value={form.gender} onChange={e => setForm({...form, gender: e.target.value})} className="w-full bg-slate-50 border-none text-slate-900 text-sm font-bold rounded-2xl px-5 py-4 focus:ring-2 focus:ring-[#A7F3D0] outline-none appearance-none font-sans cursor-pointer">
                               <option value="">Select...</option>
                               <option value="Female">Female</option>
                               <option value="Male">Male</option>
@@ -200,15 +216,15 @@ export const SettingsView = ({
                   </div>
                   
                   <div className="p-4 md:p-6 bg-slate-50 rounded-3xl border border-slate-100 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-                     <div className="flex items-center gap-4">
-                        <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center text-slate-400 shadow-sm"><Calendar size={18}/></div>
+                     <label htmlFor={restDayId} className="flex items-center gap-4 cursor-pointer group">
+                        <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center text-slate-400 shadow-sm group-hover:text-slate-900 transition-colors"><Calendar size={18}/></div>
                         <div>
                            <p className="text-sm font-bold text-slate-900 uppercase tracking-wide">Weekly Rest Day</p>
-                           <p className="text-xs text-slate-400 mt-1">Protects your streak on this day</p>
+                           <p className="text-xs text-slate-400 mt-1 font-sans">Protects your streak on this day</p>
                         </div>
-                     </div>
+                     </label>
                      <div className="relative w-full md:w-auto md:min-w-[200px]">
-                        <select value={userPreferences.restDay || ""} onChange={e => setUserPreferences({...userPreferences, restDay: e.target.value})} className="w-full bg-white border-none text-slate-900 text-xs font-bold rounded-xl px-4 py-3 focus:ring-2 focus:ring-[#A7F3D0] outline-none appearance-none font-sans">
+                        <select id={restDayId} value={userPreferences.restDay || ""} onChange={e => setUserPreferences({...userPreferences, restDay: e.target.value})} className="w-full bg-white border-none text-slate-900 text-xs font-bold rounded-xl px-4 py-3 focus:ring-2 focus:ring-[#A7F3D0] outline-none appearance-none font-sans cursor-pointer">
                            <option value="">None</option>
                            <option value="Monday">Monday</option>
                            <option value="Tuesday">Tuesday</option>
@@ -224,7 +240,20 @@ export const SettingsView = ({
                </div>
 
                <div className="pt-4 md:pt-8">
-                  <button onClick={handleSave} className="w-full md:w-auto bg-slate-900 text-white px-10 py-4 rounded-full font-black uppercase text-[10px] tracking-[0.3em] hover:bg-emerald-500 transition-colors shadow-lg flex items-center justify-center gap-3"><Save size={16}/> Save Changes</button>
+                  <button
+                     onClick={handleSave}
+                     disabled={isSaving}
+                     className={`w-full md:w-auto bg-slate-900 text-white px-10 py-4 rounded-full font-black uppercase text-[10px] tracking-[0.3em] hover:bg-emerald-500 transition-all shadow-lg flex items-center justify-center gap-3 min-w-[240px] ${isSaving ? 'opacity-80 cursor-not-allowed' : ''}`}
+                  >
+                     {isSaving ? (
+                        <Loader2 size={16} className="animate-spin" />
+                     ) : isSaved ? (
+                        <Check size={16} className="text-emerald-400" />
+                     ) : (
+                        <Save size={16}/>
+                     )}
+                     {isSaving ? 'Saving Changes...' : isSaved ? 'Profile Updated' : 'Save Changes'}
+                  </button>
                </div>
             </div>
           )}
@@ -252,9 +281,15 @@ export const SettingsView = ({
                      </div>
                   </div>
                   <div className="flex flex-col md:flex-row items-start md:items-center justify-between p-6 bg-slate-50 rounded-3xl border border-slate-100 gap-4">
-                     <div className="flex items-center gap-4"><div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center text-slate-400 shadow-sm"><Clock size={18}/></div><div><p className="text-sm font-bold text-slate-900 uppercase tracking-wide">Time Zone</p><p className="text-xs text-slate-400 mt-1">Local time display</p></div></div>
+                     <label htmlFor={timezoneId} className="flex items-center gap-4 cursor-pointer group">
+                        <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center text-slate-400 shadow-sm group-hover:text-slate-900 transition-colors"><Clock size={18}/></div>
+                        <div>
+                           <p className="text-sm font-bold text-slate-900 uppercase tracking-wide">Time Zone</p>
+                           <p className="text-xs text-slate-400 mt-1 font-sans">Local time display</p>
+                        </div>
+                     </label>
                      <div className="relative w-full md:w-auto md:min-w-[200px]">
-                        <select value={userPreferences.timezone} onChange={e => setUserPreferences({...userPreferences,timezone: e.target.value})} className="w-full bg-white border-none text-slate-900 text-xs font-bold rounded-xl px-4 py-3 focus:ring-2 focus:ring-[#A7F3D0] outline-none appearance-none font-sans">
+                        <select id={timezoneId} value={userPreferences.timezone} onChange={e => setUserPreferences({...userPreferences,timezone: e.target.value})} className="w-full bg-white border-none text-slate-900 text-xs font-bold rounded-xl px-4 py-3 focus:ring-2 focus:ring-[#A7F3D0] outline-none appearance-none font-sans cursor-pointer">
                            {["America/New_York", "America/Los_Angeles", "America/Chicago", "Europe/London", "Europe/Paris", "Asia/Tokyo", "Australia/Sydney", "UTC"].map(tz => <option key={tz} value={tz}>{tz}</option>)}
                         </select>
                         <div className="absolute right-3 top-3.5 pointer-events-none text-slate-400 text-[8px]">▼</div>
@@ -270,9 +305,12 @@ export const SettingsView = ({
   );
 };
 
-const InputGroup = ({ label, type = "text", value, onChange, placeholder, disabled = false }: any) => (
-  <div className="space-y-2 w-full">
-    <label className="text-[10px] font-black uppercase text-slate-400 ml-4 tracking-widest">{label}</label>
-    <input type={type} className={`w-full bg-slate-50 border-none text-slate-900 text-sm font-bold rounded-2xl px-5 py-4 focus:ring-2 focus:ring-[#A7F3D0] outline-none transition-all font-sans ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`} placeholder={placeholder} value={value} onChange={e => onChange && onChange(e.target.value)} disabled={disabled} />
-  </div>
-);
+const InputGroup = ({ label, type = "text", value, onChange, placeholder, disabled = false }: any) => {
+  const id = useId();
+  return (
+    <div className="space-y-2 w-full">
+      <label htmlFor={id} className="text-[10px] font-black uppercase text-slate-400 ml-4 tracking-widest cursor-pointer">{label}</label>
+      <input id={id} type={type} className={`w-full bg-slate-50 border-none text-slate-900 text-sm font-bold rounded-2xl px-5 py-4 focus:ring-2 focus:ring-[#A7F3D0] outline-none transition-all font-sans ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`} placeholder={placeholder} value={value} onChange={e => onChange && onChange(e.target.value)} disabled={disabled} />
+    </div>
+  );
+};
