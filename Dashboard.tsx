@@ -819,11 +819,11 @@ export const DashboardView = ({ workouts, setWorkouts, userGoals, setUserGoals, 
 
                 <div className="md:hidden mb-4">
                     <div className="flex items-center justify-between mb-4">
-                        <button onClick={() => handleDayChange(-1)} className="p-2 bg-slate-50 rounded-full"><ChevronLeft size={20}/></button>
+                        <button onClick={() => handleDayChange(-1)} aria-label="Previous day" className="p-2 bg-slate-50 rounded-full focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none"><ChevronLeft size={20}/></button>
                         <span className="text-sm font-black uppercase tracking-widest text-slate-500">
                             {new Date(selectedDay.replace(/-/g, '/')).toLocaleDateString('en-US', { weekday: 'long', day: 'numeric' })}
                         </span>
-                        <button onClick={() => handleDayChange(1)} className="p-2 bg-slate-50 rounded-full"><ChevronRight size={20}/></button>
+                        <button onClick={() => handleDayChange(1)} aria-label="Next day" className="p-2 bg-slate-50 rounded-full focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none"><ChevronRight size={20}/></button>
                     </div>
                     <div className="bg-slate-900 text-white p-6 rounded-[30px] shadow-xl relative overflow-hidden">
                        <div className="absolute top-0 right-0 p-6 opacity-10"><Activity size={80}/></div>
@@ -869,7 +869,19 @@ export const DashboardView = ({ workouts, setWorkouts, userGoals, setUserGoals, 
                     const isStreak = dayLogs.length > 0;
 
                     return (
-                      <div key={i} onClick={() => setSelectedDay(dStr)} className={`group min-h-[80px] md:min-h-[140px] rounded-[16px] md:rounded-[24px] p-2 md:p-4 transition-all duration-300 relative flex flex-col gap-1 md:gap-2 border-2 ${
+                      <div
+                        key={i}
+                        onClick={() => setSelectedDay(dStr)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            setSelectedDay(dStr);
+                          }
+                        }}
+                        role="button"
+                        tabIndex={locked ? -1 : 0}
+                        aria-label={`${d.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}${isToday ? ', Today' : ''}${isStreak ? ', Workouts recorded' : ''}`}
+                        className={`group min-h-[80px] md:min-h-[140px] rounded-[16px] md:rounded-[24px] p-2 md:p-4 transition-all duration-300 relative flex flex-col gap-1 md:gap-2 border-2 focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none ${
                         locked 
                           ? 'bg-slate-50/40 border-transparent opacity-40 cursor-not-allowed grayscale' 
                           : future 
