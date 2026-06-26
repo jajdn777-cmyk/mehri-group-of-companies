@@ -85,7 +85,7 @@ const CreateGoalModal = ({ onClose, onSubmit, userPreferences }: any) => {
                   <div className="p-3 border-b border-slate-50 bg-white">
                     <div className="flex items-center bg-slate-50 rounded-xl px-3 py-2">
                       <Search size={14} className="text-slate-400 mr-2"/>
-                      <input className="bg-transparent w-full font-bold text-xs outline-none" placeholder="Search..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} autoFocus />
+                      <input className="bg-transparent w-full font-bold text-xs outline-none" placeholder="Search..." aria-label="Search activity types" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} autoFocus />
                     </div>
                   </div>
                   <div className="overflow-y-auto custom-scrollbar p-2 flex-1">
