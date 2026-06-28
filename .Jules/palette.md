@@ -9,3 +9,7 @@
 ## 2026-04-28 - [Keyboard-Accessible Hover Menus & Valid Button Content]
 **Learning:** For hover-triggered menus, use `onFocusCapture` and a refined `onBlurCapture` that checks `e.currentTarget.contains(e.relatedTarget)` to ensure the menu stays open when focus moves between the trigger and its children. Additionally, always use `span` instead of `div` inside `button` elements to maintain HTML validity while achieving desired layout.
 **Action:** Implement robust focus management for all hover-based navigation and audit button children for invalid flow content.
+
+## 2026-05-15 - [Robust Loading States]
+**Learning:** When implementing loading states for asynchronous operations, it is critical to wrap the API call in a `try...finally` block. This ensures the loading indicator is dismissed and the interface becomes interactive again even if the request fails, preventing the UI from being permanently "stuck."
+**Action:** Always use `try...finally` to reset loading indicators after async actions.
