@@ -4,7 +4,7 @@
 
 # Mehri OS
 
-**Mehri OS** is a smart fitness and health app. It helps you track your health, get advice from an AI coach, and read tips on how to stay fit and healthy.
+**Mehri OS** is a smart fitness and health app. It helps you track your health, get advice from advanced biometric analysis, and read tips on how to stay fit and healthy.
 
 ## 🚀 Main Features
 
@@ -19,7 +19,7 @@
 
 - **Website:** React and Vite (to make it fast).
 - **Database:** Supabase (to save your data safely).
-- **AI:** Google Gemini (the brain for the AI coach).
+- **Analysis:** Google Gemini (the engine for data-driven insights).
 - **Design:** Tailwind CSS and Framer Motion (for smooth looks).
 
 ## ⚙️ How to Set Up
