@@ -56,10 +56,11 @@ const EmptyWorkoutState = ({ onAdd }: { onAdd: () => void }) => (
         </p>
      </div>
      <button 
+        type="button"
         onClick={onAdd}
-        className="px-10 py-4 bg-slate-900 text-white rounded-full font-black uppercase text-xs tracking-[0.3em] hover:bg-emerald-500 hover:text-slate-900 transition-all shadow-xl hover:-translate-y-1 flex items-center gap-3"
+        className="px-10 py-4 bg-slate-900 text-white rounded-full font-black uppercase text-xs tracking-[0.3em] hover:bg-emerald-500 hover:text-slate-900 transition-all shadow-xl hover:-translate-y-1 flex items-center gap-3 focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none"
      >
-        <Plus size={16}/> Initialize Protocol
+        <Plus size={16} aria-hidden="true"/> Initialize Protocol
      </button>
   </div>
 );
@@ -703,11 +704,13 @@ export const DashboardView = ({ workouts, setWorkouts, userGoals, setUserGoals, 
                     <button onClick={() => setActivityFilter('Run')} className={`flex-1 md:flex-none px-6 py-2 rounded-xl text-[10px] font-black uppercase transition-all ${activityFilter === 'Run' ? 'bg-white shadow-sm text-slate-900' : 'text-slate-400'}`}>Run</button>
                   </div>
                   <button 
+                    type="button"
                     onClick={() => isLoggable && setShowLogModal(true)} 
                     disabled={!isLoggable}
-                    className="group bg-slate-900 text-white px-8 py-4 md:py-3 rounded-2xl text-xs md:text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-slate-800 transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 w-full md:w-auto active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+                    aria-label={isLoggable ? "Add Workout" : (isPast ? 'Past day locked' : 'Future day locked')}
+                    className="group bg-slate-900 text-white px-8 py-4 md:py-3 rounded-2xl text-xs md:text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-slate-800 transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 w-full md:w-auto active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none"
                   >
-                    <Plus size={16} className="transition-transform group-hover:rotate-90" /> {isLoggable ? 'Add Workout' : (isPast ? 'Past (Locked)' : 'Future (Locked)')}
+                    <Plus size={16} className="transition-transform group-hover:rotate-90" aria-hidden="true" /> {isLoggable ? 'Add Workout' : (isPast ? 'Past (Locked)' : 'Future (Locked)')}
                   </button>
                 </div>
               </div>
@@ -766,11 +769,12 @@ export const DashboardView = ({ workouts, setWorkouts, userGoals, setUserGoals, 
                                <h4 className="text-lg font-black uppercase tracking-tight text-slate-900">{goal.title}</h4>
                             </div>
                             <button
+                              type="button"
                               onClick={(e) => deleteGoal(e, goal.id)}
                               aria-label="Delete goal"
-                              className="text-slate-300 hover:text-red-500 transition-colors z-20 p-2 rounded-full hover:bg-slate-50"
+                              className="text-slate-300 hover:text-red-500 transition-colors z-20 p-2 rounded-full hover:bg-slate-50 focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none"
                             >
-                                <Trash2 size={16}/>
+                                <Trash2 size={16} aria-hidden="true"/>
                             </button>
                          </div>
                          <div className="space-y-2">
@@ -819,11 +823,25 @@ export const DashboardView = ({ workouts, setWorkouts, userGoals, setUserGoals, 
 
                 <div className="md:hidden mb-4">
                     <div className="flex items-center justify-between mb-4">
-                        <button onClick={() => handleDayChange(-1)} className="p-2 bg-slate-50 rounded-full"><ChevronLeft size={20}/></button>
+                        <button
+                          type="button"
+                          onClick={() => handleDayChange(-1)}
+                          aria-label="Previous day"
+                          className="p-2 bg-slate-50 rounded-full focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none"
+                        >
+                          <ChevronLeft size={20} aria-hidden="true"/>
+                        </button>
                         <span className="text-sm font-black uppercase tracking-widest text-slate-500">
                             {new Date(selectedDay.replace(/-/g, '/')).toLocaleDateString('en-US', { weekday: 'long', day: 'numeric' })}
                         </span>
-                        <button onClick={() => handleDayChange(1)} className="p-2 bg-slate-50 rounded-full"><ChevronRight size={20}/></button>
+                        <button
+                          type="button"
+                          onClick={() => handleDayChange(1)}
+                          aria-label="Next day"
+                          className="p-2 bg-slate-50 rounded-full focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none"
+                        >
+                          <ChevronRight size={20} aria-hidden="true"/>
+                        </button>
                     </div>
                     <div className="bg-slate-900 text-white p-6 rounded-[30px] shadow-xl relative overflow-hidden">
                        <div className="absolute top-0 right-0 p-6 opacity-10"><Activity size={80}/></div>
@@ -842,9 +860,11 @@ export const DashboardView = ({ workouts, setWorkouts, userGoals, setUserGoals, 
                        </div>
                        
                        <button 
+                         type="button"
                          onClick={() => isLoggable && setShowLogModal(true)} 
                          disabled={!isLoggable} 
-                         className={`mt-6 w-full py-3 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${!isLoggable ? 'bg-white/5 text-slate-500 cursor-not-allowed' : 'bg-white/10 hover:bg-white/20 text-white'}`}
+                         aria-label={isLoggable ? "Log Activity Here" : (isPast ? 'Locked (Past)' : 'Locked (Future)')}
+                         className={`mt-6 w-full py-3 rounded-xl text-xs font-black uppercase tracking-widest transition-all focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none ${!isLoggable ? 'bg-white/5 text-slate-500 cursor-not-allowed' : 'bg-white/10 hover:bg-white/20 text-white'}`}
                        >
                          {isLoggable ? 'Log Activity Here' : (isPast ? 'Locked (Past)' : 'Locked (Future)')}
                        </button>
@@ -923,7 +943,14 @@ export const DashboardView = ({ workouts, setWorkouts, userGoals, setUserGoals, 
                                </div>
                                <Lock size={10} className="text-slate-400" />
                             </div>
-                            <button onClick={(e) => { e.stopPropagation(); setSelectedDay(dStr); setShowLogModal(true); }} className="absolute bottom-2 right-2 md:bottom-4 md:right-4 w-6 h-6 md:w-8 md:h-8 bg-slate-50 rounded-full flex items-center justify-center text-slate-400 opacity-0 hover:bg-[#A7F3D0] hover:text-slate-900 transition-all group-hover:opacity-100 shadow-sm"><Plus size={12} className="md:w-3.5 md:h-3.5"/></button>
+                            <button
+                              type="button"
+                              onClick={(e) => { e.stopPropagation(); setSelectedDay(dStr); setShowLogModal(true); }}
+                              aria-label="Add workout for this day"
+                              className="absolute bottom-2 right-2 md:bottom-4 md:right-4 w-6 h-6 md:w-8 md:h-8 bg-slate-50 rounded-full flex items-center justify-center text-slate-400 opacity-0 focus-visible:opacity-100 hover:bg-[#A7F3D0] hover:text-slate-900 transition-all group-hover:opacity-100 shadow-sm focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none"
+                            >
+                              <Plus size={12} className="md:w-3.5 md:h-3.5" aria-hidden="true"/>
+                            </button>
                           </>
                         )}
                       </div>
@@ -957,11 +984,12 @@ export const DashboardView = ({ workouts, setWorkouts, userGoals, setUserGoals, 
                                  </p>
                               </div>
                               <button 
+                                type="button"
                                 onClick={() => handleDeleteWorkout(log.id)} 
                                 aria-label="Delete workout"
-                                className="p-2 text-slate-300 hover:text-red-500 rounded-full hover:bg-red-50 transition-all opacity-0 group-hover:opacity-100"
+                                className="p-2 text-slate-300 hover:text-red-500 rounded-full hover:bg-red-50 transition-all opacity-0 focus-visible:opacity-100 group-hover:opacity-100 focus-visible:ring-2 ring-emerald-500 ring-offset-2 outline-none"
                               >
-                                 <Trash2 size={18}/>
+                                 <Trash2 size={18} aria-hidden="true"/>
                               </button>
                            </div>
                         </div>
