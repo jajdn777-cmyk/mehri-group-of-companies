@@ -1,6 +1,6 @@
 
-import React, { useState, useEffect } from 'react';
-import { User, CreditCard, Monitor, ArrowRight, Save, Clock, MapPin, Ruler, Weight, UserCircle, Calendar, ShieldAlert } from 'lucide-react';
+import React, { useState, useEffect, useId } from 'react';
+import { User, CreditCard, Monitor, ArrowRight, Save, Clock, MapPin, Ruler, Weight, UserCircle, Calendar, ShieldAlert, Loader2, Check } from 'lucide-react';
 import { getDistVal, getDistUnit, convertDist, api } from './utils.ts';
 import { AdminView } from './Admin.tsx';
 import { ADMIN_EMAIL } from './constants.ts';
@@ -23,6 +23,8 @@ export const SettingsView = ({
   const [form, setForm] = useState(userProfile);
   const [specsForm, setSpecsForm] = useState(userSpecs);
   const [showAdmin, setShowAdmin] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [isSaved, setIsSaved] = useState(false);
   
   const [heightFt, setHeightFt] = useState('');
   const [heightIn, setHeightIn] = useState('');
@@ -38,27 +40,39 @@ export const SettingsView = ({
     }
   }, []);
 
-  const handleSave = () => {
-    let finalHeightCm = specsForm.height;
-    let finalWeightKg = specsForm.weight;
+  const handleSave = async () => {
+    if (isSaving) return;
+    setIsSaving(true);
+    setIsSaved(false);
 
-    if (units === 'imperial') {
-      finalWeightKg = (parseFloat(specsForm.weight) * 0.453592).toFixed(1);
-      const totalInches = (parseInt(heightFt || '0') * 12) + parseInt(heightIn || '0');
-      finalHeightCm = (totalInches * 2.54).toFixed(0);
+    try {
+      let finalHeightCm = specsForm.height;
+      let finalWeightKg = specsForm.weight;
+
+      if (units === 'imperial') {
+        finalWeightKg = (parseFloat(specsForm.weight) * 0.453592).toFixed(1);
+        const totalInches = (parseInt(heightFt || '0') * 12) + parseInt(heightIn || '0');
+        finalHeightCm = (totalInches * 2.54).toFixed(0);
+      }
+
+      // API UPDATE
+      await api("UPDATE_PROFILE", {
+          username: userProfile.username,
+          profile: form,
+          specs: { weight: finalWeightKg, height: finalHeightCm },
+          preferences: userPreferences
+      });
+
+      setUserProfile(form);
+      setUserSpecs({ weight: finalWeightKg, height: finalHeightCm });
+      setIsSaved(true);
+      setTimeout(() => setIsSaved(false), 2000);
+    } catch (e) {
+      console.error(e);
+      alert("Failed to save changes. Please try again.");
+    } finally {
+      setIsSaving(false);
     }
-    
-    // API UPDATE
-    api("UPDATE_PROFILE", { 
-        username: userProfile.username,
-        profile: form,
-        specs: { weight: finalWeightKg, height: finalHeightCm },
-        preferences: userPreferences
-    });
-
-    setUserProfile(form);
-    setUserSpecs({ weight: finalWeightKg, height: finalHeightCm });
-    alert("Profile Updated Successfully in Database.");
   };
 
   const navItems = [
@@ -224,7 +238,19 @@ export const SettingsView = ({
                </div>
 
                <div className="pt-4 md:pt-8">
-                  <button onClick={handleSave} className="w-full md:w-auto bg-slate-900 text-white px-10 py-4 rounded-full font-black uppercase text-[10px] tracking-[0.3em] hover:bg-emerald-500 transition-colors shadow-lg flex items-center justify-center gap-3"><Save size={16}/> Save Changes</button>
+                  <button
+                    onClick={handleSave}
+                    disabled={isSaving}
+                    className="w-full md:w-auto bg-slate-900 text-white px-10 py-4 rounded-full font-black uppercase text-[10px] tracking-[0.3em] hover:bg-emerald-500 transition-colors shadow-lg flex items-center justify-center gap-3 disabled:opacity-50 min-w-[220px]"
+                  >
+                    {isSaving ? (
+                      <><Loader2 size={16} className="animate-spin"/> Saving...</>
+                    ) : isSaved ? (
+                      <><Check size={16} className="text-[#A7F3D0]"/> Changes Saved</>
+                    ) : (
+                      <><Save size={16}/> Save Changes</>
+                    )}
+                  </button>
                </div>
             </div>
           )}
@@ -270,9 +296,12 @@ export const SettingsView = ({
   );
 };
 
-const InputGroup = ({ label, type = "text", value, onChange, placeholder, disabled = false }: any) => (
-  <div className="space-y-2 w-full">
-    <label className="text-[10px] font-black uppercase text-slate-400 ml-4 tracking-widest">{label}</label>
-    <input type={type} className={`w-full bg-slate-50 border-none text-slate-900 text-sm font-bold rounded-2xl px-5 py-4 focus:ring-2 focus:ring-[#A7F3D0] outline-none transition-all font-sans ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`} placeholder={placeholder} value={value} onChange={e => onChange && onChange(e.target.value)} disabled={disabled} />
-  </div>
-);
+const InputGroup = ({ label, type = "text", value, onChange, placeholder, disabled = false }: any) => {
+  const id = useId();
+  return (
+    <div className="space-y-2 w-full">
+      <label htmlFor={id} className="text-[10px] font-black uppercase text-slate-400 ml-4 tracking-widest cursor-pointer">{label}</label>
+      <input id={id} type={type} className={`w-full bg-slate-50 border-none text-slate-900 text-sm font-bold rounded-2xl px-5 py-4 focus:ring-2 focus:ring-[#A7F3D0] outline-none transition-all font-sans ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`} placeholder={placeholder} value={value} onChange={e => onChange && onChange(e.target.value)} disabled={disabled} />
+    </div>
+  );
+};
