@@ -9,3 +9,7 @@
 ## 2026-04-28 - [Keyboard-Accessible Hover Menus & Valid Button Content]
 **Learning:** For hover-triggered menus, use `onFocusCapture` and a refined `onBlurCapture` that checks `e.currentTarget.contains(e.relatedTarget)` to ensure the menu stays open when focus moves between the trigger and its children. Additionally, always use `span` instead of `div` inside `button` elements to maintain HTML validity while achieving desired layout.
 **Action:** Implement robust focus management for all hover-based navigation and audit button children for invalid flow content.
+
+## 2026-07-03 - [Accessible Form Linkage & Async Feedback]
+**Learning:** In this design system, many form inputs were visually labeled but lacked semantic connection. Using the `useId` hook in reusable components like `InputGroup` ensures that every label-input pair is correctly linked for screen readers and improves click target area (labels become clickable). Additionally, replacing browser `alert()` with inline async feedback (Loader + Check icons) in buttons provides a smoother, non-blocking user experience.
+**Action:** Audit form components for `htmlFor` linkage and prefer `useId` for generating unique IDs; always implement asynchronous visual feedback for primary action buttons.
