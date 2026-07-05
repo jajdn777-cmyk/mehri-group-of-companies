@@ -1,5 +1,5 @@
-import React from 'react';
-import { Trophy, CheckCircle2, ArrowRight } from 'lucide-react';
+import React, { useState } from 'react';
+import { Trophy, CheckCircle2, ArrowRight, Loader2 } from 'lucide-react';
 import { api } from './utils.ts';
 
 const CHALLENGE_PRESETS = [
@@ -10,28 +10,57 @@ const CHALLENGE_PRESETS = [
 ];
 
 export const ChallengesView = ({ userChallenges, setUserChallenges, userHandle }: any) => {
-  
-  const handleJoin = (challenge: any) => {
-    if (!userHandle) { alert("Please login to join challenges."); return; }
-    
+  const [loadingId, setLoadingId] = useState<string | null>(null);
+
+  const handleJoin = async (challenge: any) => {
+    if (!userHandle) {
+      alert('Please login to join challenges.');
+      return;
+    }
+
     // Check if already joined
     if (userChallenges.some((uc: any) => uc.challenge_id === challenge.id)) return;
 
     const newEntry = {
-        challenge_id: challenge.id,
-        title: challenge.title,
-        status: 'Active',
-        joined_date: new Date().toISOString()
+      challenge_id: challenge.id,
+      title: challenge.title,
+      status: 'Active',
+      joined_date: new Date().toISOString(),
     };
 
-    api("JOIN_CHALLENGE", { username: userHandle, ...newEntry });
-    setUserChallenges([...userChallenges, newEntry]);
+    setLoadingId(challenge.id);
+    try {
+      const res = await api('JOIN_CHALLENGE', { username: userHandle, ...newEntry });
+      if (res.status === 'success') {
+        setUserChallenges([...userChallenges, newEntry]);
+      } else {
+        alert(res.message || 'Failed to join challenge.');
+      }
+    } catch (error) {
+      console.error(error);
+      alert('An error occurred. Please try again.');
+    } finally {
+      setLoadingId(null);
+    }
   };
 
-  const handleLeave = (challengeId: string) => {
-    if (!confirm("Leave this challenge?")) return;
-    api("LEAVE_CHALLENGE", { username: userHandle, challenge_id: challengeId });
-    setUserChallenges(userChallenges.filter((c: any) => c.challenge_id !== challengeId));
+  const handleLeave = async (challengeId: string) => {
+    if (!confirm('Leave this challenge?')) return;
+
+    setLoadingId(challengeId);
+    try {
+      const res = await api('LEAVE_CHALLENGE', { username: userHandle, challenge_id: challengeId });
+      if (res.status === 'success') {
+        setUserChallenges(userChallenges.filter((c: any) => c.challenge_id !== challengeId));
+      } else {
+        alert(res.message || 'Failed to leave challenge.');
+      }
+    } catch (error) {
+      console.error(error);
+      alert('An error occurred. Please try again.');
+    } finally {
+      setLoadingId(null);
+    }
   };
 
   return (
@@ -48,7 +77,7 @@ export const ChallengesView = ({ userChallenges, setUserChallenges, userHandle }
            const isJoined = userChallenges.some((uc: any) => uc.challenge_id === c.id);
            return (
              <div key={c.id} className="group relative h-96 rounded-[40px] overflow-hidden shadow-lg cursor-default transition-transform hover:-translate-y-1">
-                <img src={c.img} className="absolute inset-0 w-full h-full object-cover" />
+                <img src={c.img} alt="" aria-hidden="true" className="absolute inset-0 w-full h-full object-cover" />
                 <div className={`absolute inset-0 transition-opacity duration-300 ${isJoined ? 'bg-emerald-900/80' : 'bg-slate-900/60 group-hover:bg-slate-900/80'}`} />
                 
                 <div className="absolute inset-0 p-8 flex flex-col justify-between text-white">
@@ -61,12 +90,33 @@ export const ChallengesView = ({ userChallenges, setUserChallenges, userHandle }
                       <p className="text-xs font-medium text-slate-300 mb-6 leading-relaxed">{c.desc}</p>
                       
                       {isJoined ? (
-                        <button onClick={() => handleLeave(c.id)} className="text-[10px] font-bold uppercase tracking-widest text-red-400 hover:text-white transition-colors">
-                           Leave Challenge
+                        <button
+                          onClick={() => handleLeave(c.id)}
+                          disabled={loadingId === c.id}
+                          aria-busy={loadingId === c.id}
+                          aria-label={loadingId === c.id ? 'Leaving challenge...' : 'Leave challenge'}
+                          className="text-[10px] font-bold uppercase tracking-widest text-red-400 hover:text-white transition-colors flex items-center gap-2 disabled:opacity-50"
+                        >
+                          {loadingId === c.id && <Loader2 size={12} className="animate-spin" />}
+                          Leave Challenge
                         </button>
                       ) : (
-                        <button onClick={() => handleJoin(c)} className="w-full py-3 bg-white text-slate-900 rounded-xl font-black uppercase text-[10px] tracking-[0.2em] hover:bg-emerald-400 transition-colors flex items-center justify-center gap-2">
-                           Join <ArrowRight size={12}/>
+                        <button
+                          onClick={() => handleJoin(c)}
+                          disabled={loadingId === c.id}
+                          aria-busy={loadingId === c.id}
+                          aria-label={loadingId === c.id ? 'Joining challenge...' : 'Join challenge'}
+                          className="w-full py-3 bg-white text-slate-900 rounded-xl font-black uppercase text-[10px] tracking-[0.2em] hover:bg-emerald-400 transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
+                        >
+                          {loadingId === c.id ? (
+                            <>
+                              <Loader2 size={12} className="animate-spin" /> Joining...
+                            </>
+                          ) : (
+                            <>
+                              Join <ArrowRight size={12} />
+                            </>
+                          )}
                         </button>
                       )}
                    </div>
