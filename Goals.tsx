@@ -69,17 +69,29 @@ const CreateGoalModal = ({ onClose, onSubmit, userPreferences }: any) => {
   return (
     <div className="fixed inset-0 z-[6000] flex items-center justify-center p-4 bg-slate-900/90 backdrop-blur-md overflow-y-auto">
       <div className="bg-white p-6 md:p-10 rounded-[30px] md:rounded-[50px] shadow-2xl w-full max-w-4xl relative overflow-visible animate-scale-in my-8">
-        <button onClick={onClose} className="absolute top-6 right-6 md:top-8 md:right-8 text-slate-300 hover:text-emerald-500 transition-colors"><X size={28}/></button>
+        <button
+          onClick={onClose}
+          aria-label="Close modal"
+          className="absolute top-6 right-6 md:top-8 md:right-8 text-slate-300 hover:text-emerald-500 transition-colors focus-visible:ring-2 ring-emerald-500 outline-none rounded-lg"
+        >
+          <X size={28}/>
+        </button>
         <h3 className="text-3xl md:text-4xl font-black uppercase text-slate-900 tracking-tighter mb-8">Create A Goal</h3>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
           <div className="space-y-3 relative md:z-50">
             <label className="text-[10px] font-black uppercase text-slate-400 ml-4 tracking-widest">Activity</label>
             <div className="relative">
-              <div className="w-full bg-slate-50 p-5 rounded-[25px] font-bold text-base flex items-center justify-between cursor-pointer hover:bg-slate-100 transition-colors" onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
+              <button
+                type="button"
+                aria-haspopup="listbox"
+                aria-expanded={isDropdownOpen}
+                className="w-full bg-slate-50 p-5 rounded-[25px] font-bold text-base flex items-center justify-between hover:bg-slate-100 transition-colors focus-visible:ring-2 ring-emerald-500 outline-none"
+                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+              >
                 <span className={activity ? "text-slate-900" : "text-slate-400"}>{activity || "Select Activity..."}</span>
                 <ChevronDown size={20} className="text-slate-400" />
-              </div>
+              </button>
               {isDropdownOpen && (
                 <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-slate-100 rounded-[25px] shadow-2xl overflow-hidden h-64 flex flex-col z-[100]">
                   <div className="p-3 border-b border-slate-50 bg-white">
@@ -310,7 +322,13 @@ export const GoalsView = ({ userGoals, setUserGoals, onNavigate, userPreferences
                     <div className="flex justify-between items-end">
                         <p className="text-xs font-bold text-slate-400">{g.activity}</p>
                         <p className="text-xl font-black text-slate-900">{stats.current} <span className="text-[10px] text-slate-400 uppercase">/ {g.target} {stats.unitLabel}</span></p>
-                        <button onClick={(e) => {e.stopPropagation(); deleteGoal(g.id);}} className="text-slate-300 hover:text-red-500 p-2 rounded-full hover:bg-red-50 transition-all z-20"><Trash2 size={16}/></button>
+                        <button
+                          onClick={(e) => {e.stopPropagation(); deleteGoal(g.id);}}
+                          aria-label="Delete goal"
+                          className="text-slate-300 hover:text-red-500 p-2 rounded-full hover:bg-red-50 transition-all z-20 focus-visible:ring-2 ring-emerald-500 outline-none"
+                        >
+                          <Trash2 size={16}/>
+                        </button>
                     </div>
                   </div>
                </div>
